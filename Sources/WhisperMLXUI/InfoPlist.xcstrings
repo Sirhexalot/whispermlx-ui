@@ -1,16 +1,62 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "NSMicrophoneUsageDescription" : {
+    "CFBundleDisplayName" : {
+      "comment" : "Bundle display name",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "WhisperMLX UI needs microphone access to transcribe local recordings." } },
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "WhisperMLX UI benötigt das Mikrofon, um lokale Aufnahmen zu transkribieren." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "WhisperMLX UI"
+          }
+        }
+      }
+    },
+    "CFBundleName" : {
+      "comment" : "Bundle name",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "WhisperMLX UI"
+          }
+        }
+      }
+    },
+    "NSMicrophoneUsageDescription" : {
+      "comment" : "Privacy - Microphone Usage Description",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WhisperMLX UI benötigt das Mikrofon, um lokale Aufnahmen zu transkribieren."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WhisperMLX UI needs microphone access to transcribe local recordings."
+          }
+        }
       }
     },
     "NSScreenCaptureUsageDescription" : {
+      "extractionState" : "stale",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "WhisperMLX UI needs system audio access to transcribe local recordings." } },
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "WhisperMLX UI benötigt Systemaudio, um lokale Aufnahmen zu transkribieren." } }
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WhisperMLX UI benötigt Systemaudio, um lokale Aufnahmen zu transkribieren."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WhisperMLX UI needs system audio access to transcribe local recordings."
+          }
+        }
       }
     }
   },

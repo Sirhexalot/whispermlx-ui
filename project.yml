@@ -1,0 +1,53 @@
+name: WhisperMLXUI
+options:
+  bundleIdPrefix: local.whispermlx
+settings:
+  base:
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+    SWIFT_VERSION: "5.0"
+    DEVELOPMENT_TEAM: "F22N2AUDUL"
+    CODE_SIGN_STYLE: Automatic
+    CODE_SIGN_IDENTITY: "Apple Development"
+targets:
+  WhisperMLXUI:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources/WhisperMLXUI
+        excludes:
+          # The String Catalogs at the source root are the authoritative
+          # translations. Keeping the legacy .strings files outside the target
+          # prevents Xcode from compiling two Localizable/InfoPlist tables.
+          - Resources
+    info:
+      path: WhisperMLXUI/Info.plist
+      properties:
+        CFBundleDisplayName: WhisperMLX UI
+        CFBundleName: WhisperMLX UI
+        CFBundleDevelopmentRegion: de
+        CFBundleLocalizations:
+          - de
+          - en
+        CFBundleIdentifier: local.whispermlx.ui
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        LSMinimumSystemVersion: "14.0"
+        NSMicrophoneUsageDescription: WhisperMLX UI benötigt das Mikrofon, um lokale Aufnahmen zu transkribieren.
+        NSScreenCaptureUsageDescription: WhisperMLX UI benötigt Systemaudio, um lokale Aufnahmen zu transkribieren.
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: local.whispermlx.ui
+        PRODUCT_NAME: WhisperMLX UI
+        GENERATE_INFOPLIST_FILE: NO
+    postBuildScripts:
+      - name: WhisperMLX-Befehl einbetten
+        script: |
+          mkdir -p "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin"
+          cp "${SRCROOT}/bin/whispermlx" "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/whispermlx"
+          chmod 755 "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/whispermlx"
+          if [ ! -x "${SRCROOT}/bin/ffmpeg" ]; then
+            echo "error: Die eingebettete FFmpeg-Version fehlt. Bitte scripts/build-bundled-ffmpeg.sh ausführen."
+            exit 1
+          fi
+          cp "${SRCROOT}/bin/ffmpeg" "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/ffmpeg"
+          chmod 755 "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/ffmpeg"

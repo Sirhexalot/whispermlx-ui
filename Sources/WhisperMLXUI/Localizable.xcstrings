@@ -1,51 +1,1398 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "action.cancel" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Cancel" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Abbrechen" } } } },
-    "action.openFolder" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Open Folder" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Ordner öffnen" } } } },
-    "action.retry" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Try Again" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Erneut versuchen" } } } },
-    "action.transcribe" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Transcribe" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Transkribieren" } } } },
-    "action.transcribeAgain" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Transcribe Again" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Erneut transkribieren" } } } },
-    "app.subtitle" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Local transcription for audio and video files" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Lokale Transkription für Audio- und Videodateien" } } } },
-    "details.emptyLog" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Status messages appear here." } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Statusmeldungen erscheinen hier." } } } },
-    "details.section" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Details" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Details" } } } },
-    "diarization.label" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Speaker Diarization" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Sprechertrennung" } } } },
-    "diarization.usePyannote" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Use pyannote" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "pyannote verwenden" } } } },
-    "error.microphoneUnavailable" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "No microphone is available or permission has not been granted." } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Kein Mikrofon verfügbar oder freigegeben." } } } },
-    "error.transcriptionExitCode" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Transcription finished with error code %d." } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Die Transkription wurde mit Fehlercode %d beendet." } } } },
-    "error.whisperMLXLaunchFailed" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "WhisperMLX could not be started: %@" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "WhisperMLX konnte nicht gestartet werden: %@" } } } },
-    "error.whisperMLXNotInstalled" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "WhisperMLX is not installed. Please run install.sh first." } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "WhisperMLX ist nicht installiert. Bitte zuerst install.sh ausführen." } } } },
-    "file.choose" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Choose Audio or Video ..." } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Audio oder Video auswählen ..." } } } },
-    "file.noneSelected" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "No file selected yet" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Noch keine Datei ausgewählt" } } } },
-    "file.output" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Output: %@" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Ausgabe: %@" } } } },
-    "file.section" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "File" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Datei" } } } },
-    "log.recordingRunning" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Recording is running ..." } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufnahme läuft ..." } } } },
-    "log.recordingSaved" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Recording saved: %@\nReady to transcribe." } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufnahme gespeichert: %@\nBereit zur Transkription." } } } },
-    "log.transcriptionStarted" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Transcription started ..." } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Transkription gestartet ..." } } } },
-    "model.label" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Model" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Modell" } } } },
-    "model.largeV3" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Accurate - large-v3" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Genau - large-v3" } } } },
-    "model.small" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Compact - small" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Kompakt - small" } } } },
-    "model.turbo" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Fast - large-v3-turbo" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Schnell - large-v3-turbo" } } } },
-    "recording.description" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Records locally through the microphone. Transcription starts after recording stops." } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Nimmt lokal über das Mikrofon auf. Die Transkription startet erst nach dem Stoppen." } } } },
-    "recording.running" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Recording - %d s" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufnahme läuft - %d s" } } } },
-    "recording.section" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Recording" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufnahme" } } } },
-    "recording.start" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Start Recording" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufnahme starten" } } } },
-    "recording.stop" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Stop Recording" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufnahme stoppen" } } } },
-    "recordings.fileName" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Recording_%@.caf" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufnahme_%@.caf" } } } },
-    "recordings.folderName" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "WhisperMLX Recordings" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "WhisperMLX-Aufnahmen" } } } },
-    "settings.defaultModel" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Default Model" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Standardmodell" } } } },
-    "settings.models.description" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Models are downloaded on first use and cached locally." } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Modelle werden beim ersten Einsatz heruntergeladen und lokal zwischengespeichert." } } } },
-    "settings.models.tab" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Models" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Modelle" } } } },
-    "settings.token.description" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Required for speaker diarization with pyannote. The token is stored only in the macOS keychain." } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Erforderlich für die Sprechertrennung mit pyannote. Der Token wird nur im macOS-Schlüsselbund gespeichert." } } } },
-    "settings.token.save" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Save Token" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Token speichern" } } } },
-    "settings.token.saved" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Saved" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Gespeichert" } } } },
-    "speakerCount.automatic" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Detect Automatically" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Automatisch erkennen" } } } },
-    "speakerCount.label" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Speaker Count" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Sprecheranzahl" } } } },
-    "speakerCount.people" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "%d People" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "%d Personen" } } } },
-    "transcription.cancelled" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Transcription cancelled." } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Transkription abgebrochen." } } } },
-    "transcription.finished" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Done: %@" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Fertig: %@" } } } },
-    "transcription.running" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Transcription running ..." } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Transkription läuft ..." } } } },
-    "transcription.section" : { "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Transcription" } }, "de" : { "stringUnit" : { "state" : "translated", "value" : "Transkription" } } } }
+  "sourceLanguage": "en",
+  "strings": {
+    "action.apply": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Übernehmen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apply"
+          }
+        }
+      }
+    },
+    "action.cancel": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abbrechen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        }
+      }
+    },
+    "action.close": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schließen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close"
+          }
+        }
+      }
+    },
+    "action.openFolder": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ordner öffnen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Folder"
+          }
+        }
+      }
+    },
+    "action.retry": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erneut versuchen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try Again"
+          }
+        }
+      }
+    },
+    "action.transcribe": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transkribieren"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcribe"
+          }
+        }
+      }
+    },
+    "action.transcribeAgain": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erneut transkribieren"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcribe Again"
+          }
+        }
+      }
+    },
+    "app.subtitle": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lokale Transkription für Audio- und Videodateien"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Local transcription for audio and video files"
+          }
+        }
+      }
+    },
+    "details.emptyLog": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Statusmeldungen erscheinen hier."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Status messages appear here."
+          }
+        }
+      }
+    },
+    "details.section": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Details"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Details"
+          }
+        }
+      }
+    },
+    "diarization.label": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprechertrennung"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speaker Diarization"
+          }
+        }
+      }
+    },
+    "diarization.usePyannote": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprechererkennung aktivieren"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enable speaker recognition"
+          }
+        }
+      }
+    },
+    "error.audioMixingFailed": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mikrofon und Systemaudio konnten nicht zusammengeführt werden."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Microphone and system audio could not be mixed."
+          }
+        }
+      }
+    },
+    "error.ffmpegMissing": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "FFmpeg fehlt. Es wird benötigt, um Mikrofon und Systemaudio zusammenzuführen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "FFmpeg is missing. It is required to mix microphone and system audio."
+          }
+        }
+      }
+    },
+    "error.huggingFaceTokenRequired": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Für die Sprechertrennung fehlt ein Hugging-Face-Token."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A Hugging Face token is required for speaker diarization."
+          }
+        }
+      }
+    },
+    "error.microphoneUnavailable": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kein Mikrofon verfügbar oder freigegeben."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No microphone is available or permission has not been granted."
+          }
+        }
+      }
+    },
+    "error.modelDownloadFailed": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Modell konnte nicht geladen werden."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The model could not be downloaded."
+          }
+        }
+      }
+    },
+    "error.modelRuntimeMissing": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die WhisperMLX-Laufzeit ist nicht verfügbar."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The WhisperMLX runtime is unavailable."
+          }
+        }
+      }
+    },
+    "error.systemAudioInitialization": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Systemaudio konnte nicht initialisiert werden: %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System audio could not be initialized: %@"
+          }
+        }
+      }
+    },
+    "error.systemAudioPermission": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Systemaudio benötigt die Freigabe unter Datenschutz & Sicherheit > Bildschirm- und Systemaudioaufnahme."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System audio requires permission in Privacy & Security > Screen & System Audio Recording."
+          }
+        }
+      }
+    },
+    "error.systemAudioUnavailable": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Für die Systemaudioaufnahme wurde kein Bildschirm gefunden."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No display is available for system audio recording."
+          }
+        }
+      }
+    },
+    "error.transcriptionExitCode": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Transkription wurde mit Fehlercode %d beendet."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcription finished with error code %d."
+          }
+        }
+      }
+    },
+    "error.whisperMLXLaunchFailed": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhisperMLX konnte nicht gestartet werden: %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhisperMLX could not be started: %@"
+          }
+        }
+      }
+    },
+    "error.whisperMLXNotInstalled": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhisperMLX ist nicht verfügbar. Bitte Python 3.13 und whispermlx installieren."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhisperMLX is not available. Please install Python 3.13 and whispermlx."
+          }
+        }
+      }
+    },
+    "file.choose": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Audio oder Video auswählen ..."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose Audio or Video ..."
+          }
+        }
+      }
+    },
+    "file.noneSelected": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch keine Datei ausgewählt"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No file selected yet"
+          }
+        }
+      }
+    },
+    "file.output": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ausgabe: %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Output: %@"
+          }
+        }
+      }
+    },
+    "file.outputExtension": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "transkript"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "transcript"
+          }
+        }
+      }
+    },
+    "file.section": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datei"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File"
+          }
+        }
+      }
+    },
+    "log.huggingFaceTokenRequired": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprechertrennung benötigt einen Hugging-Face-Token. Bitte über das Zahnrad unter Sprechertrennung hinterlegen und Übernehmen wählen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speaker diarization requires a Hugging Face token. Open Settings, enter it under Speaker Diarization, then choose Apply."
+          }
+        }
+      }
+    },
+    "log.recordingRunning": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufnahme läuft ..."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recording is running ..."
+          }
+        }
+      }
+    },
+    "log.recordingSaved": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufnahme gespeichert: %@\nBereit zur Transkription."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recording saved: %@\nReady to transcribe."
+          }
+        }
+      }
+    },
+    "log.transcriptionStarted": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transkription gestartet ..."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcription started ..."
+          }
+        }
+      }
+    },
+    "model.label": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modell"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Model"
+          }
+        }
+      }
+    },
+    "model.largeV3": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Genau - large-v3"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accurate - large-v3"
+          }
+        }
+      }
+    },
+    "model.small": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kompakt - small"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compact - small"
+          }
+        }
+      }
+    },
+    "model.turbo": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schnell - large-v3-turbo"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fast - large-v3-turbo"
+          }
+        }
+      }
+    },
+    "recording.compact.hint": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Transkription startet erst nach dem Stoppen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcription starts after you stop recording."
+          }
+        }
+      }
+    },
+    "recording.compact.title": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufnahme läuft"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recording in Progress"
+          }
+        }
+      }
+    },
+    "recording.description": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nimmt lokal über das Mikrofon auf. Die Transkription startet erst nach dem Stoppen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Records locally through the microphone. Transcription starts after recording stops."
+          }
+        }
+      }
+    },
+    "recording.level.microphone": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mikrofon"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Microphone"
+          }
+        }
+      }
+    },
+    "recording.level.systemAudio": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Systemaudio"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System Audio"
+          }
+        }
+      }
+    },
+    "recording.running": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufnahme läuft - %d s"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recording - %d s"
+          }
+        }
+      }
+    },
+    "recording.section": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufnahme"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recording"
+          }
+        }
+      }
+    },
+    "recording.start": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufnahme starten"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start Recording"
+          }
+        }
+      }
+    },
+    "recording.stop": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufnahme stoppen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop Recording"
+          }
+        }
+      }
+    },
+    "recordings.fileName": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aufnahme_%@.caf"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recording_%@.caf"
+          }
+        }
+      }
+    },
+    "recordings.folderName": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhisperMLX-Aufnahmen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhisperMLX Recordings"
+          }
+        }
+      }
+    },
+    "settings.defaultModel": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Standardmodell"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Default Model"
+          }
+        }
+      }
+    },
+    "settings.diarization.description": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ordnet erkannte Gesprächsabschnitte den jeweiligen Sprecher:innen zu."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Assigns recognized conversation segments to individual speakers."
+          }
+        }
+      }
+    },
+    "settings.model.download": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download"
+          }
+        }
+      }
+    },
+    "settings.model.installed": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installiert"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installed"
+          }
+        }
+      }
+    },
+    "settings.model.remove": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entfernen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove"
+          }
+        }
+      }
+    },
+    "settings.model.remove.confirmation.message": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Modell wird aus dem lokalen Hugging-Face-Cache gelöscht. Bei einer späteren Nutzung kann es erneut heruntergeladen werden."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The model will be removed from the local Hugging Face cache. It can be downloaded again when needed."
+          }
+        }
+      }
+    },
+    "settings.model.remove.confirmation.title": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modell wirklich entfernen?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove model?"
+          }
+        }
+      }
+    },
+    "settings.models.description": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modelle werden beim ersten Einsatz heruntergeladen und lokal zwischengespeichert."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Models are downloaded on first use and cached locally."
+          }
+        }
+      }
+    },
+    "settings.models.noneInstalled": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kein Modell installiert"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No model installed"
+          }
+        }
+      }
+    },
+    "settings.models.noneInstalled.hint": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lade unter „Modelle“ mindestens ein Modell herunter."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download at least one model under Models."
+          }
+        }
+      }
+    },
+    "settings.models.tab": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modelle"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Models"
+          }
+        }
+      }
+    },
+    "settings.open": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einstellungen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings"
+          }
+        }
+      }
+    },
+    "settings.title": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einstellungen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings"
+          }
+        }
+      }
+    },
+    "settings.token.and": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "und die Vereinbarung für"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "and acceptance of the agreement for"
+          }
+        }
+      }
+    },
+    "settings.token.create": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Token auf Hugging Face erstellen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create token on Hugging Face"
+          }
+        }
+      }
+    },
+    "settings.token.description": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erforderlich für die Sprechererkennung. Der Token wird nur im macOS-Schlüsselbund gespeichert."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Required for speaker recognition. The token is stored only in the macOS keychain."
+          }
+        }
+      }
+    },
+    "settings.token.huggingFaceLink": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hugging-Face-Zugriffstoken"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hugging Face access token"
+          }
+        }
+      }
+    },
+    "settings.token.load": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gespeicherten Token laden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Load Saved Token"
+          }
+        }
+      }
+    },
+    "settings.token.loaded": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Token geladen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Token loaded"
+          }
+        }
+      }
+    },
+    "settings.token.loadFailed": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der gespeicherte Token konnte nicht geladen werden. Erlaube den Zugriff im Schlüsselbund oder füge ihn erneut ein."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The saved token could not be loaded. Allow Keychain access or enter it again."
+          }
+        }
+      }
+    },
+    "settings.token.modelAgreement": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "pyannote-Modellvereinbarung öffnen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open pyannote model agreement"
+          }
+        }
+      }
+    },
+    "settings.token.placeholder": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hugging-Face-Token"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hugging Face Token"
+          }
+        }
+      }
+    },
+    "settings.token.pyannoteLink": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "pyannote speaker-diarization-community-1"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "pyannote speaker-diarization-community-1"
+          }
+        }
+      }
+    },
+    "settings.token.requirements": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Für die Sprechertrennung brauchst du einen Token sowie die akzeptierte Modellvereinbarung:"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speaker diarization requires a token and acceptance of the model agreement:"
+          }
+        }
+      }
+    },
+    "settings.token.save": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Token speichern"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save Token"
+          }
+        }
+      }
+    },
+    "settings.token.saved": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gespeichert"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved"
+          }
+        }
+      }
+    },
+    "settings.token.title": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hugging-Face-Token"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hugging Face Token"
+          }
+        }
+      }
+    },
+    "settings.transcription.description": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Einstellungen gelten für die nächste Transkription."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "These settings apply to the next transcription."
+          }
+        }
+      }
+    },
+    "settings.vad.description": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erkennt Sprachabschnitte vor der Transkription. Pyannote ist für Gesprächsaufnahmen empfohlen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Detects speech segments before transcription. Pyannote is recommended for recorded conversations."
+          }
+        }
+      }
+    },
+    "settings.vad.title": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "VAD-Vorverarbeitung"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "VAD preprocessing"
+          }
+        }
+      }
+    },
+    "speakerCount.automatic": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatisch erkennen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Detect Automatically"
+          }
+        }
+      }
+    },
+    "speakerCount.label": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprecheranzahl"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speaker Count"
+          }
+        }
+      }
+    },
+    "speakerCount.people": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d Personen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d People"
+          }
+        }
+      }
+    },
+    "transcription.cancelled": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transkription abgebrochen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcription cancelled."
+          }
+        }
+      }
+    },
+    "transcription.finished": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fertig: %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done: %@"
+          }
+        }
+      }
+    },
+    "transcription.running": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transkription läuft ..."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcription running ..."
+          }
+        }
+      }
+    },
+    "transcription.section": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transkription"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transcription"
+          }
+        }
+      }
+    },
+    "vad.pyannote": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pyannote – empfohlen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pyannote – recommended"
+          }
+        }
+      }
+    },
+    "vad.silero": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silero – schlank"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silero – lightweight"
+          }
+        }
+      }
+    }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }

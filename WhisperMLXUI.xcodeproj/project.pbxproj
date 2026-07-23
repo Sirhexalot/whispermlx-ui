@@ -1,0 +1,359 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0CF41909213CC4C93276A9A5 /* WhisperMLXUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 646DEE8E6F5630B25061A6DC /* WhisperMLXUIApp.swift */; };
+		0FEA07002974FCB902137FAC /* ModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B997424F0FC0A620D488B23D /* ModelManager.swift */; };
+		137729590D1C4E733E0099AF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FEB2E64477CA09E528E90C1F /* Assets.xcassets */; };
+		36563A15B2BC2B60A92825A9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BEB90783F0420DA4758E9F /* ContentView.swift */; };
+		43CC3C438DFCACECEA50E802 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 0A365206C349BFC386CB9540 /* InfoPlist.xcstrings */; };
+		61E615AB97E0555944203EA1 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 774042A3194BD34BAA2E3584 /* Localizable.xcstrings */; };
+		6DA6CCE4D2B6B2C84225E46D /* TranscriptionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C157FFFA436DF03D52D8DFD0 /* TranscriptionController.swift */; };
+		7EF1CC382A4CB69E095687B3 /* SystemAudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890941EAD7CEA077F29BA9EB /* SystemAudioRecorder.swift */; };
+		CC1568C3B8564A359CCBAD68 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8927AEE5C22EE729A1EDD0F8 /* AudioRecorder.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0A365206C349BFC386CB9540 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
+		646DEE8E6F5630B25061A6DC /* WhisperMLXUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperMLXUIApp.swift; sourceTree = "<group>"; };
+		774042A3194BD34BAA2E3584 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		7936A48F4F444F9B2FC646D6 /* WhisperMLXUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhisperMLXUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		890941EAD7CEA077F29BA9EB /* SystemAudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAudioRecorder.swift; sourceTree = "<group>"; };
+		8927AEE5C22EE729A1EDD0F8 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
+		B997424F0FC0A620D488B23D /* ModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelManager.swift; sourceTree = "<group>"; };
+		C157FFFA436DF03D52D8DFD0 /* TranscriptionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionController.swift; sourceTree = "<group>"; };
+		C2BEB90783F0420DA4758E9F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		FEB2E64477CA09E528E90C1F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		2725360F8FE9ACB8BB7A9BEB /* WhisperMLXUI */ = {
+			isa = PBXGroup;
+			children = (
+				FEB2E64477CA09E528E90C1F /* Assets.xcassets */,
+				8927AEE5C22EE729A1EDD0F8 /* AudioRecorder.swift */,
+				C2BEB90783F0420DA4758E9F /* ContentView.swift */,
+				0A365206C349BFC386CB9540 /* InfoPlist.xcstrings */,
+				774042A3194BD34BAA2E3584 /* Localizable.xcstrings */,
+				B997424F0FC0A620D488B23D /* ModelManager.swift */,
+				890941EAD7CEA077F29BA9EB /* SystemAudioRecorder.swift */,
+				C157FFFA436DF03D52D8DFD0 /* TranscriptionController.swift */,
+				646DEE8E6F5630B25061A6DC /* WhisperMLXUIApp.swift */,
+			);
+			name = WhisperMLXUI;
+			path = Sources/WhisperMLXUI;
+			sourceTree = "<group>";
+		};
+		4C24C73C9913A82FF38593B4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7936A48F4F444F9B2FC646D6 /* WhisperMLXUI.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FC699C3ADF2EAEC7F8C0B3AD = {
+			isa = PBXGroup;
+			children = (
+				2725360F8FE9ACB8BB7A9BEB /* WhisperMLXUI */,
+				4C24C73C9913A82FF38593B4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3AA7A42ADA635D16B582C891 /* WhisperMLXUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1D1A6FC82697FA5DF96D1E6 /* Build configuration list for PBXNativeTarget "WhisperMLXUI" */;
+			buildPhases = (
+				86BD967C342FA993E333BBBE /* Sources */,
+				1F9F168024925CB3F6BD0E75 /* Resources */,
+				917221C1555BB02CE1DABA78 /* WhisperMLX-Befehl einbetten */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WhisperMLXUI;
+			packageProductDependencies = (
+			);
+			productName = WhisperMLXUI;
+			productReference = 7936A48F4F444F9B2FC646D6 /* WhisperMLXUI.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5C59657AEF6ADDF7756A0502 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					3AA7A42ADA635D16B582C891 = {
+						DevelopmentTeam = F22N2AUDUL;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = DA3A7C50846562CD2F2D4926 /* Build configuration list for PBXProject "WhisperMLXUI" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				de,
+				en,
+			);
+			mainGroup = FC699C3ADF2EAEC7F8C0B3AD;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 4C24C73C9913A82FF38593B4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3AA7A42ADA635D16B582C891 /* WhisperMLXUI */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1F9F168024925CB3F6BD0E75 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				137729590D1C4E733E0099AF /* Assets.xcassets in Resources */,
+				43CC3C438DFCACECEA50E802 /* InfoPlist.xcstrings in Resources */,
+				61E615AB97E0555944203EA1 /* Localizable.xcstrings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		917221C1555BB02CE1DABA78 /* WhisperMLX-Befehl einbetten */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "WhisperMLX-Befehl einbetten";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "mkdir -p \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin\"\ncp \"${SRCROOT}/bin/whispermlx\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/whispermlx\"\nchmod 755 \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/whispermlx\"\nif [ ! -x \"${SRCROOT}/bin/ffmpeg\" ]; then\n  echo \"error: Die eingebettete FFmpeg-Version fehlt. Bitte scripts/build-bundled-ffmpeg.sh ausführen.\"\n  exit 1\nfi\ncp \"${SRCROOT}/bin/ffmpeg\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/ffmpeg\"\nchmod 755 \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/ffmpeg\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		86BD967C342FA993E333BBBE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC1568C3B8564A359CCBAD68 /* AudioRecorder.swift in Sources */,
+				36563A15B2BC2B60A92825A9 /* ContentView.swift in Sources */,
+				0FEA07002974FCB902137FAC /* ModelManager.swift in Sources */,
+				7EF1CC382A4CB69E095687B3 /* SystemAudioRecorder.swift in Sources */,
+				6DA6CCE4D2B6B2C84225E46D /* TranscriptionController.swift in Sources */,
+				0CF41909213CC4C93276A9A5 /* WhisperMLXUIApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2B25B3FA28C0A38A6E7CF90C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = F22N2AUDUL;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		9960B699772C50CCEDE3D60C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = WhisperMLXUI/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = local.whispermlx.ui;
+				PRODUCT_NAME = "WhisperMLX UI";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		EB2A6704071E0AC71FB91B17 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = WhisperMLXUI/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = local.whispermlx.ui;
+				PRODUCT_NAME = "WhisperMLX UI";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		F7981CF0D233C4D9CB2E3D38 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = F22N2AUDUL;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DA3A7C50846562CD2F2D4926 /* Build configuration list for PBXProject "WhisperMLXUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B25B3FA28C0A38A6E7CF90C /* Debug */,
+				F7981CF0D233C4D9CB2E3D38 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F1D1A6FC82697FA5DF96D1E6 /* Build configuration list for PBXNativeTarget "WhisperMLXUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EB2A6704071E0AC71FB91B17 /* Debug */,
+				9960B699772C50CCEDE3D60C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5C59657AEF6ADDF7756A0502 /* Project object */;
+}

@@ -16,11 +16,7 @@ typeset -a extra
 extra=("$@")
 
 if [[ " ${extra[*]} " == *" --diarize "* ]]; then
-  token_file="${XDG_CONFIG_HOME:-$HOME/.config}/whispermlx-ui/hf.env"
-  [[ -r "$token_file" ]] || { print -u2 "Missing Hugging Face token file: $token_file"; exit 3; }
-  source "$token_file"
-  [[ -n "${HF_TOKEN:-}" ]] || { print -u2 "HF_TOKEN is missing in $token_file"; exit 3; }
-  export HF_TOKEN
+  [[ -n "${HF_TOKEN:-}" ]] || { print -u2 "Missing Hugging Face token. Save it in the app settings before enabling speaker diarization."; exit 3; }
   [[ " ${extra[*]} " == *" --hf_token "* ]] || extra=(--hf_token "$HF_TOKEN" "${extra[@]}")
 fi
 
@@ -34,11 +30,24 @@ print "Output: $output_dir"
 export PYTHONWARNINGS="${PYTHONWARNINGS:+${PYTHONWARNINGS},}ignore::UserWarning:pyannote.audio.core.io"
 if [[ -n "${WHISPERMLX_PYTHON:-}" ]]; then
   python="$WHISPERMLX_PYTHON"
+elif [[ -x "${0:A:h:h}/python/bin/python" ]]; then
+  # Future self-contained app runtime, located at Contents/Resources/python.
+  python="${0:A:h:h}/python/bin/python"
+elif [[ -x "$HOME/.local/share/whispermlx-ui/venv/bin/python" ]]; then
+  # Managed application runtime. The bare Homebrew interpreter does not carry
+  # WhisperMLX and must not be selected before this environment.
+  python="$HOME/.local/share/whispermlx-ui/venv/bin/python"
+elif [[ -x "/opt/homebrew/opt/python@3.13/bin/python3.13" ]]; then
+  python="/opt/homebrew/opt/python@3.13/bin/python3.13"
+elif (( $+commands[python3.13] )); then
+  python="${commands[python3.13]}"
+elif (( $+commands[python3] )); then
+  python="${commands[python3]}"
 else
-  python="${XDG_DATA_HOME:-$HOME/.local/share}/whispermlx-ui/venv/bin/python"
+  python=""
 fi
 [[ -x "$python" ]] || {
-  print -u2 "WhisperMLX is not installed. Run the project's install.sh first."
+  print -u2 "Python with WhisperMLX is not available. Install it with: brew install python@3.13 && /opt/homebrew/opt/python@3.13/bin/python3.13 -m pip install --upgrade whispermlx"
   exit 4
 }
 exec "$python" -m whispermlx "$input" "${extra[@]}"

@@ -1,3 +1,28 @@
 .DS_Store
+
+# Local configuration/secrets
 config/hf.env
+
+# Transcription outputs
 *.transkript/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+build/
+
+# Xcode local state
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+
+# Local build/distribution artifacts
+build/
+dist/
+DerivedData/
+*.dmg
+*.zip
+*.dSYM/
+
+# Bundled/generated local binaries
+bin/ffmpeg
