@@ -17,6 +17,7 @@ extra=("$@")
 
 if [[ " ${extra[*]} " == *" --diarize "* ]]; then
   token_file="${XDG_CONFIG_HOME:-$HOME/.config}/whispermlx-ui/hf.env"
+  [[ -r "$token_file" ]] || token_file="${XDG_CONFIG_HOME:-$HOME/.config}/transkribiere/hf.env"
   [[ -r "$token_file" ]] || { print -u2 "Missing Hugging Face token file: $token_file"; exit 3; }
   source "$token_file"
   [[ -n "${HF_TOKEN:-}" ]] || { print -u2 "HF_TOKEN is missing in $token_file"; exit 3; }
