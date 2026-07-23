@@ -1,0 +1,18 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "NSMicrophoneUsageDescription" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "WhisperMLX UI needs microphone access to transcribe local recordings." } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "WhisperMLX UI benötigt das Mikrofon, um lokale Aufnahmen zu transkribieren." } }
+      }
+    },
+    "NSScreenCaptureUsageDescription" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "WhisperMLX UI needs system audio access to transcribe local recordings." } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "WhisperMLX UI benötigt Systemaudio, um lokale Aufnahmen zu transkribieren." } }
+      }
+    }
+  },
+  "version" : "1.0"
+}
