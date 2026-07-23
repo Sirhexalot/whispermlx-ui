@@ -2,7 +2,7 @@
   "sourceLanguage" : "en",
   "strings" : {
     "action.apply" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -19,7 +19,7 @@
       }
     },
     "action.cancel" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -36,7 +36,7 @@
       }
     },
     "action.close" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -53,7 +53,7 @@
       }
     },
     "action.openFolder" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -70,7 +70,7 @@
       }
     },
     "action.retry" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -87,7 +87,7 @@
       }
     },
     "action.transcribe" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -104,7 +104,7 @@
       }
     },
     "action.transcribeAgain" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -137,7 +137,7 @@
       }
     },
     "details.emptyLog" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -154,7 +154,7 @@
       }
     },
     "details.section" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -187,7 +187,7 @@
       }
     },
     "diarization.usePyannote" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -204,7 +204,7 @@
       }
     },
     "error.audioMixingFailed" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -220,8 +220,59 @@
         }
       }
     },
-    "error.ffmpegMissing" : {
+    "error.diarizationDownloadTokenRequired" : {
       "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für den ersten Download des Offline-pyannote-Modells wird ein Hugging-Face-Token benötigt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Hugging Face token is required to download the offline pyannote model the first time."
+          }
+        }
+      }
+    },
+    "error.diarizationModelDownloadFailed" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Offline-pyannote-Modell konnte nicht heruntergeladen werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The offline pyannote model could not be downloaded."
+          }
+        }
+      }
+    },
+    "error.diarizationModelPathInvalid" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der lokale pyannote-Modellordner wurde nicht gefunden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The offline pyannote model folder could not be found."
+          }
+        }
+      }
+    },
+    "error.ffmpegMissing" : {
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -238,24 +289,41 @@
       }
     },
     "error.huggingFaceTokenRequired" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Für die Sprechertrennung fehlt ein Hugging-Face-Token."
+            "value" : "Für die Sprechertrennung fehlt entweder das Offline-pyannote-Modell oder ein Hugging-Face-Token für den ersten Download."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A Hugging Face token is required for speaker diarization."
+            "value" : "Speaker diarization requires either the offline pyannote model or a Hugging Face token for the first download."
+          }
+        }
+      }
+    },
+    "error.microphoneSelectionFailed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Mikrofon „%@“ konnte nicht aktiviert werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not activate the microphone “%@”."
           }
         }
       }
     },
     "error.microphoneUnavailable" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -272,7 +340,7 @@
       }
     },
     "error.modelDownloadFailed" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -288,8 +356,25 @@
         }
       }
     },
-    "error.modelRuntimeMissing" : {
+    "error.modelNotInstalled" : {
       "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das ausgewählte Modell ist nicht installiert. Bitte lade es unter Einstellungen > Modelle herunter."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The selected model is not installed. Download it in Settings > Models."
+          }
+        }
+      }
+    },
+    "error.modelRuntimeMissing" : {
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -306,7 +391,7 @@
       }
     },
     "error.systemAudioInitialization" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -323,7 +408,7 @@
       }
     },
     "error.systemAudioPermission" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -340,7 +425,7 @@
       }
     },
     "error.systemAudioUnavailable" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -357,7 +442,7 @@
       }
     },
     "error.transcriptionExitCode" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -374,7 +459,7 @@
       }
     },
     "error.whisperMLXLaunchFailed" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -391,7 +476,7 @@
       }
     },
     "error.whisperMLXNotInstalled" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -425,7 +510,7 @@
       }
     },
     "file.noneSelected" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -442,7 +527,7 @@
       }
     },
     "file.output" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -459,7 +544,7 @@
       }
     },
     "file.outputExtension" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -476,7 +561,7 @@
       }
     },
     "file.section" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -493,24 +578,41 @@
       }
     },
     "log.huggingFaceTokenRequired" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sprechertrennung benötigt einen Hugging-Face-Token. Bitte über das Zahnrad unter Sprechertrennung hinterlegen und Übernehmen wählen."
+            "value" : "Sprechertrennung benötigt entweder das Offline-pyannote-Modell oder ein Hugging-Face-Token für den ersten Download. Öffne die Einstellungen unter Sprechertrennung und richte eine der beiden Optionen ein."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Speaker diarization requires a Hugging Face token. Open Settings, enter it under Speaker Diarization, then choose Apply."
+            "value" : "Speaker diarization requires either the offline pyannote model or a Hugging Face token for the first download. Open Settings under Speaker Diarization and configure one of the two options."
+          }
+        }
+      }
+    },
+    "log.recordingMicrophoneOnly" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Systemaudio ist nicht verfügbar. Es wird nur das Mikrofon aufgenommen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System audio is unavailable. Recording microphone only."
           }
         }
       }
     },
     "log.recordingRunning" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -527,7 +629,7 @@
       }
     },
     "log.recordingSaved" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -544,7 +646,7 @@
       }
     },
     "log.transcriptionStarted" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -561,7 +663,7 @@
       }
     },
     "model.label" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -578,7 +680,7 @@
       }
     },
     "model.largeV3" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -595,7 +697,7 @@
       }
     },
     "model.small" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -612,7 +714,7 @@
       }
     },
     "model.turbo" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -645,7 +747,7 @@
       }
     },
     "recording.compact.title" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -678,7 +780,7 @@
       }
     },
     "recording.level.microphone" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -695,7 +797,7 @@
       }
     },
     "recording.level.systemAudio" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -712,7 +814,7 @@
       }
     },
     "recording.running" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -729,7 +831,7 @@
       }
     },
     "recording.section" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -746,7 +848,7 @@
       }
     },
     "recording.start" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -763,7 +865,7 @@
       }
     },
     "recording.stop" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -780,7 +882,7 @@
       }
     },
     "recordings.fileName" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -797,7 +899,7 @@
       }
     },
     "recordings.folderName" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -814,7 +916,7 @@
       }
     },
     "settings.defaultModel" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -846,8 +948,174 @@
         }
       }
     },
+    "settings.diarization.offline.description" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lade das pyannote-Offlinemodell einmal in den von der App verwalteten lokalen Ordner. Danach kann die Sprechertrennung ohne Internetverbindung laufen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Download the pyannote offline model once into the app-managed local folder. After that, speaker diarization can run without internet access."
+          }
+        }
+      }
+    },
+    "settings.diarization.offline.download" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline-Modell herunterladen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Download Offline Model"
+          }
+        }
+      }
+    },
+    "settings.diarization.offline.downloading" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline-Modell wird heruntergeladen ..."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Downloading offline model ..."
+          }
+        }
+      }
+    },
+    "settings.diarization.offline.installed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline-Modell installiert"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline model installed"
+          }
+        }
+      }
+    },
+    "settings.diarization.offline.missing" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Offline-Modellort ist gespeichert, aber die Dateien fehlen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline model location exists in settings, but the files are missing"
+          }
+        }
+      }
+    },
+    "settings.diarization.offline.notInstalled" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline-Modell ist noch nicht installiert"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline model not installed yet"
+          }
+        }
+      }
+    },
+    "settings.diarization.offline.title" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline-pyannote-Modell"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline pyannote Model"
+          }
+        }
+      }
+    },
+    "settings.microphone.description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wähle bei Bedarf ein bestimmtes Eingabegerät. Ohne Auswahl verwendet die App das aktuelle Standardmikrofon von macOS."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pick a specific input device if needed. Without a selection, the app uses the current macOS default microphone."
+          }
+        }
+      }
+    },
+    "settings.microphone.systemDefault" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Systemstandard"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System Default"
+          }
+        }
+      }
+    },
+    "settings.microphone.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikrofon"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Microphone"
+          }
+        }
+      }
+    },
     "settings.model.download" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -864,7 +1132,7 @@
       }
     },
     "settings.model.installed" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -881,7 +1149,7 @@
       }
     },
     "settings.model.remove" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -914,7 +1182,7 @@
       }
     },
     "settings.model.remove.confirmation.title" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -995,7 +1263,7 @@
       }
     },
     "settings.open" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1028,7 +1296,7 @@
       }
     },
     "settings.token.and" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1045,7 +1313,7 @@
       }
     },
     "settings.token.create" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1066,19 +1334,19 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Erforderlich für die Sprechererkennung. Der Token wird nur im macOS-Schlüsselbund gespeichert."
+            "value" : "Nach der Offline-Einrichtung optional. Der Token wird nur für den ersten Download des geschützten pyannote-Modells gebraucht und nur im macOS-Schlüsselbund gespeichert."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Required for speaker recognition. The token is stored only in the macOS keychain."
+            "value" : "Optional after offline setup. The token is only needed for the first download of the gated pyannote model and is stored only in the macOS keychain."
           }
         }
       }
     },
     "settings.token.huggingFaceLink" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1095,7 +1363,7 @@
       }
     },
     "settings.token.load" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1112,7 +1380,7 @@
       }
     },
     "settings.token.loaded" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1129,7 +1397,7 @@
       }
     },
     "settings.token.loadFailed" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1146,7 +1414,7 @@
       }
     },
     "settings.token.modelAgreement" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1163,7 +1431,7 @@
       }
     },
     "settings.token.placeholder" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1180,7 +1448,7 @@
       }
     },
     "settings.token.pyannoteLink" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1197,24 +1465,24 @@
       }
     },
     "settings.token.requirements" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Für die Sprechertrennung brauchst du einen Token sowie die akzeptierte Modellvereinbarung:"
+            "value" : "Für den ersten Download des Offline-pyannote-Modells brauchst du einen Token sowie die akzeptierte Modellvereinbarung:"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Speaker diarization requires a token and acceptance of the model agreement:"
+            "value" : "The first download of the offline pyannote model requires a token and acceptance of the model agreement:"
           }
         }
       }
     },
     "settings.token.save" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1231,7 +1499,7 @@
       }
     },
     "settings.token.saved" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1296,7 +1564,7 @@
       }
     },
     "settings.vad.title" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1329,7 +1597,7 @@
       }
     },
     "speakerCount.label" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1346,7 +1614,7 @@
       }
     },
     "speakerCount.people" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1379,7 +1647,7 @@
       }
     },
     "transcription.finished" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1412,7 +1680,7 @@
       }
     },
     "transcription.section" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1429,7 +1697,7 @@
       }
     },
     "vad.pyannote" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1446,7 +1714,7 @@
       }
     },
     "vad.silero" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {

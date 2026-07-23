@@ -25,6 +25,24 @@
         }
       }
     },
+    "NSAudioCaptureUsageDescription" : {
+      "comment" : "Privacy - Audio Capture Usage Description",
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WhisperMLX UI benötigt Systemaudio, um lokale Aufnahmen zu transkribieren."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WhisperMLX UI needs system audio access to transcribe local recordings."
+          }
+        }
+      }
+    },
     "NSMicrophoneUsageDescription" : {
       "comment" : "Privacy - Microphone Usage Description",
       "localizations" : {

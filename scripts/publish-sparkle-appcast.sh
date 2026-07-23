@@ -2,6 +2,7 @@
 set -euo pipefail
 
 root="${0:A:h:h}"
+derived_data_path="${WHISPERMLXUI_DERIVED_DATA_PATH:-${TMPDIR:-/tmp}/whispermlx-ui-derived-data}"
 updates_dir="${1:-$root/dist/sparkle-updates}"
 public_dir="${2:-$root/docs}"
 default_archive="$root/dist/Release/WhisperMLX-UI-macOS.zip"
@@ -16,6 +17,7 @@ trap cleanup EXIT
 find_generate_appcast() {
   local candidate
   for candidate in \
+    "$derived_data_path/SourcePackages/artifacts/sparkle/Sparkle/bin/generate_appcast" \
     "$root/build/DerivedData/SourcePackages/artifacts/sparkle/Sparkle/bin/generate_appcast" \
     "$root/.build/artifacts/sparkle/Sparkle/bin/generate_appcast"
   do
@@ -30,6 +32,7 @@ find_generate_appcast() {
 find_sign_update() {
   local candidate
   for candidate in \
+    "$derived_data_path/SourcePackages/artifacts/sparkle/Sparkle/bin/sign_update" \
     "$root/build/DerivedData/SourcePackages/artifacts/sparkle/Sparkle/bin/sign_update" \
     "$root/.build/artifacts/sparkle/Sparkle/bin/sign_update"
   do

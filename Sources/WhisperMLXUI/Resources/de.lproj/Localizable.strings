@@ -8,6 +8,9 @@
 "details.section" = "Details";
 "diarization.label" = "Sprechertrennung";
 "diarization.usePyannote" = "pyannote verwenden";
+"error.diarizationDownloadTokenRequired" = "Für den ersten Download des Offline-pyannote-Modells wird ein Hugging-Face-Token benötigt.";
+"error.diarizationModelDownloadFailed" = "Das Offline-pyannote-Modell konnte nicht heruntergeladen werden.";
+"error.diarizationModelPathInvalid" = "Der lokale pyannote-Modellordner wurde nicht gefunden.";
 "error.microphoneUnavailable" = "Kein Mikrofon verfügbar oder freigegeben.";
 "error.transcriptionExitCode" = "Die Transkription wurde mit Fehlercode %d beendet.";
 "error.whisperMLXLaunchFailed" = "WhisperMLX konnte nicht gestartet werden: %@";
@@ -18,6 +21,7 @@
 "file.outputExtension" = "transkript";
 "file.section" = "Datei";
 "log.recordingRunning" = "Aufnahme läuft ...";
+"log.recordingMicrophoneOnly" = "Systemaudio ist nicht verfügbar. Es wird nur das Mikrofon aufgenommen.";
 "log.recordingSaved" = "Aufnahme gespeichert: %@\nBereit zur Transkription.";
 "log.transcriptionStarted" = "Transkription gestartet ...";
 "model.label" = "Modell";
@@ -32,9 +36,16 @@
 "recordings.fileName" = "Aufnahme_%@.caf";
 "recordings.folderName" = "WhisperMLX-Aufnahmen";
 "settings.defaultModel" = "Standardmodell";
+"settings.diarization.offline.download" = "Offline-Modell herunterladen";
+"settings.diarization.offline.description" = "Lade das pyannote-Offlinemodell einmal in den von der App verwalteten lokalen Ordner. Danach kann die Sprechertrennung ohne Internetverbindung laufen.";
+"settings.diarization.offline.downloading" = "Offline-Modell wird heruntergeladen ...";
+"settings.diarization.offline.installed" = "Offline-Modell installiert";
+"settings.diarization.offline.missing" = "Der Offline-Modellort ist gespeichert, aber die Dateien fehlen";
+"settings.diarization.offline.notInstalled" = "Offline-Modell ist noch nicht installiert";
+"settings.diarization.offline.title" = "Offline-pyannote-Modell";
 "settings.models.description" = "Modelle werden beim ersten Einsatz heruntergeladen und lokal zwischengespeichert.";
 "settings.models.tab" = "Modelle";
-"settings.token.description" = "Erforderlich für die Sprechertrennung mit pyannote. Der Token wird nur im macOS-Schlüsselbund gespeichert.";
+"settings.token.description" = "Nach der Offline-Einrichtung optional. Der Token wird nur für den Online-Zugriff auf geschützte pyannote-Modelle gebraucht und nur im macOS-Schlüsselbund gespeichert.";
 "settings.token.load" = "Gespeicherten Token laden";
 "settings.token.placeholder" = "Hugging-Face-Token";
 "settings.token.save" = "Token speichern";

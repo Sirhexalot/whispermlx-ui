@@ -1,2 +1,3 @@
 "NSMicrophoneUsageDescription" = "WhisperMLX UI benötigt das Mikrofon, um lokale Aufnahmen zu transkribieren.";
+"NSAudioCaptureUsageDescription" = "WhisperMLX UI benötigt Systemaudio, um lokale Aufnahmen zu transkribieren.";
 "NSScreenCaptureUsageDescription" = "WhisperMLX UI benötigt Systemaudio, um lokale Aufnahmen zu transkribieren.";

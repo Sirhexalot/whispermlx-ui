@@ -53,6 +53,8 @@ final class TranscriptionController {
     var model: Model = .largeV3
     var vadMethod: VADMethod = .pyannote
     var diarizationEnabled: Bool
+    var diarizationModelPath: String
+    var preferredMicrophoneUID: String?
     /// nil lets pyannote determine the number of speakers.
     var speakerCount: Int?
     var status: Status = .ready
@@ -66,9 +68,14 @@ final class TranscriptionController {
     private static let progressPattern = try! NSRegularExpression(pattern: "Transcribing:\\s*(\\d{1,3})%")
 
     init() {
-        // The token's existence is sufficient for the default; its value is
-        // retrieved only when a diarized transcription is actually started.
-        diarizationEnabled = TokenStore.exists()
+        let initialDiarizationModelPath = LocalDiarizationModelStore.load()
+        let initialMicrophoneUID = AudioInputDeviceStore.load()
+        diarizationModelPath = initialDiarizationModelPath
+        preferredMicrophoneUID = initialMicrophoneUID
+        recorder.preferredMicrophoneUID = initialMicrophoneUID
+        // A saved token or a local pipeline directory are sufficient for the
+        // default; the secret value is only retrieved when it is actually used.
+        diarizationEnabled = TokenStore.exists() || Self.isUsableDiarizationModelPath(initialDiarizationModelPath)
     }
 
     var outputURL: URL? {
@@ -93,15 +100,26 @@ final class TranscriptionController {
 
     func start() {
         guard let inputURL else { return }
-        if diarizationEnabled && TokenStore.load().trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+        guard resolveCLI() != nil else {
+            status = .failed(String(localized: "error.whisperMLXNotInstalled"))
+            return
+        }
+        guard ModelManager.isInstalled(model) else {
+            status = .failed(String(localized: "error.modelNotInstalled"))
+            return
+        }
+
+        let localDiarizationModel = validatedDiarizationModelPath()
+        if diarizationEnabled && !diarizationModelPath.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && localDiarizationModel == nil {
+            status = .failed(String(localized: "error.diarizationModelPathInvalid"))
+            return
+        }
+        if diarizationEnabled && localDiarizationModel == nil && TokenStore.load().trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             status = .failed(String(localized: "error.huggingFaceTokenRequired"))
             log = String(localized: "log.huggingFaceTokenRequired") + "\n"
             return
         }
-        guard let executableURL = resolveCLI() else {
-            status = .failed(String(localized: "error.whisperMLXNotInstalled"))
-            return
-        }
+        guard let executableURL = resolveCLI() else { return }
 
         let scoped = inputURL.startAccessingSecurityScopedResource()
         if scoped { scopedURL = inputURL }
@@ -109,6 +127,9 @@ final class TranscriptionController {
         var arguments = [inputURL.path, "--model", model.rawValue, "--vad_method", vadMethod.rawValue]
         if diarizationEnabled {
             arguments.append("--diarize")
+            if let localDiarizationModel {
+                arguments += ["--diarize_model", localDiarizationModel]
+            }
             if let speakerCount {
                 arguments += ["--min_speakers", "\(speakerCount)", "--max_speakers", "\(speakerCount)"]
             }
@@ -121,7 +142,7 @@ final class TranscriptionController {
         var environment = ProcessInfo.processInfo.environment
         let bundledBin = Bundle.main.bundleURL.appendingPathComponent("Contents/Resources/bin").path
         environment["PATH"] = "\(bundledBin):/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
-        if diarizationEnabled {
+        if diarizationEnabled && localDiarizationModel == nil {
             let token = TokenStore.load()
             if !token.isEmpty {
                 environment["HF_TOKEN"] = token
@@ -191,6 +212,9 @@ final class TranscriptionController {
             do {
                 try await recorder.start()
                 log = String(localized: "log.recordingRunning") + "\n"
+                if let warning = recorder.lastStartWarning, !warning.isEmpty {
+                    log += warning + "\n"
+                }
             } catch {
                 status = .failed(error.localizedDescription)
             }
@@ -229,5 +253,22 @@ final class TranscriptionController {
               let valueRange = Range(match.range(at: 1), in: log),
               let value = Double(log[valueRange]) else { return }
         progress = min(max(value, 0), 100)
+    }
+
+    private func hasLocalDiarizationModel() -> Bool {
+        Self.isUsableDiarizationModelPath(diarizationModelPath)
+    }
+
+    private func validatedDiarizationModelPath() -> String? {
+        let trimmedPath = diarizationModelPath.trimmingCharacters(in: .whitespacesAndNewlines)
+        return Self.isUsableDiarizationModelPath(trimmedPath) ? trimmedPath : nil
+    }
+
+    private static func isUsableDiarizationModelPath(_ path: String) -> Bool {
+        let trimmedPath = path.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedPath.isEmpty else { return false }
+
+        var isDirectory: ObjCBool = false
+        return FileManager.default.fileExists(atPath: trimmedPath, isDirectory: &isDirectory) && isDirectory.boolValue
     }
 }

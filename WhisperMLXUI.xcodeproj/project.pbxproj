@@ -9,9 +9,11 @@
 /* Begin PBXBuildFile section */
 		0CF41909213CC4C93276A9A5 /* WhisperMLXUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 646DEE8E6F5630B25061A6DC /* WhisperMLXUIApp.swift */; };
 		0FEA07002974FCB902137FAC /* ModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B997424F0FC0A620D488B23D /* ModelManager.swift */; };
+		11393EE57C296D276451FEBF /* AudioInputDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BE892F39B7A3FC5D62E0D9 /* AudioInputDevice.swift */; };
 		137729590D1C4E733E0099AF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FEB2E64477CA09E528E90C1F /* Assets.xcassets */; };
 		36563A15B2BC2B60A92825A9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BEB90783F0420DA4758E9F /* ContentView.swift */; };
 		43CC3C438DFCACECEA50E802 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 0A365206C349BFC386CB9540 /* InfoPlist.xcstrings */; };
+		60C50BEFE2ECB6062FC9D709 /* RecordingPermissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FE1158B68988A6CC61C5C68 /* RecordingPermissions.swift */; };
 		61E615AB97E0555944203EA1 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 774042A3194BD34BAA2E3584 /* Localizable.xcstrings */; };
 		6DA6CCE4D2B6B2C84225E46D /* TranscriptionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C157FFFA436DF03D52D8DFD0 /* TranscriptionController.swift */; };
 		7847175FE8DC99E82B71E303 /* UpdaterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA3AB1663A4F36287A4B3E9 /* UpdaterView.swift */; };
@@ -28,6 +30,8 @@
 		7CA3AB1663A4F36287A4B3E9 /* UpdaterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterView.swift; sourceTree = "<group>"; };
 		890941EAD7CEA077F29BA9EB /* SystemAudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAudioRecorder.swift; sourceTree = "<group>"; };
 		8927AEE5C22EE729A1EDD0F8 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
+		8FE1158B68988A6CC61C5C68 /* RecordingPermissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingPermissions.swift; sourceTree = "<group>"; };
+		92BE892F39B7A3FC5D62E0D9 /* AudioInputDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioInputDevice.swift; sourceTree = "<group>"; };
 		B997424F0FC0A620D488B23D /* ModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelManager.swift; sourceTree = "<group>"; };
 		C157FFFA436DF03D52D8DFD0 /* TranscriptionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionController.swift; sourceTree = "<group>"; };
 		C2BEB90783F0420DA4758E9F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -50,11 +54,13 @@
 			isa = PBXGroup;
 			children = (
 				FEB2E64477CA09E528E90C1F /* Assets.xcassets */,
+				92BE892F39B7A3FC5D62E0D9 /* AudioInputDevice.swift */,
 				8927AEE5C22EE729A1EDD0F8 /* AudioRecorder.swift */,
 				C2BEB90783F0420DA4758E9F /* ContentView.swift */,
 				0A365206C349BFC386CB9540 /* InfoPlist.xcstrings */,
 				774042A3194BD34BAA2E3584 /* Localizable.xcstrings */,
 				B997424F0FC0A620D488B23D /* ModelManager.swift */,
+				8FE1158B68988A6CC61C5C68 /* RecordingPermissions.swift */,
 				890941EAD7CEA077F29BA9EB /* SystemAudioRecorder.swift */,
 				C157FFFA436DF03D52D8DFD0 /* TranscriptionController.swift */,
 				7CA3AB1663A4F36287A4B3E9 /* UpdaterView.swift */,
@@ -158,6 +164,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		917221C1555BB02CE1DABA78 /* WhisperMLX-Befehl einbetten */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -173,7 +180,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "mkdir -p \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin\"\ncp \"${SRCROOT}/bin/whispermlx\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/whispermlx\"\nchmod 755 \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/whispermlx\"\nif [ ! -x \"${SRCROOT}/bin/ffmpeg\" ]; then\n  echo \"error: Die eingebettete FFmpeg-Version fehlt. Bitte scripts/build-bundled-ffmpeg.sh ausführen.\"\n  exit 1\nfi\ncp \"${SRCROOT}/bin/ffmpeg\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/ffmpeg\"\nchmod 755 \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/ffmpeg\"\n";
+			shellScript = "mkdir -p \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin\"\ncp \"${SRCROOT}/bin/whispermlx\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/whispermlx\"\nchmod 755 \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/whispermlx\"\nif [ ! -x \"${SRCROOT}/bin/ffmpeg\" ]; then\n  echo \"error: Die eingebettete FFmpeg-Version fehlt. Bitte scripts/build-bundled-ffmpeg.sh ausführen.\"\n  exit 1\nfi\ncp \"${SRCROOT}/bin/ffmpeg\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/ffmpeg\"\nchmod 755 \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/ffmpeg\"\n# iCloud/File Provider metadata would invalidate the app signature.\nxattr -cr \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -182,9 +189,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				11393EE57C296D276451FEBF /* AudioInputDevice.swift in Sources */,
 				CC1568C3B8564A359CCBAD68 /* AudioRecorder.swift in Sources */,
 				36563A15B2BC2B60A92825A9 /* ContentView.swift in Sources */,
 				0FEA07002974FCB902137FAC /* ModelManager.swift in Sources */,
+				60C50BEFE2ECB6062FC9D709 /* RecordingPermissions.swift in Sources */,
 				7EF1CC382A4CB69E095687B3 /* SystemAudioRecorder.swift in Sources */,
 				6DA6CCE4D2B6B2C84225E46D /* TranscriptionController.swift in Sources */,
 				7847175FE8DC99E82B71E303 /* UpdaterView.swift in Sources */,

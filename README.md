@@ -6,9 +6,10 @@ A native macOS app for local transcription on Apple Silicon using [whispermlx](h
 
 - Import audio and video files directly from the app
 - Record locally from the microphone and system audio
+- Pick a specific microphone in Settings or fall back to the current macOS default input
 - Show progress and runtime logs during transcription
 - Download and remove Whisper models from the settings window
-- Optional speaker diarization with pyannote and a Hugging Face token
+- Optional speaker diarization with pyannote, either through a local offline clone or a Hugging Face token
 - Write results into a transcript folder next to the source file
 
 ## Requirements
@@ -49,8 +50,9 @@ After that, you can also open and run the app directly from [`WhisperMLXUI.xcode
 
 1. Choose a file or start a recording
 2. Select an installed model in Settings
-3. Optionally enable speaker diarization
-4. Start transcription
+3. Optionally pick a dedicated microphone in Settings
+4. Optionally enable speaker diarization
+5. Start transcription
 
 For recordings, the app first stores microphone and system-audio tracks separately and then mixes them with `ffmpeg` into a Whisper-ready WAV file.
 
@@ -66,12 +68,14 @@ Model data is stored in the Hugging Face cache under `~/.cache/huggingface/hub`.
 
 ## Speaker Diarization
 
-Speaker diarization uses `pyannote/speaker-diarization-community-1`. It requires:
+Speaker diarization uses `pyannote/speaker-diarization-community-1`.
 
-- a Hugging Face token
-- accepted model terms for that repository
+You can use it in two ways:
 
-The token is entered in the app settings and stored only in the macOS Keychain.
+- Online or first-time setup: accept the model terms on Hugging Face and provide a token in the app settings
+- Offline after setup: let the app download the pipeline once into its managed local storage
+
+The token is stored only in the macOS Keychain. After the first download, the app uses its managed local pyannote directory and no token is required for offline transcription.
 
 ## Auto Updates
 

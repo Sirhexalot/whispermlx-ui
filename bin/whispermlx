@@ -16,8 +16,10 @@ typeset -a extra
 extra=("$@")
 
 if [[ " ${extra[*]} " == *" --diarize "* ]]; then
-  [[ -n "${HF_TOKEN:-}" ]] || { print -u2 "Missing Hugging Face token. Save it in the app settings before enabling speaker diarization."; exit 3; }
-  [[ " ${extra[*]} " == *" --hf_token "* ]] || extra=(--hf_token "$HF_TOKEN" "${extra[@]}")
+  if [[ " ${extra[*]} " != *" --diarize_model "* ]]; then
+    [[ -n "${HF_TOKEN:-}" ]] || { print -u2 "Missing Hugging Face token. Save it in the app settings or configure an offline pyannote model before enabling speaker diarization."; exit 3; }
+    [[ " ${extra[*]} " == *" --hf_token "* ]] || extra=(--hf_token "$HF_TOKEN" "${extra[@]}")
+  fi
 fi
 
 [[ " ${extra[*]} " == *" --model "* ]] || extra=(--model large-v3-turbo "${extra[@]}")

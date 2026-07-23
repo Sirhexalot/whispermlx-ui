@@ -8,6 +8,9 @@
 "details.section" = "Details";
 "diarization.label" = "Speaker Diarization";
 "diarization.usePyannote" = "Use pyannote";
+"error.diarizationDownloadTokenRequired" = "A Hugging Face token is required to download the offline pyannote model the first time.";
+"error.diarizationModelDownloadFailed" = "The offline pyannote model could not be downloaded.";
+"error.diarizationModelPathInvalid" = "The offline pyannote model folder could not be found.";
 "error.microphoneUnavailable" = "No microphone is available or permission has not been granted.";
 "error.transcriptionExitCode" = "Transcription finished with error code %d.";
 "error.whisperMLXLaunchFailed" = "WhisperMLX could not be started: %@";
@@ -18,6 +21,7 @@
 "file.outputExtension" = "transcript";
 "file.section" = "File";
 "log.recordingRunning" = "Recording is running ...";
+"log.recordingMicrophoneOnly" = "System audio is unavailable. Recording microphone only.";
 "log.recordingSaved" = "Recording saved: %@\nReady to transcribe.";
 "log.transcriptionStarted" = "Transcription started ...";
 "model.label" = "Model";
@@ -32,9 +36,16 @@
 "recordings.fileName" = "Recording_%@.caf";
 "recordings.folderName" = "WhisperMLX Recordings";
 "settings.defaultModel" = "Default Model";
+"settings.diarization.offline.download" = "Download Offline Model";
+"settings.diarization.offline.description" = "Download the pyannote offline model once into the app-managed local folder. After that, speaker diarization can run without internet access.";
+"settings.diarization.offline.downloading" = "Downloading offline model ...";
+"settings.diarization.offline.installed" = "Offline model installed";
+"settings.diarization.offline.missing" = "Offline model location exists in settings, but the files are missing";
+"settings.diarization.offline.notInstalled" = "Offline model not installed yet";
+"settings.diarization.offline.title" = "Offline pyannote Model";
 "settings.models.description" = "Models are downloaded on first use and cached locally.";
 "settings.models.tab" = "Models";
-"settings.token.description" = "Required for speaker diarization with pyannote. The token is stored only in the macOS keychain.";
+"settings.token.description" = "Optional after offline setup. The token is only needed for online access to gated pyannote models and is stored only in the macOS keychain.";
 "settings.token.load" = "Load Saved Token";
 "settings.token.placeholder" = "Hugging Face Token";
 "settings.token.save" = "Save Token";

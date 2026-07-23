@@ -8,6 +8,8 @@ struct ContentView: View {
     @State private var isImporting = false
     @State private var showsDetails = false
     @State private var showsSettings = false
+    @State private var microphoneDevices: [AudioInputDevice] = []
+    @State private var preferredMicrophoneUID: String = ""
 
     init(controller: TranscriptionController) {
         self.controller = controller
@@ -28,6 +30,7 @@ struct ContentView: View {
         .sheet(isPresented: $showsSettings) {
             SettingsView(controller: controller)
         }
+        .onAppear { refreshMicrophones() }
     }
 
     private var fullView: some View {
@@ -108,6 +111,19 @@ struct ContentView: View {
                     Text("recording.description")
                         .foregroundStyle(.secondary)
                     Spacer()
+                    Picker("settings.microphone.title", selection: $preferredMicrophoneUID) {
+                        Text("settings.microphone.systemDefault").tag("")
+                        ForEach(microphoneDevices) { item in
+                            Text(item.name).tag(item.id)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .frame(maxWidth: 240)
+                    .labelsHidden()
+                    .help("settings.microphone.title")
+                    .onChange(of: preferredMicrophoneUID) { _, newValue in
+                        applyPreferredMicrophone(newValue)
+                    }
                     Button("recording.start") { controller.startRecording() }
                         .buttonStyle(.borderedProminent)
                         .disabled(controller.isRunning)
@@ -259,6 +275,22 @@ struct ContentView: View {
         }
         .padding(18)
         .frame(width: 620, height: 360)
+    }
+
+    private func refreshMicrophones() {
+        microphoneDevices = AudioInputDeviceManager.availableDevices()
+        preferredMicrophoneUID = controller.preferredMicrophoneUID ?? ""
+        if !preferredMicrophoneUID.isEmpty && !microphoneDevices.contains(where: { $0.id == preferredMicrophoneUID }) {
+            preferredMicrophoneUID = ""
+            applyPreferredMicrophone("")
+        }
+    }
+
+    private func applyPreferredMicrophone(_ uid: String) {
+        let resolvedUID = uid.isEmpty ? nil : uid
+        controller.preferredMicrophoneUID = resolvedUID
+        controller.recorder.preferredMicrophoneUID = resolvedUID
+        AudioInputDeviceStore.save(resolvedUID)
     }
 }
 

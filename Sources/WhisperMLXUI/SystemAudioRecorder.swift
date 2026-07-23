@@ -1,4 +1,5 @@
 import AVFoundation
+import CoreGraphics
 import CoreMedia
 import ScreenCaptureKit
 
@@ -15,6 +16,10 @@ final class SystemAudioRecorder: NSObject, SCStreamOutput {
     var onLevel: ((Float) -> Void)?
 
     func start(to outputURL: URL) async throws {
+        guard RecordingPermissions.ensureSystemAudioAccess() else {
+            throw SystemAudioRecorderError.permissionDenied
+        }
+
         let content: SCShareableContent
         do {
             content = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: false)
@@ -24,7 +29,10 @@ final class SystemAudioRecorder: NSObject, SCStreamOutput {
             throw SystemAudioRecorderError.initializationFailed(error.localizedDescription)
         }
 
-        guard let display = content.displays.first else {
+        // Audio is system-wide; the display only anchors ScreenCaptureKit's
+        // stream. Prefer the user's primary display over enumeration order.
+        let primaryDisplayID = CGMainDisplayID()
+        guard let display = content.displays.first(where: { $0.displayID == primaryDisplayID }) ?? content.displays.first else {
             throw SystemAudioRecorderError.noDisplay
         }
 
@@ -43,6 +51,10 @@ final class SystemAudioRecorder: NSObject, SCStreamOutput {
         self.outputURL = outputURL
         acceptingBuffers = true
         try newStream.addStreamOutput(self, type: .audio, sampleHandlerQueue: .global(qos: .userInitiated))
+        // ScreenCaptureKit also delivers video frames for a display filter,
+        // even though this app only persists audio. Registering this output
+        // prevents the framework from dropping an unhandled stream type.
+        try newStream.addStreamOutput(self, type: .screen, sampleHandlerQueue: .global(qos: .utility))
         do {
             try await newStream.startCapture()
             stream = newStream
@@ -100,6 +112,7 @@ final class SystemAudioRecorder: NSObject, SCStreamOutput {
 enum SystemAudioRecorderError: LocalizedError {
     case initializationFailed(String)
     case noDisplay
+    case permissionDenied
 
     var errorDescription: String? {
         switch self {
@@ -110,6 +123,8 @@ enum SystemAudioRecorderError: LocalizedError {
             )
         case .noDisplay:
             return String(localized: "error.systemAudioUnavailable")
+        case .permissionDenied:
+            return String(localized: "error.systemAudioPermission")
         }
     }
 }

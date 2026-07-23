@@ -7,9 +7,14 @@ final class AudioRecorder: ObservableObject {
     @Published private(set) var elapsed: TimeInterval = 0
     @Published private(set) var level: Float = 0
     @Published private(set) var systemLevel: Float = 0
+    @Published private(set) var includesSystemAudio = false
+    @Published private(set) var lastStartWarning: String?
+    @Published private(set) var activeMicrophoneName: String?
+
+    var preferredMicrophoneUID: String?
 
     private var engine: AVAudioEngine?
-    private var audioFile: AVAudioFile?
+    private var microphoneWriter: MicrophoneFileWriter?
     private var microphoneURL: URL?
     private var systemAudioURL: URL?
     private var timer: Timer?
@@ -27,12 +32,10 @@ final class AudioRecorder: ObservableObject {
 
     func start() async throws {
         guard !isRecording else { return }
+        try await RecordingPermissions.ensureMicrophoneAccess()
         let engine = AVAudioEngine()
         let node = engine.inputNode
-        let format = node.outputFormat(forBus: 0)
-        guard format.channelCount > 0, format.sampleRate > 0 else {
-            throw RecorderError.microphoneUnavailable
-        }
+        let activeMicrophone = try AudioInputDeviceManager.configure(node, preferredUID: preferredMicrophoneUID)
         let folder = FileManager.default.urls(for: .moviesDirectory, in: .userDomainMask)[0]
             .appendingPathComponent(String(localized: "recordings.folderName", defaultValue: "WhisperMLX Recordings"), isDirectory: true)
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
@@ -41,15 +44,29 @@ final class AudioRecorder: ObservableObject {
             String.localizedStringWithFormat(String(localized: "recordings.fileName", defaultValue: "Recording_%@.caf"), stamp)
         )
         let systemURL = folder.appendingPathComponent("System_\(stamp).caf")
-        let file = try AVAudioFile(forWriting: microphoneURL, settings: format.settings)
+        let writer = MicrophoneFileWriter(outputURL: microphoneURL)
 
-        // System audio requires macOS' Screen & System Audio Recording permission.
-        // Do this before starting the microphone so a declined request never
-        // looks like a complete two-track recording.
-        try await systemAudioRecorder.start(to: systemURL)
+        do {
+            try await systemAudioRecorder.start(to: systemURL)
+            self.systemAudioURL = systemURL
+            includesSystemAudio = true
+            lastStartWarning = nil
+        } catch {
+            // Fall back to microphone-only recording if ScreenCaptureKit or the
+            // related permission is unavailable.
+            self.systemAudioURL = nil
+            includesSystemAudio = false
+            lastStartWarning = String(
+                localized: "log.recordingMicrophoneOnly",
+                defaultValue: "System audio is unavailable. Recording microphone only."
+            )
+        }
 
-        node.installTap(onBus: 0, bufferSize: 2_048, format: format) { buffer, _ in
-            try? file.write(from: buffer)
+        // Let AVAudioEngine provide the selected device's native format. Asking
+        // for a client format here can fail for microphones with a different
+        // hardware format.
+        node.installTap(onBus: 0, bufferSize: 2_048, format: nil) { buffer, _ in
+            writer.write(buffer)
             guard let samples = buffer.floatChannelData?[0], buffer.frameLength > 0 else { return }
             var peak: Float = 0
             for index in 0..<Int(buffer.frameLength) {
@@ -66,13 +83,13 @@ final class AudioRecorder: ObservableObject {
         engine.prepare()
         try engine.start()
         self.engine = engine
-        audioFile = file
+        microphoneWriter = writer
         self.microphoneURL = microphoneURL
-        systemAudioURL = systemURL
+        activeMicrophoneName = activeMicrophone?.name
         startedAt = .now
         elapsed = 0
         level = 0
-        systemLevel = 0
+        systemLevel = includesSystemAudio ? 0 : 0
         isRecording = true
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             Task { @MainActor [weak self] in
@@ -88,14 +105,17 @@ final class AudioRecorder: ObservableObject {
         engine?.inputNode.removeTap(onBus: 0)
         engine?.stop()
         engine = nil
-        audioFile = nil
+        let didWriteMicrophoneAudio = microphoneWriter?.hasWrittenAudio == true
+        microphoneWriter = nil
         await systemAudioRecorder.stop()
         isRecording = false
         elapsed = 0
         level = 0
         systemLevel = 0
+        activeMicrophoneName = nil
 
-        guard let microphoneURL, let systemAudioURL else { return nil }
+        guard didWriteMicrophoneAudio, let microphoneURL else { return nil }
+        guard let systemAudioURL else { return microphoneURL }
         let mixedURL = microphoneURL.deletingPathExtension().appendingPathExtension("wav")
         do {
             try await AudioMixer.mix(systemAudio: systemAudioURL, microphone: microphoneURL, output: mixedURL)
@@ -107,9 +127,53 @@ final class AudioRecorder: ObservableObject {
     }
 }
 
+private final class MicrophoneFileWriter {
+    private let outputURL: URL
+    private let lock = NSLock()
+    private var file: AVAudioFile?
+    private var wroteAudio = false
+
+    init(outputURL: URL) {
+        self.outputURL = outputURL
+    }
+
+    var hasWrittenAudio: Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        return wroteAudio
+    }
+
+    func write(_ buffer: AVAudioPCMBuffer) {
+        lock.lock()
+        defer { lock.unlock() }
+
+        do {
+            if file == nil {
+                file = try AVAudioFile(forWriting: outputURL, settings: buffer.format.settings)
+            }
+            try file?.write(from: buffer)
+            wroteAudio = true
+        } catch {
+            NSLog("WhisperMLX UI: could not write microphone audio: \(error.localizedDescription)")
+        }
+    }
+}
+
 enum RecorderError: LocalizedError {
     case microphoneUnavailable
-    var errorDescription: String? { String(localized: "error.microphoneUnavailable") }
+    case microphoneSelectionFailed(String)
+
+    var errorDescription: String? {
+        switch self {
+        case .microphoneUnavailable:
+            String(localized: "error.microphoneUnavailable")
+        case let .microphoneSelectionFailed(name):
+            String.localizedStringWithFormat(
+                String(localized: "error.microphoneSelectionFailed"),
+                name
+            )
+        }
+    }
 }
 
 enum AudioMixer {
