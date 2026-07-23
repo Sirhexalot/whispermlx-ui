@@ -73,6 +73,24 @@ Speaker diarization uses `pyannote/speaker-diarization-community-1`. It requires
 
 The token is entered in the app settings and stored only in the macOS Keychain.
 
+## Auto Updates
+
+The app includes Sparkle 2 for native macOS update checks.
+
+- The default feed URL is `https://sirhexalot.github.io/whispermlx-ui/appcast.xml`
+- The app exposes a `Check for Updates…` menu item in the application menu
+- Release archives can be published for Sparkle from the notarized ZIP build
+
+To host the update feed on GitHub Pages, enable Pages for the repository and publish from the `docs/` folder on `main`.
+
+To generate or refresh the Sparkle appcast after creating a notarized ZIP:
+
+```zsh
+./scripts/publish-sparkle-appcast.sh
+```
+
+Sparkle's EdDSA public key still needs to be generated once and written to `SUPublicEDKey` for production update validation.
+
 ## Permissions
 
 For local recording, the app needs:

@@ -14,7 +14,9 @@
 		43CC3C438DFCACECEA50E802 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 0A365206C349BFC386CB9540 /* InfoPlist.xcstrings */; };
 		61E615AB97E0555944203EA1 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 774042A3194BD34BAA2E3584 /* Localizable.xcstrings */; };
 		6DA6CCE4D2B6B2C84225E46D /* TranscriptionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C157FFFA436DF03D52D8DFD0 /* TranscriptionController.swift */; };
+		7847175FE8DC99E82B71E303 /* UpdaterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA3AB1663A4F36287A4B3E9 /* UpdaterView.swift */; };
 		7EF1CC382A4CB69E095687B3 /* SystemAudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890941EAD7CEA077F29BA9EB /* SystemAudioRecorder.swift */; };
+		A4EABC792E88443BF952DA41 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = CCC3E177A42099C12AC6BC66 /* Sparkle */; };
 		CC1568C3B8564A359CCBAD68 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8927AEE5C22EE729A1EDD0F8 /* AudioRecorder.swift */; };
 /* End PBXBuildFile section */
 
@@ -23,6 +25,7 @@
 		646DEE8E6F5630B25061A6DC /* WhisperMLXUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperMLXUIApp.swift; sourceTree = "<group>"; };
 		774042A3194BD34BAA2E3584 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		7936A48F4F444F9B2FC646D6 /* WhisperMLXUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhisperMLXUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7CA3AB1663A4F36287A4B3E9 /* UpdaterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterView.swift; sourceTree = "<group>"; };
 		890941EAD7CEA077F29BA9EB /* SystemAudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAudioRecorder.swift; sourceTree = "<group>"; };
 		8927AEE5C22EE729A1EDD0F8 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
 		B997424F0FC0A620D488B23D /* ModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelManager.swift; sourceTree = "<group>"; };
@@ -30,6 +33,17 @@
 		C2BEB90783F0420DA4758E9F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		FEB2E64477CA09E528E90C1F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5F7C6E0D4405ED5969C0ED8C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A4EABC792E88443BF952DA41 /* Sparkle in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		2725360F8FE9ACB8BB7A9BEB /* WhisperMLXUI */ = {
@@ -43,6 +57,7 @@
 				B997424F0FC0A620D488B23D /* ModelManager.swift */,
 				890941EAD7CEA077F29BA9EB /* SystemAudioRecorder.swift */,
 				C157FFFA436DF03D52D8DFD0 /* TranscriptionController.swift */,
+				7CA3AB1663A4F36287A4B3E9 /* UpdaterView.swift */,
 				646DEE8E6F5630B25061A6DC /* WhisperMLXUIApp.swift */,
 			);
 			name = WhisperMLXUI;
@@ -74,6 +89,7 @@
 			buildPhases = (
 				86BD967C342FA993E333BBBE /* Sources */,
 				1F9F168024925CB3F6BD0E75 /* Resources */,
+				5F7C6E0D4405ED5969C0ED8C /* Frameworks */,
 				917221C1555BB02CE1DABA78 /* WhisperMLX-Befehl einbetten */,
 			);
 			buildRules = (
@@ -82,6 +98,7 @@
 			);
 			name = WhisperMLXUI;
 			packageProductDependencies = (
+				CCC3E177A42099C12AC6BC66 /* Sparkle */,
 			);
 			productName = WhisperMLXUI;
 			productReference = 7936A48F4F444F9B2FC646D6 /* WhisperMLXUI.app */;
@@ -112,6 +129,9 @@
 			);
 			mainGroup = FC699C3ADF2EAEC7F8C0B3AD;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				EDE1A85B8B5793C41C39383A /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4C24C73C9913A82FF38593B4 /* Products */;
 			projectDirPath = "";
@@ -167,6 +187,7 @@
 				0FEA07002974FCB902137FAC /* ModelManager.swift in Sources */,
 				7EF1CC382A4CB69E095687B3 /* SystemAudioRecorder.swift in Sources */,
 				6DA6CCE4D2B6B2C84225E46D /* TranscriptionController.swift in Sources */,
+				7847175FE8DC99E82B71E303 /* UpdaterView.swift in Sources */,
 				0CF41909213CC4C93276A9A5 /* WhisperMLXUIApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -234,6 +255,8 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SPARKLE_FEED_URL = "https://sirhexalot.github.io/whispermlx-ui/appcast.xml";
+				SPARKLE_PUBLIC_ED_KEY = "ATxSWQj7gj+tmqgt2bVnqv6sBncuVwFxyoBPUhEfyjk=";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -327,6 +350,8 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SPARKLE_FEED_URL = "https://sirhexalot.github.io/whispermlx-ui/appcast.xml";
+				SPARKLE_PUBLIC_ED_KEY = "ATxSWQj7gj+tmqgt2bVnqv6sBncuVwFxyoBPUhEfyjk=";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
@@ -355,6 +380,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		EDE1A85B8B5793C41C39383A /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.9.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CCC3E177A42099C12AC6BC66 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EDE1A85B8B5793C41C39383A /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5C59657AEF6ADDF7756A0502 /* Project object */;
 }

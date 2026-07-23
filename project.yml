@@ -1,6 +1,10 @@
 name: WhisperMLXUI
 options:
   bundleIdPrefix: local.whispermlx
+packages:
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    from: 2.9.0
 settings:
   base:
     MACOSX_DEPLOYMENT_TARGET: "14.0"
@@ -8,10 +12,14 @@ settings:
     DEVELOPMENT_TEAM: "F22N2AUDUL"
     CODE_SIGN_STYLE: Automatic
     CODE_SIGN_IDENTITY: "Apple Development"
+    SPARKLE_FEED_URL: "https://sirhexalot.github.io/whispermlx-ui/appcast.xml"
+    SPARKLE_PUBLIC_ED_KEY: "ATxSWQj7gj+tmqgt2bVnqv6sBncuVwFxyoBPUhEfyjk="
 targets:
   WhisperMLXUI:
     type: application
     platform: macOS
+    dependencies:
+      - package: Sparkle
     sources:
       - path: Sources/WhisperMLXUI
         excludes:
@@ -34,6 +42,8 @@ targets:
         LSMinimumSystemVersion: "14.0"
         NSMicrophoneUsageDescription: WhisperMLX UI benötigt das Mikrofon, um lokale Aufnahmen zu transkribieren.
         NSScreenCaptureUsageDescription: WhisperMLX UI benötigt Systemaudio, um lokale Aufnahmen zu transkribieren.
+        SUFeedURL: "$(SPARKLE_FEED_URL)"
+        SUPublicEDKey: "$(SPARKLE_PUBLIC_ED_KEY)"
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: local.whispermlx.ui

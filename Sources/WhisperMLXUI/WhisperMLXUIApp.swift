@@ -1,15 +1,31 @@
 import SwiftUI
 import Security
+import Sparkle
 
 @main
 struct WhisperMLXUIApp: App {
-    @State private var controller = TranscriptionController()
+    @State private var controller: TranscriptionController
+    private let updaterController: SPUStandardUpdaterController
+
+    init() {
+        _controller = State(initialValue: TranscriptionController())
+        updaterController = SPUStandardUpdaterController(
+            startingUpdater: true,
+            updaterDelegate: nil,
+            userDriverDelegate: nil
+        )
+    }
 
     var body: some Scene {
         WindowGroup("WhisperMLX UI") {
             ContentView(controller: controller)
         }
         .defaultSize(width: 820, height: 450)
+        .commands {
+            CommandGroup(after: .appInfo) {
+                CheckForUpdatesView(updater: updaterController.updater)
+            }
+        }
         Settings { SettingsView(controller: controller) }
     }
 }
