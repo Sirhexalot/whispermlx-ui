@@ -4,14 +4,13 @@ A small macOS launcher for local transcription on Apple Silicon using [whisperml
 
 ## Install
 
-Prerequisites: macOS on Apple Silicon, Python 3, `ffmpeg`, and `whispermlx`. Install the two dependencies once:
+Prerequisites: macOS on Apple Silicon, Homebrew, Python 3.13, and `ffmpeg`. Install the system dependencies once:
 
 ```zsh
-brew install ffmpeg
-python3 -m pip install --user whispermlx
+brew install python@3.13 ffmpeg
 ```
 
-If WhisperMLX is installed in a different Python environment, start the UI with its Python executable set in `WHISPERMLX_PYTHON`.
+`./install.sh` creates an independent Python environment in `~/.local/share/whispermlx-ui/venv` and installs WhisperMLX there. It does not require Codex. To use a different Python environment, set `WHISPERMLX_PYTHON` to its Python executable before starting the command-line tool.
 
 ```zsh
 ./install.sh

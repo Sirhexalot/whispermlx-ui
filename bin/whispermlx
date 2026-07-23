@@ -21,6 +21,7 @@ if [[ " ${extra[*]} " == *" --diarize "* ]]; then
   source "$token_file"
   [[ -n "${HF_TOKEN:-}" ]] || { print -u2 "HF_TOKEN is missing in $token_file"; exit 3; }
   export HF_TOKEN
+  [[ " ${extra[*]} " == *" --hf_token "* ]] || extra=(--hf_token "$HF_TOKEN" "${extra[@]}")
 fi
 
 [[ " ${extra[*]} " == *" --model "* ]] || extra=(--model large-v3-turbo "${extra[@]}")
@@ -31,4 +32,13 @@ mkdir -p "$output_dir"
 print "Transcribing: $input"
 print "Output: $output_dir"
 export PYTHONWARNINGS="${PYTHONWARNINGS:+${PYTHONWARNINGS},}ignore::UserWarning:pyannote.audio.core.io"
-exec "${WHISPERMLX_PYTHON:-python3}" -m whispermlx "$input" "${extra[@]}"
+if [[ -n "${WHISPERMLX_PYTHON:-}" ]]; then
+  python="$WHISPERMLX_PYTHON"
+else
+  python="${XDG_DATA_HOME:-$HOME/.local/share}/whispermlx-ui/venv/bin/python"
+fi
+[[ -x "$python" ]] || {
+  print -u2 "WhisperMLX is not installed. Run the project's install.sh first."
+  exit 4
+}
+exec "$python" -m whispermlx "$input" "${extra[@]}"

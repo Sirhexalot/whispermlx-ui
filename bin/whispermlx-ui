@@ -18,14 +18,12 @@ if [[ "${system_language:l}" == de* ]]; then
   speaker_prompt="Sprechertrennung mit pyannote verwenden?"
   done_message="Fertig. Die Dateien liegen neben dem Original im Ordner .transkript."
   error_message="Die Transkription wurde mit Fehler beendet."
-  close_message="Taste drücken zum Schließen …"
 else
   file_prompt="Select an audio or video file"
   model_prompt="Select transcription model"
   speaker_prompt="Use speaker diarization with pyannote?"
   done_message="Done. Files are in the .transkript folder next to the original."
   error_message="The transcription ended with an error."
-  close_message="Press any key to close …"
 fi
 
 input=$(osascript - "$file_prompt" <<'APPLESCRIPT'
@@ -38,7 +36,7 @@ APPLESCRIPT
 
 selection=$(osascript - "$model_prompt" <<'APPLESCRIPT'
 on run argv
-  choose from list {"Schnell / Fast – large-v3-turbo", "Genau / Accurate – large-v3", "Kompakt / Compact – small"} with prompt (item 1 of argv) default items {"Schnell / Fast – large-v3-turbo"}
+  choose from list {"Schnell / Fast – large-v3-turbo", "Genau / Accurate – large-v3", "Kompakt / Compact – small"} with prompt (item 1 of argv) default items {"Genau / Accurate – large-v3"}
 end run
 APPLESCRIPT
 ) || exit 0
@@ -64,8 +62,47 @@ case "$speaker_choice" in
   *) diarize="" ;;
 esac
 
-command="${(q)cli} ${(q)input} --model ${(q)model}${diarize}; status=\$?; echo; if (( status == 0 )); then echo ${(q)done_message}; else echo ${(q)error_message}; fi; read -n 1 -s -r '?${close_message}'"
-osascript - "$command" <<'APPLESCRIPT'
+output_dir="${input:r}.transkript"
+log_file="$output_dir/transkription.log"
+
+command=$(cat <<EOF
+clear
+printf '\\033]0;WhisperMLX UI – Transkription\\007'
+print -P '%F{cyan}WhisperMLX UI%f'
+print '────────────────────────────────────────'
+print 'Transkription läuft …'
+print "Datei: ${(q)input}"
+print "Modell: ${(q)model}"
+print "Ausgabe: ${(q)output_dir}"
+print ''
+mkdir -p ${(q)output_dir}
+${(q)cli} ${(q)input} --model ${(q)model}${diarize} > ${(q)log_file} 2>&1 &
+process_id=\$!
+seconds=0
+while kill -0 "\$process_id" 2>/dev/null; do
+  printf '\\rVerarbeite die Aufnahme … %s Sekunden' "\$seconds"
+  sleep 1
+  (( seconds += 1 ))
+done
+wait "\$process_id"
+exit_status=\$?
+print ''
+print ''
+if (( exit_status == 0 )); then
+  print -P '%F{green}${(q)done_message}%f'
+else
+  print -P '%F{red}${(q)error_message}%f'
+  print "Details: ${(q)log_file}"
+fi
+print ''
+print 'Dieses Fenster kann jetzt geschlossen werden.'
+EOF
+)
+run_script=$(mktemp "${TMPDIR:-/tmp}/whispermlx-ui.XXXXXX")
+print -r -- "$command"$'\nrm -f -- "$0"\n' > "$run_script"
+chmod 700 "$run_script"
+terminal_command="/bin/zsh ${(q)run_script}"
+osascript - "$terminal_command" <<'APPLESCRIPT'
 on run argv
   tell application "Terminal"
     activate
