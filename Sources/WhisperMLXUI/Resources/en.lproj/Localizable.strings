@@ -28,7 +28,7 @@
 "model.largeV3" = "Accurate - large-v3";
 "model.small" = "Compact - small";
 "model.turbo" = "Fast - large-v3-turbo";
-"recording.description" = "Records locally through the microphone. Transcription starts after recording stops.";
+"recording.description" = "Records microphone and system audio locally. The complete recording is transcribed after it stops.";
 "recording.running" = "Recording - %d s";
 "recording.section" = "Recording";
 "recording.start" = "Start Recording";

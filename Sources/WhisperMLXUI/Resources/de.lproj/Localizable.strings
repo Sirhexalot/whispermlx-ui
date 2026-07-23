@@ -28,7 +28,7 @@
 "model.largeV3" = "Genau - large-v3";
 "model.small" = "Kompakt - small";
 "model.turbo" = "Schnell - large-v3-turbo";
-"recording.description" = "Nimmt lokal über das Mikrofon auf. Die Transkription startet erst nach dem Stoppen.";
+"recording.description" = "Nimmt Mikrofon und Systemaudio lokal auf. Nach dem Stoppen wird die gesamte Aufnahme transkribiert.";
 "recording.running" = "Aufnahme läuft - %d s";
 "recording.section" = "Aufnahme";
 "recording.start" = "Aufnahme starten";

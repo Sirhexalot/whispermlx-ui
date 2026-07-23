@@ -768,13 +768,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nimmt lokal über das Mikrofon auf. Die Transkription startet erst nach dem Stoppen."
+            "value" : "Nimmt Mikrofon und Systemaudio lokal auf. Nach dem Stoppen wird die gesamte Aufnahme transkribiert."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Records locally through the microphone. Transcription starts after recording stops."
+            "value" : "Records microphone and system audio locally. The complete recording is transcribed after it stops."
           }
         }
       }
