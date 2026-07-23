@@ -2,27 +2,30 @@
 set -euo pipefail
 
 root="${0:A:h}"
-cli="$root/transkribiere"
-
-ui_language=$(osascript <<'APPLESCRIPT'
-choose from list {"Deutsch", "English"} with prompt "Sprache / Language" default items {"Deutsch"}
-APPLESCRIPT
-) || exit 0
-
-if [[ "$ui_language" == "English" ]]; then
-  file_prompt="Select an audio or video file"
-  model_prompt="Select transcription model"
-  speaker_prompt="Use speaker diarization with pyannote?"
-  done_message="Done. Files are in the .transkript folder next to the original."
-  error_message="The transcription ended with an error."
-  close_message="Press any key to close …"
+if [[ -n "${WHISPERMLX_CLI:-}" ]]; then
+  cli="$WHISPERMLX_CLI"
+elif [[ -x "$root/whispermlx" ]]; then
+  cli="$root/whispermlx"
 else
+  cli="${root:h}/Resources/bin/whispermlx"
+fi
+
+system_language=$(plutil -extract AppleLanguages.0 raw -o - "$HOME/Library/Preferences/.GlobalPreferences.plist" 2>/dev/null || print en)
+
+if [[ "${system_language:l}" == de* ]]; then
   file_prompt="Audio- oder Videodatei auswählen"
   model_prompt="Transkriptionsmodell auswählen"
   speaker_prompt="Sprechertrennung mit pyannote verwenden?"
   done_message="Fertig. Die Dateien liegen neben dem Original im Ordner .transkript."
   error_message="Die Transkription wurde mit Fehler beendet."
   close_message="Taste drücken zum Schließen …"
+else
+  file_prompt="Select an audio or video file"
+  model_prompt="Select transcription model"
+  speaker_prompt="Use speaker diarization with pyannote?"
+  done_message="Done. Files are in the .transkript folder next to the original."
+  error_message="The transcription ended with an error."
+  close_message="Press any key to close …"
 fi
 
 input=$(osascript - "$file_prompt" <<'APPLESCRIPT'

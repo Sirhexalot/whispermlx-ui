@@ -2,7 +2,7 @@
 set -euo pipefail
 
 if (( $# == 0 )) || [[ "$1" == "-h" || "$1" == "--help" ]]; then
-  print 'Usage: transkribiere <audio-or-video-file> [whispermlx options]'
+  print 'Usage: whispermlx <audio-or-video-file> [whispermlx options]'
   exit 0
 fi
 
@@ -17,7 +17,6 @@ extra=("$@")
 
 if [[ " ${extra[*]} " == *" --diarize "* ]]; then
   token_file="${XDG_CONFIG_HOME:-$HOME/.config}/whispermlx-ui/hf.env"
-  [[ -r "$token_file" ]] || token_file="${XDG_CONFIG_HOME:-$HOME/.config}/transkribiere/hf.env"
   [[ -r "$token_file" ]] || { print -u2 "Missing Hugging Face token file: $token_file"; exit 3; }
   source "$token_file"
   [[ -n "${HF_TOKEN:-}" ]] || { print -u2 "HF_TOKEN is missing in $token_file"; exit 3; }
@@ -25,7 +24,6 @@ if [[ " ${extra[*]} " == *" --diarize "* ]]; then
 fi
 
 [[ " ${extra[*]} " == *" --model "* ]] || extra=(--model large-v3-turbo "${extra[@]}")
-[[ " ${extra[*]} " == *" --language "* ]] || extra=(--language de "${extra[@]}")
 [[ " ${extra[*]} " == *" --output_format "* || " ${extra[*]} " == *" -f "* ]] || extra=(--output_format all "${extra[@]}")
 [[ " ${extra[*]} " == *" --output_dir "* || " ${extra[*]} " == *" -o "* ]] || extra=(--output_dir "$output_dir" "${extra[@]}")
 

@@ -1,6 +1,6 @@
 # whispermlx-ui
 
-A small macOS launcher for local transcription on Apple Silicon using [whispermlx](https://github.com/KalebJS/whispermlx). The UI is available in German and English.
+A small macOS launcher for local transcription on Apple Silicon using [whispermlx](https://github.com/KalebJS/whispermlx). The UI follows the macOS system language: German when the preferred language starts with `de`, otherwise English.
 
 ## Install
 
@@ -13,10 +13,18 @@ Prerequisites: macOS on Apple Silicon, `ffmpeg`, and `whispermlx` installed in t
 Launch the UI:
 
 ```zsh
-transkribiere-ui
+whispermlx-ui
 ```
 
-It lets you select an audio/video file, model, and optionally speaker diarization. Outputs (`.txt`, `.srt`, `.vtt`, `.tsv`, `.json`) are written to a `.transkript` folder next to the original.
+Or start **WhisperMLX UI** from Finder, Spotlight, or Launchpad. The installer copies it to `/Applications`.
+
+For command-line use:
+
+```zsh
+whispermlx /path/to/audio-or-video-file
+```
+
+The UI automatically detects the spoken language, lets you select a model and optionally speaker diarization. Outputs (`.txt`, `.srt`, `.vtt`, `.tsv`, `.json`) are written to a `.transkript` folder next to the original.
 
 ## Speaker diarization
 
