@@ -41,6 +41,8 @@ targets:
         GENERATE_INFOPLIST_FILE: NO
     postBuildScripts:
       - name: WhisperMLX-Befehl einbetten
+        outputFiles:
+          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/bin/whispermlx
         script: |
           mkdir -p "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin"
           cp "${SRCROOT}/bin/whispermlx" "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/whispermlx"
