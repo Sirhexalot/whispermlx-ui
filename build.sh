@@ -29,7 +29,8 @@ xcodebuild \
   CODE_SIGNING_ALLOWED=NO
 
 rm -rf "$final_app_path"
-cp -R "$derived_app_path" "$final_app_path"
+/usr/bin/ditto "$derived_app_path" "$final_app_path"
+/usr/bin/xattr -cr "$final_app_path"
 
 print "Build abgeschlossen: $configuration"
 print "App: $final_app_path"

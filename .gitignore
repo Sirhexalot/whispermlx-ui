@@ -10,6 +10,7 @@ config/hf.env
 .build/
 .swiftpm/
 build/
+cer/
 
 # Xcode local state
 xcuserdata/
