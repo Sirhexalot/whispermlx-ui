@@ -6,6 +6,12 @@ updates_dir="${1:-$root/dist/sparkle-updates}"
 public_dir="${2:-$root/docs}"
 default_archive="$root/dist/Release/WhisperMLX-UI-macOS.zip"
 download_base_url="${SPARKLE_DOWNLOAD_BASE_URL:-}"
+staging_dir="$(mktemp -d "${TMPDIR:-/tmp}/whispermlx-appcast.XXXXXX")"
+
+cleanup() {
+  [[ -d "$staging_dir" ]] && /bin/rm -rf "$staging_dir"
+}
+trap cleanup EXIT
 
 find_generate_appcast() {
   local candidate
@@ -48,8 +54,8 @@ sign_update="$(find_sign_update)" || {
 
 mkdir -p "$updates_dir" "$public_dir"
 
-if [[ ! -f "$updates_dir/WhisperMLX-UI-macOS.zip" && -f "$default_archive" ]]; then
-  cp "$default_archive" "$updates_dir/WhisperMLX-UI-macOS.zip"
+if [[ -f "$default_archive" ]]; then
+  cp -f "$default_archive" "$updates_dir/WhisperMLX-UI-macOS.zip"
 fi
 
 [[ -f "$updates_dir/WhisperMLX-UI-macOS.zip" ]] || {
@@ -57,10 +63,12 @@ fi
   exit 3
 }
 
-"$generate_appcast" "$updates_dir"
+cp -f "$updates_dir/WhisperMLX-UI-macOS.zip" "$staging_dir/WhisperMLX-UI-macOS.zip"
 
-if [[ -f "$updates_dir/appcast.xml" ]]; then
-  for archive in "$updates_dir"/*; do
+"$generate_appcast" "$staging_dir"
+
+if [[ -f "$staging_dir/appcast.xml" ]]; then
+  for archive in "$staging_dir"/*; do
     [[ -f "$archive" ]] || continue
     case "${archive:t}" in
       *.zip|*.dmg|*.tar|*.tar.gz|*.tar.xz)
@@ -70,15 +78,20 @@ if [[ -f "$updates_dir/appcast.xml" ]]; then
           my $filename = $ENV{FILENAME};
           my $signature = $ENV{SIGNATURE};
           s#<enclosure url="([^"]*\Q$filename\E[^"]*)"[^>]*/>#<enclosure url="$1" $signature type="application/octet-stream"/>#g;
-        ' "$updates_dir/appcast.xml"
+        ' "$staging_dir/appcast.xml"
         ;;
     esac
   done
   if [[ -n "$download_base_url" ]]; then
     escaped_base_url="${download_base_url%/}"
-    /usr/bin/sed -E -i '' "s|url=\"([^\"]+)\"|url=\"$escaped_base_url/\\1\"|g" "$updates_dir/appcast.xml"
+    FILENAME="WhisperMLX-UI-macOS.zip" BASE_URL="$escaped_base_url" /usr/bin/perl -0pi -e '
+      my $filename = $ENV{FILENAME};
+      my $base_url = $ENV{BASE_URL};
+      s#url="[^"]*\Q$filename\E"#url="$base_url/$filename"#g;
+    ' "$staging_dir/appcast.xml"
   fi
-  cp "$updates_dir/appcast.xml" "$public_dir/appcast.xml"
+  cp -f "$staging_dir/appcast.xml" "$updates_dir/appcast.xml"
+  cp -f "$staging_dir/appcast.xml" "$public_dir/appcast.xml"
 fi
 
 print "Sparkle appcast generated in: $updates_dir"

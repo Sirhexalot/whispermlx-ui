@@ -37,8 +37,8 @@ targets:
           - de
           - en
         CFBundleIdentifier: local.whispermlx.ui
-        CFBundleShortVersionString: "1.0"
-        CFBundleVersion: "1"
+        CFBundleShortVersionString: "1.0.1"
+        CFBundleVersion: "2"
         LSMinimumSystemVersion: "14.0"
         NSMicrophoneUsageDescription: WhisperMLX UI benötigt das Mikrofon, um lokale Aufnahmen zu transkribieren.
         NSScreenCaptureUsageDescription: WhisperMLX UI benötigt Systemaudio, um lokale Aufnahmen zu transkribieren.

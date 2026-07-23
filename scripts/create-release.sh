@@ -76,5 +76,8 @@ xcrun stapler validate "$app_path"
 
 rm -f "$archive_path"
 ditto -c -k --sequesterRsrc --keepParent "$app_path" "$archive_path"
+/bin/rm -rf "$root/dist/$configuration/$app_name"
+/usr/bin/ditto "$app_path" "$root/dist/$configuration/$app_name"
+/usr/bin/xattr -cr "$root/dist/$configuration/$app_name"
 
 print "Release archive created: $archive_path"
