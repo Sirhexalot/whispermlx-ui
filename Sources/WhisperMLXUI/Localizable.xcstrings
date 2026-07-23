@@ -915,6 +915,74 @@
         }
       }
     },
+    "recordings.microphoneFileName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikrofon.caf"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Microphone.caf"
+          }
+        }
+      }
+    },
+    "recordings.mixedFileName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufnahme.m4a"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recording.m4a"
+          }
+        }
+      }
+    },
+    "recordings.sourceFolderName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quellen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "source"
+          }
+        }
+      }
+    },
+    "recordings.systemAudioFileName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Systemaudio.caf"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System Audio.caf"
+          }
+        }
+      }
+    },
     "settings.defaultModel" : {
       "extractionState" : "manual",
       "localizations" : {

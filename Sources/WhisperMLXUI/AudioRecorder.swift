@@ -13,8 +13,7 @@ final class AudioRecorder: ObservableObject {
 
     var preferredMicrophoneUID: String?
 
-    private var engine: AVAudioEngine?
-    private var microphoneWriter: MicrophoneFileWriter?
+    private var microphoneCapture: MicrophoneCapture?
     private var microphoneURL: URL?
     private var systemAudioURL: URL?
     private var timer: Timer?
@@ -33,18 +32,36 @@ final class AudioRecorder: ObservableObject {
     func start() async throws {
         guard !isRecording else { return }
         try await RecordingPermissions.ensureMicrophoneAccess()
-        let engine = AVAudioEngine()
-        let node = engine.inputNode
-        let activeMicrophone = try AudioInputDeviceManager.configure(node, preferredUID: preferredMicrophoneUID)
-        let folder = FileManager.default.urls(for: .moviesDirectory, in: .userDomainMask)[0]
+        let recordingsFolder = FileManager.default.urls(for: .moviesDirectory, in: .userDomainMask)[0]
             .appendingPathComponent(String(localized: "recordings.folderName", defaultValue: "WhisperMLX Recordings"), isDirectory: true)
-        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
-        let stamp = ISO8601DateFormatter().string(from: .now).replacingOccurrences(of: ":", with: "-")
-        let microphoneURL = folder.appendingPathComponent(
-            String.localizedStringWithFormat(String(localized: "recordings.fileName", defaultValue: "Recording_%@.caf"), stamp)
+        try FileManager.default.createDirectory(at: recordingsFolder, withIntermediateDirectories: true)
+        let stamp = Self.localizedFileNameTimestamp()
+        let sessionName = URL(fileURLWithPath: String.localizedStringWithFormat(
+            String(localized: "recordings.fileName", defaultValue: "Recording_%@.caf"), stamp
+        )).deletingPathExtension().lastPathComponent
+        let sessionFolder = recordingsFolder.appendingPathComponent(sessionName, isDirectory: true)
+        try FileManager.default.createDirectory(at: sessionFolder, withIntermediateDirectories: true)
+        let sourceFolder = sessionFolder.appendingPathComponent(
+            String(localized: "recordings.sourceFolderName", defaultValue: "source"),
+            isDirectory: true
         )
-        let systemURL = folder.appendingPathComponent("System_\(stamp).caf")
-        let writer = MicrophoneFileWriter(outputURL: microphoneURL)
+        try FileManager.default.createDirectory(at: sourceFolder, withIntermediateDirectories: true)
+        let microphoneURL = sourceFolder.appendingPathComponent(
+            String(localized: "recordings.microphoneFileName", defaultValue: "Microphone.caf")
+        )
+        let systemURL = sourceFolder.appendingPathComponent(
+            String(localized: "recordings.systemAudioFileName", defaultValue: "System Audio.caf")
+        )
+        let capture = MicrophoneCapture { [weak self] newLevel in
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                self.level = max(newLevel, self.level * 0.72)
+            }
+        }
+        let activeMicrophone = try capture.start(
+            preferredDeviceID: preferredMicrophoneUID,
+            outputURL: microphoneURL
+        )
 
         do {
             try await systemAudioRecorder.start(to: systemURL)
@@ -62,30 +79,9 @@ final class AudioRecorder: ObservableObject {
             )
         }
 
-        // Let AVAudioEngine provide the selected device's native format. Asking
-        // for a client format here can fail for microphones with a different
-        // hardware format.
-        node.installTap(onBus: 0, bufferSize: 2_048, format: nil) { buffer, _ in
-            writer.write(buffer)
-            guard let samples = buffer.floatChannelData?[0], buffer.frameLength > 0 else { return }
-            var peak: Float = 0
-            for index in 0..<Int(buffer.frameLength) {
-                peak = max(peak, abs(samples[index]))
-            }
-            // A peak display reacts promptly to speech and stays legible for
-            // the relatively low levels supplied by many Mac microphones.
-            let normalized = min(1, peak * 8)
-            Task { @MainActor [weak self] in
-                guard let self else { return }
-                self.level = max(normalized, self.level * 0.72)
-            }
-        }
-        engine.prepare()
-        try engine.start()
-        self.engine = engine
-        microphoneWriter = writer
+        microphoneCapture = capture
         self.microphoneURL = microphoneURL
-        activeMicrophoneName = activeMicrophone?.name
+        activeMicrophoneName = activeMicrophone.name
         startedAt = .now
         elapsed = 0
         level = 0
@@ -102,11 +98,8 @@ final class AudioRecorder: ObservableObject {
     func stop() async -> URL? {
         guard isRecording else { return nil }
         timer?.invalidate(); timer = nil
-        engine?.inputNode.removeTap(onBus: 0)
-        engine?.stop()
-        engine = nil
-        let didWriteMicrophoneAudio = microphoneWriter?.hasWrittenAudio == true
-        microphoneWriter = nil
+        let didWriteMicrophoneAudio = microphoneCapture?.stop() == true
+        microphoneCapture = nil
         await systemAudioRecorder.stop()
         isRecording = false
         elapsed = 0
@@ -116,7 +109,9 @@ final class AudioRecorder: ObservableObject {
 
         guard didWriteMicrophoneAudio, let microphoneURL else { return nil }
         guard let systemAudioURL else { return microphoneURL }
-        let mixedURL = microphoneURL.deletingPathExtension().appendingPathExtension("wav")
+        let mixedURL = microphoneURL.deletingLastPathComponent().deletingLastPathComponent().appendingPathComponent(
+            String(localized: "recordings.mixedFileName", defaultValue: "Recording.m4a")
+        )
         do {
             try await AudioMixer.mix(systemAudio: systemAudioURL, microphone: microphoneURL, output: mixedURL)
             return mixedURL
@@ -125,6 +120,83 @@ final class AudioRecorder: ObservableObject {
             return nil
         }
     }
+
+    private static func localizedFileNameTimestamp() -> String {
+        let formatter = DateFormatter()
+        formatter.locale = .current
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .medium
+        return formatter.string(from: .now)
+            .replacingOccurrences(of: "/", with: "-")
+            .replacingOccurrences(of: ":", with: "-")
+    }
+}
+
+private final class MicrophoneCapture: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
+    private let session = AVCaptureSession()
+    private let output = AVCaptureAudioDataOutput()
+    private let queue = DispatchQueue(label: "local.whispermlx.microphone-capture")
+    private let onLevel: (Float) -> Void
+    private var writer: MicrophoneFileWriter?
+
+    init(onLevel: @escaping (Float) -> Void) {
+        self.onLevel = onLevel
+    }
+
+    func start(preferredDeviceID: String?, outputURL: URL) throws -> AudioInputDevice {
+        let device: AVCaptureDevice?
+        if let preferredDeviceID, !preferredDeviceID.isEmpty {
+            device = AVCaptureDevice(uniqueID: preferredDeviceID)
+        } else {
+            device = AVCaptureDevice.default(for: .audio)
+        }
+        guard let device else { throw RecorderError.microphoneUnavailable }
+
+        let input = try AVCaptureDeviceInput(device: device)
+        guard session.canAddInput(input), session.canAddOutput(output) else {
+            throw RecorderError.microphoneUnavailable
+        }
+
+        session.beginConfiguration()
+        session.addInput(input)
+        session.addOutput(output)
+        session.commitConfiguration()
+
+        output.setSampleBufferDelegate(self, queue: queue)
+        writer = MicrophoneFileWriter(outputURL: outputURL)
+        session.startRunning()
+        return AudioInputDevice(
+            id: device.uniqueID,
+            name: device.localizedName,
+            isDefault: device.uniqueID == AVCaptureDevice.default(for: .audio)?.uniqueID
+        )
+    }
+
+    func stop() -> Bool {
+        session.stopRunning()
+        output.setSampleBufferDelegate(nil, queue: nil)
+        var wroteAudio = false
+        queue.sync {
+            wroteAudio = writer?.close() == true
+            writer = nil
+        }
+        return wroteAudio
+    }
+
+    func captureOutput(
+        _ output: AVCaptureOutput,
+        didOutput sampleBuffer: CMSampleBuffer,
+        from connection: AVCaptureConnection
+    ) {
+        guard let buffer = sampleBuffer.asPCMBuffer() else { return }
+        writer?.write(buffer)
+        guard let samples = buffer.floatChannelData?[0], buffer.frameLength > 0 else { return }
+        var peak: Float = 0
+        for index in 0..<Int(buffer.frameLength) {
+            peak = max(peak, abs(samples[index]))
+        }
+        onLevel(min(1, peak * 8))
+    }
 }
 
 private final class MicrophoneFileWriter {
@@ -132,20 +204,24 @@ private final class MicrophoneFileWriter {
     private let lock = NSLock()
     private var file: AVAudioFile?
     private var wroteAudio = false
+    private var isClosed = false
 
     init(outputURL: URL) {
         self.outputURL = outputURL
     }
 
-    var hasWrittenAudio: Bool {
+    func close() -> Bool {
         lock.lock()
         defer { lock.unlock() }
+        isClosed = true
+        file = nil
         return wroteAudio
     }
 
     func write(_ buffer: AVAudioPCMBuffer) {
         lock.lock()
         defer { lock.unlock() }
+        guard !isClosed else { return }
 
         do {
             if file == nil {
@@ -191,7 +267,7 @@ enum AudioMixer {
         process.arguments = [
             "-y", "-i", systemAudio.path, "-i", microphone.path,
             "-filter_complex", "[0:a][1:a]amix=inputs=2:duration=longest:normalize=0",
-            "-ar", "16000", "-ac", "1", "-c:a", "pcm_s16le", output.path
+            "-ar", "16000", "-ac", "1", "-c:a", "aac", "-b:a", "64k", output.path
         ]
         let stderr = Pipe()
         process.standardError = stderr

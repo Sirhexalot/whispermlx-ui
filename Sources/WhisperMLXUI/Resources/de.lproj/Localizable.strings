@@ -35,6 +35,10 @@
 "recording.stop" = "Aufnahme stoppen";
 "recordings.fileName" = "Aufnahme_%@.caf";
 "recordings.folderName" = "WhisperMLX-Aufnahmen";
+"recordings.microphoneFileName" = "Mikrofon.caf";
+"recordings.mixedFileName" = "Aufnahme.m4a";
+"recordings.sourceFolderName" = "Quellen";
+"recordings.systemAudioFileName" = "Systemaudio.caf";
 "settings.defaultModel" = "Standardmodell";
 "settings.diarization.offline.download" = "Offline-Modell herunterladen";
 "settings.diarization.offline.description" = "Lade das pyannote-Offlinemodell einmal in den von der App verwalteten lokalen Ordner. Danach kann die Sprechertrennung ohne Internetverbindung laufen.";

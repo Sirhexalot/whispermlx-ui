@@ -35,6 +35,10 @@
 "recording.stop" = "Stop Recording";
 "recordings.fileName" = "Recording_%@.caf";
 "recordings.folderName" = "WhisperMLX Recordings";
+"recordings.microphoneFileName" = "Microphone.caf";
+"recordings.mixedFileName" = "Recording.m4a";
+"recordings.sourceFolderName" = "source";
+"recordings.systemAudioFileName" = "System Audio.caf";
 "settings.defaultModel" = "Default Model";
 "settings.diarization.offline.download" = "Download Offline Model";
 "settings.diarization.offline.description" = "Download the pyannote offline model once into the app-managed local folder. After that, speaker diarization can run without internet access.";

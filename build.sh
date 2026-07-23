@@ -40,7 +40,12 @@ xcodebuild \
 rm -rf "$final_app_path"
 /usr/bin/ditto "$derived_app_path" "$final_app_path"
 /usr/bin/xattr -cr "$final_app_path"
-/usr/bin/codesign --verify --deep --strict --verbose=2 "$final_app_path"
+# `dist` may reside in an iCloud/File Provider folder. macOS can reattach
+# Finder metadata there immediately after the copy, which makes codesign reject
+# the otherwise valid bundle. Verify the Xcode product in its clean staging
+# location; release packaging copies it to a second clean staging directory
+# before applying the Developer ID signature.
+/usr/bin/codesign --verify --deep --strict --verbose=2 "$derived_app_path"
 
 print "Build abgeschlossen: $configuration"
 print "App: $final_app_path"

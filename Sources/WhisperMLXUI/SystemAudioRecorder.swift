@@ -38,9 +38,6 @@ final class SystemAudioRecorder: NSObject, SCStreamOutput {
 
         let configuration = SCStreamConfiguration()
         configuration.capturesAudio = true
-        configuration.excludesCurrentProcessAudio = true
-        configuration.sampleRate = 16_000
-        configuration.channelCount = 1
         // The stream must have a video surface, although we consume audio only.
         configuration.width = 2
         configuration.height = 2
@@ -51,9 +48,9 @@ final class SystemAudioRecorder: NSObject, SCStreamOutput {
         self.outputURL = outputURL
         acceptingBuffers = true
         try newStream.addStreamOutput(self, type: .audio, sampleHandlerQueue: .global(qos: .userInitiated))
-        // ScreenCaptureKit also delivers video frames for a display filter,
-        // even though this app only persists audio. Registering this output
-        // prevents the framework from dropping an unhandled stream type.
+        // A display-based SCStream also emits screen frames. Register an output
+        // for them even though this recorder intentionally ignores the frames;
+        // otherwise ScreenCaptureKit repeatedly reports a missing output.
         try newStream.addStreamOutput(self, type: .screen, sampleHandlerQueue: .global(qos: .utility))
         do {
             try await newStream.startCapture()
@@ -129,7 +126,7 @@ enum SystemAudioRecorderError: LocalizedError {
     }
 }
 
-private extension CMSampleBuffer {
+extension CMSampleBuffer {
     func asPCMBuffer() -> AVAudioPCMBuffer? {
         guard let description = CMSampleBufferGetFormatDescription(self),
               let streamDescription = CMAudioFormatDescriptionGetStreamBasicDescription(description),
