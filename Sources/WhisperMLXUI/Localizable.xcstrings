@@ -731,6 +731,7 @@
       }
     },
     "recording.compact.hint" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -776,6 +777,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Records microphone and system audio locally. The complete recording is transcribed after it stops."
+          }
+        }
+      }
+    },
+    "recording.finalizing" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufnahme wird vorbereitet"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preparing recording"
+          }
+        }
+      }
+    },
+    "recording.finalizing.hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikrofon und Systemaudio werden gerade zusammengeführt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Microphone and system audio are being merged."
           }
         }
       }

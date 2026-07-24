@@ -24,7 +24,7 @@ struct ContentView: View {
 
     var body: some View {
         Group {
-            if recorder.isRecording {
+            if recorder.isRecording || recorder.isFinalizingRecording {
                 compactRecordingView
                     .frame(width: 480, height: 260)
             } else {
@@ -64,17 +64,25 @@ struct ContentView: View {
     private var compactRecordingView: some View {
         VStack(alignment: .leading, spacing: 18) {
             HStack {
-                Label("recording.compact.title", systemImage: "record.circle.fill")
-                    .font(.title3.weight(.semibold))
-                    .foregroundStyle(.red)
+                if recorder.isFinalizingRecording {
+                    Label("recording.finalizing", systemImage: "waveform.circle")
+                        .font(.title3.weight(.semibold))
+                        .foregroundStyle(.orange)
+                } else {
+                    Label("recording.compact.title", systemImage: "record.circle.fill")
+                        .font(.title3.weight(.semibold))
+                        .foregroundStyle(.red)
+                }
                 Spacer()
-                Text(
-                    String.localizedStringWithFormat(
-                        String(localized: "recording.running"),
-                        Self.formattedDuration(recorder.elapsed)
+                if !recorder.isFinalizingRecording {
+                    Text(
+                        String.localizedStringWithFormat(
+                            String(localized: "recording.running"),
+                            Self.formattedDuration(recorder.elapsed)
+                        )
                     )
-                )
-                .foregroundStyle(.secondary)
+                    .foregroundStyle(.secondary)
+                }
             }
 
             VStack(alignment: .leading, spacing: 12) {
@@ -84,13 +92,15 @@ struct ContentView: View {
 
             Spacer()
             HStack {
-                Text("recording.compact.hint")
+                Text(recorder.isFinalizingRecording ? "recording.finalizing.hint" : "recording.compact.hint")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 Spacer()
-                Button("recording.stop") { controller.stopRecording() }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
+                if !recorder.isFinalizingRecording {
+                    Button("recording.stop") { controller.stopRecording() }
+                        .buttonStyle(.borderedProminent)
+                        .controlSize(.large)
+                }
             }
         }
         .padding(24)
@@ -142,7 +152,7 @@ struct ContentView: View {
 
                         Button("recording.start") { controller.startRecording() }
                             .buttonStyle(.borderedProminent)
-                            .disabled(controller.isRunning)
+                            .disabled(controller.isRunning || recorder.isFinalizingRecording)
                     }
                 }
             }
@@ -201,7 +211,7 @@ struct ContentView: View {
                     }
                     Spacer()
                     Button("file.choose") { isImporting = true }
-                        .disabled(controller.isRunning)
+                        .disabled(controller.isRunning || recorder.isFinalizingRecording)
                 }
 
                 if case .ready = controller.status {
@@ -209,7 +219,7 @@ struct ContentView: View {
                         Spacer()
                         Button("action.transcribe") { controller.start() }
                             .buttonStyle(.borderedProminent)
-                            .disabled(!controller.canStart)
+                            .disabled(!controller.canStart || recorder.isFinalizingRecording)
                     }
                 }
             }

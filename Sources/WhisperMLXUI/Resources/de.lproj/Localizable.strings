@@ -29,6 +29,8 @@
 "model.small" = "Kompakt - small";
 "model.turbo" = "Schnell - large-v3-turbo";
 "recording.description" = "Nimmt Mikrofon und Systemaudio lokal auf. Nach dem Stoppen wird die gesamte Aufnahme transkribiert.";
+"recording.finalizing" = "Aufnahme wird vorbereitet";
+"recording.finalizing.hint" = "Mikrofon und Systemaudio werden gerade zusammengeführt.";
 "recording.running" = "Aufnahme läuft - %@";
 "recording.section" = "Aufnahme";
 "recording.start" = "Aufnahme starten";

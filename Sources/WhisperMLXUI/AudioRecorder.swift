@@ -4,6 +4,7 @@ import Foundation
 @MainActor
 final class AudioRecorder: ObservableObject {
     @Published private(set) var isRecording = false
+    @Published private(set) var isFinalizingRecording = false
     @Published private(set) var elapsed: TimeInterval = 0
     @Published private(set) var level: Float = 0
     @Published private(set) var systemLevel: Float = 0
@@ -115,13 +116,27 @@ final class AudioRecorder: ObservableObject {
         microphoneCapture = nil
         await systemAudioRecorder.stop()
         isRecording = false
+        isFinalizingRecording = true
         elapsed = 0
         level = 0
         systemLevel = 0
         activeMicrophoneName = nil
-        await startPreviewMonitoringIfPossible()
 
-        guard didWriteMicrophoneAudio, let microphoneURL else { return nil }
+        defer {
+            isFinalizingRecording = false
+        }
+
+        guard didWriteMicrophoneAudio, let microphoneURL else {
+            await startPreviewMonitoringIfPossible()
+            return nil
+        }
+
+        defer {
+            Task { @MainActor [weak self] in
+                await self?.startPreviewMonitoringIfPossible()
+            }
+        }
+
         guard let systemAudioURL else { return microphoneURL }
         let mixedURL = microphoneURL.deletingLastPathComponent().deletingLastPathComponent().appendingPathComponent(
             String(localized: "recordings.mixedFileName", defaultValue: "Recording.m4a")
@@ -366,17 +381,60 @@ enum AudioMixer {
         ]
         let stderr = Pipe()
         process.standardError = stderr
-        try await withCheckedThrowingContinuation { continuation in
-            process.terminationHandler = { _ in
-                continuation.resume()
-            }
-            do {
-                try process.run()
-            } catch {
-                continuation.resume(throwing: error)
-            }
+        process.standardOutput = Pipe()
+
+        if FileManager.default.fileExists(atPath: output.path) {
+            try FileManager.default.removeItem(at: output)
         }
-        guard process.terminationStatus == 0 else { throw MixerError.mixingFailed }
+
+        do {
+            try process.run()
+        } catch {
+            throw error
+        }
+
+        await Task.detached(priority: .userInitiated) {
+            process.waitUntilExit()
+        }.value
+
+        let errorData = stderr.fileHandleForReading.readDataToEndOfFile()
+        if process.terminationStatus != 0 {
+            if let errorOutput = String(data: errorData, encoding: .utf8), !errorOutput.isEmpty {
+                NSLog("WhisperMLX UI: ffmpeg mix failed: \(errorOutput)")
+            }
+            throw MixerError.mixingFailed
+        }
+
+        try await waitForStableOutput(at: output)
+    }
+
+    private static func waitForStableOutput(at output: URL) async throws {
+        let fileManager = FileManager.default
+        var lastSize: Int64 = -1
+        var stableMatches = 0
+
+        for _ in 0..<20 {
+            guard let attributes = try? fileManager.attributesOfItem(atPath: output.path),
+                  let fileSize = attributes[.size] as? NSNumber else {
+                try await Task.sleep(for: .milliseconds(100))
+                continue
+            }
+
+            let size = fileSize.int64Value
+            if size > 0, size == lastSize {
+                stableMatches += 1
+                if stableMatches >= 2 {
+                    return
+                }
+            } else {
+                stableMatches = 0
+            }
+
+            lastSize = size
+            try await Task.sleep(for: .milliseconds(100))
+        }
+
+        throw MixerError.mixingFailed
     }
 }
 

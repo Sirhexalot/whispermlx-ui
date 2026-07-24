@@ -29,6 +29,8 @@
 "model.small" = "Compact - small";
 "model.turbo" = "Fast - large-v3-turbo";
 "recording.description" = "Records microphone and system audio locally. The complete recording is transcribed after it stops.";
+"recording.finalizing" = "Preparing recording";
+"recording.finalizing.hint" = "Microphone and system audio are being merged.";
 "recording.running" = "Recording - %@";
 "recording.section" = "Recording";
 "recording.start" = "Start Recording";
