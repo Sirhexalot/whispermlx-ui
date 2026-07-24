@@ -1,105 +1,123 @@
-# WhisperMLX UI
+# WhisperMLX UI 🎙️📝
 
-A native macOS app for local transcription on Apple Silicon using [whispermlx](https://github.com/KalebJS/whispermlx). The interface follows the macOS app language and is localized in German and English.
+**Turn meetings, interviews, and recordings into clean, readable text — locally on your Mac.**  
+No cloud. No “upload your private audio somewhere”. Just fast on-device AI.
 
-## Current Features
+Ever had that moment where you’re in a meeting and you either…
 
-- Import audio and video files directly from the app
-- Record locally from the microphone and system audio
-- Pick a specific microphone in Settings or fall back to the current macOS default input
-- Show progress and runtime logs during transcription
-- Download and remove Whisper models from the settings window
-- Optional speaker diarization with pyannote, either through a local offline clone or a Hugging Face token
-- Write results into a transcript folder next to the source file
+- write notes and miss half the conversation, or
+- try to “just remember it all” (spoiler: you won’t), or
+- discover your pencil is blunt again at the worst possible time?
+
+WhisperMLX UI is for people who want to stay present in the conversation — and still walk away with a solid written summary of what was said.
+
+---
+
+## Why you’ll like it
+
+- **Local-first privacy** 🔒  
+  Your audio stays on your machine. No cloud AI required.
+- **Ridiculously simple workflow** ✅  
+  Choose a file _or_ record → pick a model → start → get text.
+- **Works with recordings you already have**  
+  Meeting recordings, lectures, podcasts, interviews, voice memos, screen recordings…
+- **Optional speaker separation** (who said what)  
+  Great when multiple people are talking.
+
+---
+
+## What it does (without the jargon)
+
+WhisperMLX UI uses on-device AI to **convert speech into text**.  
+(Yes, people call it “transcription”… but honestly, “turn audio into text” is what you actually want.)
+
+You can:
+
+- **Record a meeting** (mic + system audio)
+- **Import audio/video files** and turn them into text
+- Save results neatly in a **transcript folder next to your original file**
+
+---
+
+## Core features
+
+- Import audio/video from inside the app
+- Record from **microphone + system audio**
+- Choose a specific microphone (or just use the Mac default)
+- See progress + runtime logs while it works (so it doesn’t feel like it’s “stuck”)
+- Download/remove AI models in Settings
+- Optional speaker diarization (speaker detection)
+- Outputs saved next to the source file for easy organization
+
+---
+
+## Privacy & “No Cloud” promise 🔒
+
+This app is built for **local processing** on Apple Silicon Macs.  
+Your recordings don’t need to leave your computer to become text.
+
+---
 
 ## Requirements
 
-- Apple Silicon Mac
-- macOS 14 or newer
-- Xcode 16 or newer
-- `xcodegen` to generate the Xcode project from [`project.yml`](./project.yml)
+- **Apple Silicon Mac**
+- **macOS 14+**
 
-The app is intended to be self-contained and bundles its own `whispermlx` launcher and `ffmpeg`.
+---
 
-## Development and Build
+## Quick start
 
-Regenerate the project files:
+1. **Choose a file** _or_ **start a recording**
+2. Open **Settings** and select an installed model
+3. (Optional) Pick a dedicated microphone
+4. (Optional) Enable speaker detection
+5. Hit **Start** — get readable text output
+
+---
+
+## Models
+
+Available models in the app:
+
+- `large-v3`
+- `large-v3-turbo`
+- `small`
+
+(You can download/remove models from Settings.)
+
+---
+
+## Speaker detection (optional)
+
+If you want “Speaker 1 / Speaker 2” style separation, enable speaker diarization.  
+It can be set up with a Hugging Face token (and can work offline after initial setup).
+
+---
+
+## Updates
+
+Built-in update checks via Sparkle (native macOS experience).
+
+---
+
+## Developer notes (kept minimal on purpose)
+
+If you want to build from source, you’ll need:
+
+- Xcode 16+
+- `xcodegen`
+
+Generate project:
 
 ```zsh
 xcodegen generate
 ```
 
-Build Debug or Release with the helper script:
+Build:
 
 ```zsh
 ./build.sh
 ./build.sh Release
 ```
 
-The script regenerates the Xcode project first and then builds the `WhisperMLXUI` scheme.
-
-Important: the build expects a bundled FFmpeg binary at [`bin/ffmpeg`](./bin/ffmpeg). If it is missing or needs to be rebuilt:
-
-```zsh
-./scripts/build-bundled-ffmpeg.sh
-```
-
-After that, you can also open and run the app directly from [`WhisperMLXUI.xcodeproj`](./WhisperMLXUI.xcodeproj) in Xcode.
-
-## Usage
-
-1. Choose a file or start a recording
-2. Select an installed model in Settings
-3. Optionally pick a dedicated microphone in Settings
-4. Optionally enable speaker diarization
-5. Start transcription
-
-For recordings, the app first stores microphone and system-audio tracks separately and then mixes them with `ffmpeg` into a Whisper-ready WAV file.
-
-## Models
-
-The app currently exposes these models:
-
-- `large-v3`
-- `large-v3-turbo`
-- `small`
-
-Model data is stored in the Hugging Face cache under `~/.cache/huggingface/hub`. You can download or remove models from the settings window.
-
-## Speaker Diarization
-
-Speaker diarization uses `pyannote/speaker-diarization-community-1`.
-
-You can use it in two ways:
-
-- Online or first-time setup: accept the model terms on Hugging Face and provide a token in the app settings
-- Offline after setup: let the app download the pipeline once into its managed local storage
-
-The token is stored only in the macOS Keychain. After the first download, the app uses its managed local pyannote directory and no token is required for offline transcription.
-
-## Auto Updates
-
-The app includes Sparkle 2 for native macOS update checks.
-
-- The default feed URL is `https://sirhexalot.github.io/whispermlx-ui/appcast.xml`
-- The app exposes a `Check for Updates…` menu item in the application menu
-- Release archives can be published for Sparkle from the notarized ZIP build
-
-To host the update feed on GitHub Pages, enable Pages for the repository and publish from the `docs/` folder on `main`.
-
-To generate or refresh the Sparkle appcast after creating a notarized ZIP:
-
-```zsh
-./scripts/publish-sparkle-appcast.sh
-```
-
-Sparkle's EdDSA public key still needs to be generated once and written to `SUPublicEDKey` for production update validation.
-
-## Permissions
-
-For local recording, the app needs:
-
-- microphone access
-- screen and system-audio recording permission
-
-Without those permissions, combined recording will not work reliably.
+---
