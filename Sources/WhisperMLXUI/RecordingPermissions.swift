@@ -5,31 +5,14 @@ import CoreGraphics
 /// by AVFoundation, while capturing system audio requires screen-capture access.
 enum RecordingPermissions {
     static func ensureMicrophoneAccess() async throws {
-        // AVAudioApplication is the current microphone-permission API on
-        // macOS 14+. On recent macOS versions it stays in sync with the
-        // Privacy & Security switch used by AVAudioEngine, whereas the older
-        // AVCaptureDevice status can occasionally report a stale denial.
-        if #available(macOS 14.0, *) {
-            switch AVAudioApplication.shared.recordPermission {
-            case .granted:
-                return
-            case .undetermined:
-                guard await requestAudioApplicationPermission() else {
-                    throw RecorderError.microphoneUnavailable
-                }
-                return
-            case .denied:
-                throw RecorderError.microphoneUnavailable
-            @unknown default:
-                throw RecorderError.microphoneUnavailable
-            }
-        }
-
+        // Microphone capture itself uses AVCaptureSession. Use the matching
+        // AVCaptureDevice permission API so a fresh Developer ID build shows
+        // macOS's microphone prompt when access is still undetermined.
         switch AVCaptureDevice.authorizationStatus(for: .audio) {
         case .authorized:
             return
         case .notDetermined:
-            guard await AVCaptureDevice.requestAccess(for: .audio) else {
+            guard await requestCapturePermission() else {
                 throw RecorderError.microphoneUnavailable
             }
         case .denied, .restricted:
@@ -39,10 +22,9 @@ enum RecordingPermissions {
         }
     }
 
-    @available(macOS 14.0, *)
-    private static func requestAudioApplicationPermission() async -> Bool {
+    private static func requestCapturePermission() async -> Bool {
         await withCheckedContinuation { continuation in
-            AVAudioApplication.requestRecordPermission { granted in
+            AVCaptureDevice.requestAccess(for: .audio) { granted in
                 continuation.resume(returning: granted)
             }
         }
