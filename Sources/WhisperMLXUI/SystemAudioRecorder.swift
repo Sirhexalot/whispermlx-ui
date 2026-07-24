@@ -137,8 +137,7 @@ extension CMSampleBuffer {
                 sampleRate: streamDescription.pointee.mSampleRate,
                 channels: AVAudioChannelCount(streamDescription.pointee.mChannelsPerFrame),
                 interleaved: false
-              ),
-              let block = CMSampleBufferGetDataBuffer(self) else { return nil }
+              ) else { return nil }
 
         let frames = CMSampleBufferGetNumSamples(self)
         guard frames > 0,
@@ -146,11 +145,42 @@ extension CMSampleBuffer {
               let destination = result.floatChannelData else { return nil }
         result.frameLength = AVAudioFrameCount(frames)
 
-        var length = 0
-        var source: UnsafeMutablePointer<Int8>?
-        CMBlockBufferGetDataPointer(block, atOffset: 0, lengthAtOffsetOut: nil, totalLengthOut: &length, dataPointerOut: &source)
-        guard let source else { return nil }
-        memcpy(destination[0], source, min(length, Int(result.frameCapacity) * MemoryLayout<Float>.size))
+        let channelCount = Int(streamDescription.pointee.mChannelsPerFrame)
+        let isInterleaved = (streamDescription.pointee.mFormatFlags & kAudioFormatFlagIsNonInterleaved) == 0
+        let bufferList = AudioBufferList.allocate(maximumBuffers: max(channelCount, 1))
+        defer { bufferList.unsafeMutablePointer.deallocate() }
+
+        var retainedBlockBuffer: CMBlockBuffer?
+        let status = CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(
+            self,
+            bufferListSizeNeededOut: nil,
+            bufferListOut: bufferList.unsafeMutablePointer,
+            bufferListSize: MemoryLayout<AudioBufferList>.size + max(channelCount - 1, 0) * MemoryLayout<AudioBuffer>.size,
+            blockBufferAllocator: kCFAllocatorDefault,
+            blockBufferMemoryAllocator: kCFAllocatorDefault,
+            flags: kCMSampleBufferFlag_AudioBufferList_Assure16ByteAlignment,
+            blockBufferOut: &retainedBlockBuffer
+        )
+        guard status == noErr else { return nil }
+
+        if isInterleaved {
+            guard let sourceData = bufferList[0].mData?.assumingMemoryBound(to: Float.self) else { return nil }
+            for frame in 0..<frames {
+                for channel in 0..<channelCount {
+                    let sample = sourceData[(frame * channelCount) + channel]
+                    destination[channel][frame] = sample.isFinite ? sample : 0
+                }
+            }
+        } else {
+            for channel in 0..<channelCount {
+                guard let sourceData = bufferList[channel].mData?.assumingMemoryBound(to: Float.self) else { return nil }
+                for frame in 0..<frames {
+                    let sample = sourceData[frame]
+                    destination[channel][frame] = sample.isFinite ? sample : 0
+                }
+            }
+        }
+
         return result
     }
 }
