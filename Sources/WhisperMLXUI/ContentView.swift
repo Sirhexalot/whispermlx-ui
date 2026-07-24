@@ -3,6 +3,12 @@ import UniformTypeIdentifiers
 import AppKit
 
 struct ContentView: View {
+    private static let microphoneLevelColor = Color(
+        red: 121 / 255,
+        green: 191 / 255,
+        blue: 67 / 255
+    )
+
     @Bindable var controller: TranscriptionController
     @ObservedObject private var recorder: AudioRecorder
     @State private var isImporting = false
@@ -30,7 +36,10 @@ struct ContentView: View {
         .sheet(isPresented: $showsSettings) {
             SettingsView(controller: controller)
         }
-        .onAppear { refreshMicrophones() }
+        .task {
+            refreshMicrophones()
+            await recorder.preparePreviewMonitoring()
+        }
     }
 
     private var fullView: some View {
@@ -62,14 +71,14 @@ struct ContentView: View {
                 Text(
                     String.localizedStringWithFormat(
                         String(localized: "recording.running"),
-                        Int(recorder.elapsed)
+                        Self.formattedDuration(recorder.elapsed)
                     )
                 )
                 .foregroundStyle(.secondary)
             }
 
             VStack(alignment: .leading, spacing: 12) {
-                audioLevel(label: "recording.level.microphone", value: recorder.level, tint: .red)
+                audioLevel(label: "recording.level.microphone", value: recorder.level, tint: Self.microphoneLevelColor)
                 audioLevel(label: "recording.level.systemAudio", value: recorder.systemLevel, tint: .blue)
             }
 
@@ -89,44 +98,52 @@ struct ContentView: View {
 
     private var recordingControls: some View {
         GroupBox("recording.section") {
-            HStack {
+            VStack(alignment: .leading, spacing: 14) {
                 if recorder.isRecording {
-                    Label(
-                        String.localizedStringWithFormat(
-                            String(localized: "recording.running"),
-                            Int(recorder.elapsed)
-                        ),
-                        systemImage: "record.circle.fill"
-                    )
-                        .foregroundStyle(.red)
+                    HStack {
+                        Label(
+                            String.localizedStringWithFormat(
+                                String(localized: "recording.running"),
+                                Self.formattedDuration(recorder.elapsed)
+                            ),
+                            systemImage: "record.circle.fill"
+                        )
+                            .foregroundStyle(.red)
+                        Spacer()
+                        Button("recording.stop") { controller.stopRecording() }
+                            .buttonStyle(.borderedProminent)
+                    }
                     VStack(alignment: .leading, spacing: 5) {
-                        audioLevel(label: "recording.level.microphone", value: recorder.level, tint: .red)
+                        audioLevel(label: "recording.level.microphone", value: recorder.level, tint: Self.microphoneLevelColor)
                         audioLevel(label: "recording.level.systemAudio", value: recorder.systemLevel, tint: .blue)
                     }
-                    .frame(width: 170)
-                    Spacer()
-                    Button("recording.stop") { controller.stopRecording() }
-                        .buttonStyle(.borderedProminent)
                 } else {
-                    Text("recording.description")
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                    Picker("settings.microphone.title", selection: $preferredMicrophoneUID) {
-                        Text("settings.microphone.systemDefault").tag("")
-                        ForEach(microphoneDevices) { item in
-                            Text(item.name).tag(item.id)
+                    VStack(alignment: .leading, spacing: 8) {
+                        audioLevel(label: "recording.level.microphone", value: recorder.level, tint: Self.microphoneLevelColor)
+                        audioLevel(label: "recording.level.systemAudio", value: recorder.systemLevel, tint: .blue)
+                    }
+
+                    HStack(alignment: .center, spacing: 14) {
+                        Picker("settings.microphone.title", selection: $preferredMicrophoneUID) {
+                            Text("settings.microphone.systemDefault").tag("")
+                            ForEach(microphoneDevices) { item in
+                                Text(item.name).tag(item.id)
+                            }
                         }
+                        .pickerStyle(.menu)
+                        .frame(width: 260, alignment: .leading)
+                        .labelsHidden()
+                        .help("settings.microphone.title")
+                        .onChange(of: preferredMicrophoneUID) { _, newValue in
+                            applyPreferredMicrophone(newValue)
+                        }
+
+                        Spacer()
+
+                        Button("recording.start") { controller.startRecording() }
+                            .buttonStyle(.borderedProminent)
+                            .disabled(controller.isRunning)
                     }
-                    .pickerStyle(.menu)
-                    .frame(maxWidth: 240)
-                    .labelsHidden()
-                    .help("settings.microphone.title")
-                    .onChange(of: preferredMicrophoneUID) { _, newValue in
-                        applyPreferredMicrophone(newValue)
-                    }
-                    Button("recording.start") { controller.startRecording() }
-                        .buttonStyle(.borderedProminent)
-                        .disabled(controller.isRunning)
                 }
             }
             .padding(8)
@@ -166,24 +183,35 @@ struct ContentView: View {
 
     private var fileSelection: some View {
         GroupBox("file.section") {
-            HStack(spacing: 14) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(controller.inputURL?.lastPathComponent ?? String(localized: "file.noneSelected"))
-                        .fontWeight(controller.inputURL == nil ? .regular : .semibold)
-                    if let outputURL = controller.outputURL {
-                        Text(
-                            String.localizedStringWithFormat(
-                                String(localized: "file.output"),
-                                outputURL.lastPathComponent
+            VStack(alignment: .leading, spacing: 14) {
+                HStack(spacing: 14) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(controller.inputURL?.lastPathComponent ?? String(localized: "file.noneSelected"))
+                            .fontWeight(controller.inputURL == nil ? .regular : .semibold)
+                        if let outputURL = controller.outputURL {
+                            Text(
+                                String.localizedStringWithFormat(
+                                    String(localized: "file.output"),
+                                    outputURL.lastPathComponent
+                                )
                             )
-                        )
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    Spacer()
+                    Button("file.choose") { isImporting = true }
+                        .disabled(controller.isRunning)
+                }
+
+                if case .ready = controller.status {
+                    HStack {
+                        Spacer()
+                        Button("action.transcribe") { controller.start() }
+                            .buttonStyle(.borderedProminent)
+                            .disabled(!controller.canStart)
                     }
                 }
-                Spacer()
-                Button("file.choose") { isImporting = true }
-                    .disabled(controller.isRunning)
             }
             .padding(8)
         }
@@ -193,7 +221,7 @@ struct ContentView: View {
         HStack {
             switch controller.status {
             case .running:
-                VStack(alignment: .leading, spacing: 5) {
+                VStack(alignment: .leading, spacing: 4) {
                     if let progress = controller.progress {
                         HStack(spacing: 8) {
                             ProgressView(value: progress, total: 100)
@@ -248,10 +276,7 @@ struct ContentView: View {
                 Button("action.retry") { controller.start() }
                     .disabled(!controller.canStart)
             case .ready:
-                Spacer()
-                Button("action.transcribe") { controller.start() }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(!controller.canStart)
+                EmptyView()
             }
         }
     }
@@ -291,6 +316,17 @@ struct ContentView: View {
         controller.preferredMicrophoneUID = resolvedUID
         controller.recorder.preferredMicrophoneUID = resolvedUID
         AudioInputDeviceStore.save(resolvedUID)
+        Task {
+            await controller.recorder.refreshPreviewMonitoring()
+        }
+    }
+
+    private static func formattedDuration(_ elapsed: TimeInterval) -> String {
+        let totalSeconds = max(0, Int(elapsed.rounded(.down)))
+        let hours = totalSeconds / 3600
+        let minutes = (totalSeconds % 3600) / 60
+        let seconds = totalSeconds % 60
+        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
 }
 

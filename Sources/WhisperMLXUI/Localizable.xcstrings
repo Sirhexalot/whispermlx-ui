@@ -566,13 +566,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Datei"
+            "value" : "Video oder Audio für Transkription importieren"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "File"
+            "value" : "Import Video or Audio for Transcription"
           }
         }
       }
@@ -764,6 +764,7 @@
       }
     },
     "recording.description" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -819,13 +820,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aufnahme läuft - %d s"
+            "value" : "Aufnahme läuft - %@"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recording - %d s"
+            "value" : "Recording - %@"
           }
         }
       }

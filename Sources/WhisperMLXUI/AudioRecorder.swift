@@ -14,11 +14,15 @@ final class AudioRecorder: ObservableObject {
     var preferredMicrophoneUID: String?
 
     private var microphoneCapture: MicrophoneCapture?
+    private var previewMicrophoneCapture: MicrophoneCapture?
     private var microphoneURL: URL?
     private var systemAudioURL: URL?
     private var timer: Timer?
+    private var previewDecayTimer: Timer?
     private var startedAt: Date?
     private let systemAudioRecorder = SystemAudioRecorder()
+    private let previewSystemAudioRecorder = SystemAudioRecorder()
+    private var didAttemptPreviewPermissions = false
 
     init() {
         systemAudioRecorder.onLevel = { [weak self] newLevel in
@@ -27,10 +31,17 @@ final class AudioRecorder: ObservableObject {
                 self.systemLevel = max(newLevel, self.systemLevel * 0.72)
             }
         }
+        previewSystemAudioRecorder.onLevel = { [weak self] newLevel in
+            Task { @MainActor [weak self] in
+                guard let self, !self.isRecording else { return }
+                self.systemLevel = max(newLevel, self.systemLevel * 0.72)
+            }
+        }
     }
 
     func start() async throws {
         guard !isRecording else { return }
+        await stopPreviewMonitoring()
         try await RecordingPermissions.ensureMicrophoneAccess()
         let recordingsFolder = FileManager.default.urls(for: .moviesDirectory, in: .userDomainMask)[0]
             .appendingPathComponent(String(localized: "recordings.folderName", defaultValue: "WhisperMLX Recordings"), isDirectory: true)
@@ -60,7 +71,8 @@ final class AudioRecorder: ObservableObject {
         }
         let activeMicrophone = try capture.start(
             preferredDeviceID: preferredMicrophoneUID,
-            outputURL: microphoneURL
+            outputURL: microphoneURL,
+            enableFileWriting: true
         )
 
         do {
@@ -85,8 +97,9 @@ final class AudioRecorder: ObservableObject {
         startedAt = .now
         elapsed = 0
         level = 0
-        systemLevel = includesSystemAudio ? 0 : 0
+        systemLevel = 0
         isRecording = true
+        startPreviewDecayTimer()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             Task { @MainActor [weak self] in
                 guard let self, let startedAt = self.startedAt else { return }
@@ -106,6 +119,7 @@ final class AudioRecorder: ObservableObject {
         level = 0
         systemLevel = 0
         activeMicrophoneName = nil
+        await startPreviewMonitoringIfPossible()
 
         guard didWriteMicrophoneAudio, let microphoneURL else { return nil }
         guard let systemAudioURL else { return microphoneURL }
@@ -118,6 +132,82 @@ final class AudioRecorder: ObservableObject {
         } catch {
             NSLog("WhisperMLX UI: could not mix audio tracks: \(error.localizedDescription)")
             return nil
+        }
+    }
+
+    func startPreviewMonitoringIfPossible() async {
+        guard !isRecording else { return }
+        level = 0
+        systemLevel = 0
+
+        if previewMicrophoneCapture == nil, RecordingPermissions.hasMicrophoneAccess() {
+            let capture = MicrophoneCapture { [weak self] newLevel in
+                Task { @MainActor [weak self] in
+                    guard let self, !self.isRecording else { return }
+                    self.level = max(newLevel, self.level * 0.72)
+                }
+            }
+            do {
+                _ = try capture.start(
+                    preferredDeviceID: preferredMicrophoneUID,
+                    outputURL: nil,
+                    enableFileWriting: false
+                )
+                previewMicrophoneCapture = capture
+            } catch {
+                NSLog("WhisperMLX UI: could not start microphone preview: \(error.localizedDescription)")
+            }
+        }
+
+        if RecordingPermissions.hasSystemAudioAccess(),
+           !previewSystemAudioRecorder.isCapturing {
+            do {
+                try await previewSystemAudioRecorder.start(to: nil)
+            } catch {
+                NSLog("WhisperMLX UI: could not start system-audio preview: \(error.localizedDescription)")
+            }
+        }
+
+        startPreviewDecayTimer()
+    }
+
+    func preparePreviewMonitoring() async {
+        guard !didAttemptPreviewPermissions else {
+            await startPreviewMonitoringIfPossible()
+            return
+        }
+
+        didAttemptPreviewPermissions = true
+        _ = await RecordingPermissions.requestMicrophoneAccessIfNeeded()
+        _ = RecordingPermissions.requestSystemAudioAccessIfNeeded()
+        await startPreviewMonitoringIfPossible()
+    }
+
+    func refreshPreviewMonitoring() async {
+        await stopPreviewMonitoring()
+        await startPreviewMonitoringIfPossible()
+    }
+
+    private func stopPreviewMonitoring() async {
+        _ = previewMicrophoneCapture?.stop()
+        previewMicrophoneCapture = nil
+        await previewSystemAudioRecorder.stop()
+        previewDecayTimer?.invalidate()
+        previewDecayTimer = nil
+        if !isRecording {
+            level = 0
+            systemLevel = 0
+        }
+    }
+
+    private func startPreviewDecayTimer() {
+        previewDecayTimer?.invalidate()
+        previewDecayTimer = Timer.scheduledTimer(withTimeInterval: 0.08, repeats: true) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                self.level *= 0.82
+                self.systemLevel *= 0.82
+            }
         }
     }
 
@@ -138,12 +228,13 @@ private final class MicrophoneCapture: NSObject, AVCaptureAudioDataOutputSampleB
     private let queue = DispatchQueue(label: "local.whispermlx.microphone-capture")
     private let onLevel: (Float) -> Void
     private var writer: MicrophoneFileWriter?
+    private var isWritingEnabled = false
 
     init(onLevel: @escaping (Float) -> Void) {
         self.onLevel = onLevel
     }
 
-    func start(preferredDeviceID: String?, outputURL: URL) throws -> AudioInputDevice {
+    func start(preferredDeviceID: String?, outputURL: URL?, enableFileWriting: Bool) throws -> AudioInputDevice {
         let device: AVCaptureDevice?
         if let preferredDeviceID, !preferredDeviceID.isEmpty {
             device = AVCaptureDevice(uniqueID: preferredDeviceID)
@@ -163,7 +254,8 @@ private final class MicrophoneCapture: NSObject, AVCaptureAudioDataOutputSampleB
         session.commitConfiguration()
 
         output.setSampleBufferDelegate(self, queue: queue)
-        writer = MicrophoneFileWriter(outputURL: outputURL)
+        isWritingEnabled = enableFileWriting
+        writer = outputURL.map(MicrophoneFileWriter.init(outputURL:))
         session.startRunning()
         return AudioInputDevice(
             id: device.uniqueID,
@@ -179,6 +271,7 @@ private final class MicrophoneCapture: NSObject, AVCaptureAudioDataOutputSampleB
         queue.sync {
             wroteAudio = writer?.close() == true
             writer = nil
+            isWritingEnabled = false
         }
         return wroteAudio
     }
@@ -189,7 +282,9 @@ private final class MicrophoneCapture: NSObject, AVCaptureAudioDataOutputSampleB
         from connection: AVCaptureConnection
     ) {
         guard let buffer = sampleBuffer.asPCMBuffer() else { return }
-        writer?.write(buffer)
+        if isWritingEnabled {
+            writer?.write(buffer)
+        }
         guard let samples = buffer.floatChannelData?[0], buffer.frameLength > 0 else { return }
         var peak: Float = 0
         for index in 0..<Int(buffer.frameLength) {

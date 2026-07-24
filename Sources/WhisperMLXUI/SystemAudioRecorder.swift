@@ -14,8 +14,9 @@ final class SystemAudioRecorder: NSObject, SCStreamOutput {
     private var acceptingBuffers = false
     private var lastLevelUpdate = Date.distantPast
     var onLevel: ((Float) -> Void)?
+    var isCapturing: Bool { stream != nil }
 
-    func start(to outputURL: URL) async throws {
+    func start(to outputURL: URL?) async throws {
         guard RecordingPermissions.ensureSystemAudioAccess() else {
             throw SystemAudioRecorderError.permissionDenied
         }
@@ -75,11 +76,12 @@ final class SystemAudioRecorder: NSObject, SCStreamOutput {
 
     func stream(_ stream: SCStream, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, of type: SCStreamOutputType) {
         guard type == .audio, acceptingBuffers,
-              let buffer = sampleBuffer.asPCMBuffer(),
-              let copy = buffer.deepCopy(),
-              let outputURL else { return }
+              let buffer = sampleBuffer.asPCMBuffer() else { return }
 
         updateLevel(from: buffer)
+
+        guard let outputURL,
+              let copy = buffer.deepCopy() else { return }
 
         writeQueue.async { [weak self] in
             guard let self, self.acceptingBuffers else { return }

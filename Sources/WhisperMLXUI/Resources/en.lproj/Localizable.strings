@@ -19,7 +19,7 @@
 "file.noneSelected" = "No file selected yet";
 "file.output" = "Output: %@";
 "file.outputExtension" = "transcript";
-"file.section" = "File";
+"file.section" = "Import Video or Audio for Transcription";
 "log.recordingRunning" = "Recording is running ...";
 "log.recordingMicrophoneOnly" = "System audio is unavailable. Recording microphone only.";
 "log.recordingSaved" = "Recording saved: %@\nReady to transcribe.";
@@ -29,7 +29,7 @@
 "model.small" = "Compact - small";
 "model.turbo" = "Fast - large-v3-turbo";
 "recording.description" = "Records microphone and system audio locally. The complete recording is transcribed after it stops.";
-"recording.running" = "Recording - %d s";
+"recording.running" = "Recording - %@";
 "recording.section" = "Recording";
 "recording.start" = "Start Recording";
 "recording.stop" = "Stop Recording";
