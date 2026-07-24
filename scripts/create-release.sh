@@ -4,6 +4,7 @@ set -euo pipefail
 root="${0:A:h:h}"
 configuration="${1:-Release}"
 app_name="WhisperMLX UI.app"
+entitlements_path="$root/WhisperMLXUI/WhisperMLXUI.entitlements"
 archive_path="$root/dist/$configuration/WhisperMLX-UI-macOS.zip"
 staging_root="$(mktemp -d "${TMPDIR:-/tmp}/whispermlx-release.XXXXXX")"
 app_path="$staging_root/$app_name"
@@ -61,6 +62,7 @@ sign_nested_binaries
   --force \
   --timestamp \
   --options runtime \
+  --entitlements "$entitlements_path" \
   --sign "$APPLE_DEVELOPER_IDENTITY" \
   "$app_path"
 

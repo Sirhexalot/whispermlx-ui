@@ -12,6 +12,7 @@ settings:
     DEVELOPMENT_TEAM: "F22N2AUDUL"
     CODE_SIGN_STYLE: Automatic
     CODE_SIGN_IDENTITY: "Apple Development"
+    CODE_SIGN_ENTITLEMENTS: WhisperMLXUI/WhisperMLXUI.entitlements
     SPARKLE_FEED_URL: "https://sirhexalot.github.io/whispermlx-ui/appcast.xml"
     SPARKLE_PUBLIC_ED_KEY: "ATxSWQj7gj+tmqgt2bVnqv6sBncuVwFxyoBPUhEfyjk="
 targets:
@@ -37,8 +38,8 @@ targets:
           - de
           - en
         CFBundleIdentifier: local.whispermlx.ui
-        CFBundleShortVersionString: "1.0.5"
-        CFBundleVersion: "6"
+        CFBundleShortVersionString: "1.0.6"
+        CFBundleVersion: "7"
         LSMinimumSystemVersion: "14.0"
         NSMicrophoneUsageDescription: WhisperMLX UI benötigt das Mikrofon, um lokale Aufnahmen zu transkribieren.
         NSAudioCaptureUsageDescription: WhisperMLX UI benötigt Systemaudio, um lokale Aufnahmen zu transkribieren.
