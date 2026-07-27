@@ -207,10 +207,14 @@ final class TranscriptionController {
         process?.terminate()
     }
 
-    func startRecording() {
+    func suggestedRecordingFolderName() -> String {
+        AudioRecorder.suggestedSessionFolderName()
+    }
+
+    func startRecording(folderName: String? = nil) {
         Task {
             do {
-                try await recorder.start()
+                try await recorder.start(sessionFolderName: folderName)
                 log = String(localized: "log.recordingRunning") + "\n"
                 if let warning = recorder.lastStartWarning, !warning.isEmpty {
                     log += warning + "\n"

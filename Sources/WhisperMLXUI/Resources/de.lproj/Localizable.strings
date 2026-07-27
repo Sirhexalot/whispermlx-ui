@@ -34,6 +34,10 @@
 "recording.running" = "Aufnahme läuft - %@";
 "recording.section" = "Aufnahme";
 "recording.start" = "Aufnahme starten";
+"recording.startModal.confirm" = "Aufnahme starten";
+"recording.startModal.description" = "Passe den Ordnernamen an, bevor die Aufnahme angelegt und gestartet wird.";
+"recording.startModal.placeholder" = "Ordnername";
+"recording.startModal.title" = "Ordnername für Aufnahme";
 "recording.stop" = "Aufnahme stoppen";
 "recordings.fileName" = "Aufnahme_%@.caf";
 "recordings.folderName" = "WhisperMLX-Aufnahmen";

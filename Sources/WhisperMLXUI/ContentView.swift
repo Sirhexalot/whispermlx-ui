@@ -14,6 +14,8 @@ struct ContentView: View {
     @State private var isImporting = false
     @State private var showsDetails = false
     @State private var showsSettings = false
+    @State private var showsRecordingStartModal = false
+    @State private var pendingRecordingFolderName = ""
     @State private var microphoneDevices: [AudioInputDevice] = []
     @State private var preferredMicrophoneUID: String = ""
 
@@ -35,6 +37,9 @@ struct ContentView: View {
         .background(WindowSizeConfigurator(isCompact: recorder.isRecording))
         .sheet(isPresented: $showsSettings) {
             SettingsView(controller: controller)
+        }
+        .sheet(isPresented: $showsRecordingStartModal) {
+            recordingStartSheet
         }
         .task {
             refreshMicrophones()
@@ -150,7 +155,7 @@ struct ContentView: View {
 
                         Spacer()
 
-                        Button("recording.start") { controller.startRecording() }
+                        Button("recording.start") { presentRecordingStartModal() }
                             .buttonStyle(.borderedProminent)
                             .disabled(controller.isRunning || recorder.isFinalizingRecording)
                     }
@@ -189,6 +194,33 @@ struct ContentView: View {
             .buttonStyle(.bordered)
             .help("settings.open")
         }
+    }
+
+    private var recordingStartSheet: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            Text("recording.startModal.title")
+                .font(.title3.weight(.semibold))
+
+            Text("recording.startModal.description")
+                .foregroundStyle(.secondary)
+
+            TextField(String(localized: "recording.startModal.placeholder"), text: $pendingRecordingFolderName)
+                .textFieldStyle(.roundedBorder)
+                .onSubmit { confirmRecordingStart() }
+
+            HStack {
+                Spacer()
+                Button("action.cancel") {
+                    showsRecordingStartModal = false
+                }
+                Button("recording.startModal.confirm") {
+                    confirmRecordingStart()
+                }
+                .buttonStyle(.borderedProminent)
+            }
+        }
+        .padding(24)
+        .frame(width: 460)
     }
 
     private var fileSelection: some View {
@@ -329,6 +361,17 @@ struct ContentView: View {
         Task {
             await controller.recorder.refreshPreviewMonitoring()
         }
+    }
+
+    private func presentRecordingStartModal() {
+        pendingRecordingFolderName = controller.suggestedRecordingFolderName()
+        showsRecordingStartModal = true
+    }
+
+    private func confirmRecordingStart() {
+        let folderName = pendingRecordingFolderName
+        showsRecordingStartModal = false
+        controller.startRecording(folderName: folderName)
     }
 
     private static func formattedDuration(_ elapsed: TimeInterval) -> String {

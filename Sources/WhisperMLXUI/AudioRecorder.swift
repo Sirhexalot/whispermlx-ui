@@ -25,6 +25,13 @@ final class AudioRecorder: ObservableObject {
     private let previewSystemAudioRecorder = SystemAudioRecorder()
     private var didAttemptPreviewPermissions = false
 
+    static func suggestedSessionFolderName() -> String {
+        let stamp = localizedFileNameTimestamp()
+        return URL(fileURLWithPath: String.localizedStringWithFormat(
+            String(localized: "recordings.fileName", defaultValue: "Recording_%@.caf"), stamp
+        )).deletingPathExtension().lastPathComponent
+    }
+
     init() {
         systemAudioRecorder.onLevel = { [weak self] newLevel in
             Task { @MainActor [weak self] in
@@ -40,17 +47,14 @@ final class AudioRecorder: ObservableObject {
         }
     }
 
-    func start() async throws {
+    func start(sessionFolderName: String? = nil) async throws {
         guard !isRecording else { return }
         await stopPreviewMonitoring()
         try await RecordingPermissions.ensureMicrophoneAccess()
         let recordingsFolder = FileManager.default.urls(for: .moviesDirectory, in: .userDomainMask)[0]
             .appendingPathComponent(String(localized: "recordings.folderName", defaultValue: "WhisperMLX Recordings"), isDirectory: true)
         try FileManager.default.createDirectory(at: recordingsFolder, withIntermediateDirectories: true)
-        let stamp = Self.localizedFileNameTimestamp()
-        let sessionName = URL(fileURLWithPath: String.localizedStringWithFormat(
-            String(localized: "recordings.fileName", defaultValue: "Recording_%@.caf"), stamp
-        )).deletingPathExtension().lastPathComponent
+        let sessionName = Self.sanitizedSessionFolderName(sessionFolderName)
         let sessionFolder = recordingsFolder.appendingPathComponent(sessionName, isDirectory: true)
         try FileManager.default.createDirectory(at: sessionFolder, withIntermediateDirectories: true)
         let sourceFolder = sessionFolder.appendingPathComponent(
@@ -234,6 +238,21 @@ final class AudioRecorder: ObservableObject {
         return formatter.string(from: .now)
             .replacingOccurrences(of: "/", with: "-")
             .replacingOccurrences(of: ":", with: "-")
+    }
+
+    private static func sanitizedSessionFolderName(_ input: String?) -> String {
+        let fallback = suggestedSessionFolderName()
+        guard let input else { return fallback }
+
+        let trimmed = input.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return fallback }
+
+        let invalidCharacters = CharacterSet(charactersIn: "/:")
+        let cleanedScalars = trimmed.unicodeScalars.map { scalar in
+            invalidCharacters.contains(scalar) ? "-" : Character(scalar)
+        }
+        let cleaned = String(cleanedScalars).trimmingCharacters(in: .whitespacesAndNewlines)
+        return cleaned.isEmpty ? fallback : cleaned
     }
 }
 

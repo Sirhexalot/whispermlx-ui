@@ -34,6 +34,10 @@
 "recording.running" = "Recording - %@";
 "recording.section" = "Recording";
 "recording.start" = "Start Recording";
+"recording.startModal.confirm" = "Start Recording";
+"recording.startModal.description" = "Adjust the folder name before the recording folder is created and recording begins.";
+"recording.startModal.placeholder" = "Folder name";
+"recording.startModal.title" = "Recording Folder Name";
 "recording.stop" = "Stop Recording";
 "recordings.fileName" = "Recording_%@.caf";
 "recordings.folderName" = "WhisperMLX Recordings";
