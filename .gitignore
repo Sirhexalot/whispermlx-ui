@@ -17,6 +17,7 @@ cer/
 xcuserdata/
 *.xcuserstate
 *.xcscmblueprint
+WhisperMLXUI [0-9]*.xcodeproj/
 
 # Local build/distribution artifacts
 build/
