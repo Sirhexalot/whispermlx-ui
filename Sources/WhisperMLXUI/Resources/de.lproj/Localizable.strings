@@ -65,5 +65,10 @@
 "speakerCount.people" = "%d Personen";
 "transcription.cancelled" = "Transkription abgebrochen.";
 "transcription.finished" = "Fertig: %@";
+"transcription.language.automatic" = "Automatisch";
+"transcription.language.description" = "Standard ist Deutsch. Wähle „Automatisch“ nur, wenn WhisperMLX die Sprache selbst erkennen soll.";
+"transcription.language.english" = "Englisch";
+"transcription.language.german" = "Deutsch";
+"transcription.language.label" = "Transkript-Sprache";
 "transcription.running" = "Transkription läuft ...";
 "transcription.section" = "Transkription";

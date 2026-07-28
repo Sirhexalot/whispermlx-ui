@@ -41,6 +41,36 @@ final class TranscriptionController {
         }
     }
 
+    enum TranscriptionLanguage: String, CaseIterable, Identifiable {
+        case german
+        case automatic
+        case english
+
+        var id: String { rawValue }
+
+        var title: String {
+            switch self {
+            case .german:
+                String(localized: "transcription.language.german")
+            case .automatic:
+                String(localized: "transcription.language.automatic")
+            case .english:
+                String(localized: "transcription.language.english")
+            }
+        }
+
+        var whisperLanguageCode: String? {
+            switch self {
+            case .german:
+                "de"
+            case .automatic:
+                nil
+            case .english:
+                "en"
+            }
+        }
+    }
+
     enum Status: Equatable {
         case ready
         case running
@@ -52,6 +82,7 @@ final class TranscriptionController {
     var inputURL: URL?
     var model: Model = .largeV3
     var vadMethod: VADMethod = .pyannote
+    var transcriptionLanguage: TranscriptionLanguage
     var diarizationEnabled: Bool
     var diarizationModelPath: String
     var preferredMicrophoneUID: String?
@@ -70,8 +101,10 @@ final class TranscriptionController {
     init() {
         let initialDiarizationModelPath = LocalDiarizationModelStore.load()
         let initialMicrophoneUID = AudioInputDeviceStore.load()
+        let initialTranscriptionLanguage = TranscriptionLanguageStore.load()
         diarizationModelPath = initialDiarizationModelPath
         preferredMicrophoneUID = initialMicrophoneUID
+        transcriptionLanguage = initialTranscriptionLanguage
         recorder.preferredMicrophoneUID = initialMicrophoneUID
         // A saved token or a local pipeline directory are sufficient for the
         // default; the secret value is only retrieved when it is actually used.
@@ -125,6 +158,9 @@ final class TranscriptionController {
         if scoped { scopedURL = inputURL }
 
         var arguments = [inputURL.path, "--model", model.rawValue, "--vad_method", vadMethod.rawValue]
+        if let languageCode = transcriptionLanguage.whisperLanguageCode {
+            arguments += ["--language", languageCode]
+        }
         if diarizationEnabled {
             arguments.append("--diarize")
             if let localDiarizationModel {

@@ -107,12 +107,31 @@ enum LocalDiarizationModelStore {
     }
 }
 
+enum TranscriptionLanguageStore {
+    private static let key = "transcription-language"
+
+    static func load() -> TranscriptionController.TranscriptionLanguage {
+        guard
+            let rawValue = UserDefaults.standard.string(forKey: key),
+            let value = TranscriptionController.TranscriptionLanguage(rawValue: rawValue)
+        else {
+            return .german
+        }
+        return value
+    }
+
+    static func save(_ language: TranscriptionController.TranscriptionLanguage) {
+        UserDefaults.standard.set(language.rawValue, forKey: key)
+    }
+}
+
 struct SettingsView: View {
     @Bindable var controller: TranscriptionController
     @Environment(\.dismiss) private var dismiss
     @State private var section: SettingsSection = .transcription
     @State private var model: TranscriptionController.Model = .largeV3
     @State private var vadMethod: TranscriptionController.VADMethod = .pyannote
+    @State private var transcriptionLanguage: TranscriptionController.TranscriptionLanguage = .german
     @State private var diarizationEnabled = true
     @State private var speakerCount: Int?
     @State private var token = ""
@@ -184,6 +203,15 @@ struct SettingsView: View {
                 }
                 Text("settings.vad.description")
                     .font(.caption).foregroundStyle(.secondary)
+
+                Picker("transcription.language.label", selection: $transcriptionLanguage) {
+                    ForEach(TranscriptionController.TranscriptionLanguage.allCases) { item in
+                        Text(item.title).tag(item)
+                    }
+                }
+                Text("transcription.language.description")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
         }
         .padding(24)
@@ -337,6 +365,7 @@ struct SettingsView: View {
     private func resetDraft() {
         model = installedModels.contains(controller.model) ? controller.model : (installedModels.first ?? controller.model)
         vadMethod = controller.vadMethod
+        transcriptionLanguage = controller.transcriptionLanguage
         diarizationEnabled = controller.diarizationEnabled
         speakerCount = controller.speakerCount
         microphoneDevices = AudioInputDeviceManager.availableDevices()
@@ -362,6 +391,7 @@ struct SettingsView: View {
         let hasOfflineModel = diarizationModelManager.status == .ready
         controller.model = model
         controller.vadMethod = vadMethod
+        controller.transcriptionLanguage = transcriptionLanguage
         controller.diarizationEnabled = diarizationEnabled && (hasOfflineModel || hasToken)
         controller.diarizationModelPath = newLocalPath
         controller.speakerCount = speakerCount
@@ -369,6 +399,7 @@ struct SettingsView: View {
         controller.recorder.preferredMicrophoneUID = controller.preferredMicrophoneUID
         if !newToken.isEmpty { TokenStore.save(newToken) }
         LocalDiarizationModelStore.save(newLocalPath)
+        TranscriptionLanguageStore.save(transcriptionLanguage)
         AudioInputDeviceStore.save(controller.preferredMicrophoneUID)
         dismiss()
     }

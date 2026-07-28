@@ -65,5 +65,10 @@
 "speakerCount.people" = "%d People";
 "transcription.cancelled" = "Transcription cancelled.";
 "transcription.finished" = "Done: %@";
+"transcription.language.automatic" = "Automatic";
+"transcription.language.description" = "German is the default. Choose Automatic only if WhisperMLX should detect the spoken language on its own.";
+"transcription.language.english" = "English";
+"transcription.language.german" = "German";
+"transcription.language.label" = "Transcript Language";
 "transcription.running" = "Transcription running ...";
 "transcription.section" = "Transcription";
