@@ -232,12 +232,11 @@ final class AudioRecorder: ObservableObject {
 
     private static func localizedFileNameTimestamp() -> String {
         let formatter = DateFormatter()
-        formatter.locale = .current
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .medium
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.timeZone = .current
+        formatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
         return formatter.string(from: .now)
-            .replacingOccurrences(of: "/", with: "-")
-            .replacingOccurrences(of: ":", with: "-")
     }
 
     private static func sanitizedSessionFolderName(_ input: String?) -> String {

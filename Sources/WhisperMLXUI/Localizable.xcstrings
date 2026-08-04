@@ -991,13 +991,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aufnahme_%@.caf"
+            "value" : "%@_Aufnahme.caf"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recording_%@.caf"
+            "value" : "%@_Recording.caf"
           }
         }
       }
