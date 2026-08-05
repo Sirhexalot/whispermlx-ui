@@ -394,7 +394,10 @@ enum AudioMixer {
         process.executableURL = URL(fileURLWithPath: executable)
         process.arguments = [
             "-y", "-i", systemAudio.path, "-i", microphone.path,
-            "-filter_complex", "[0:a][1:a]amix=inputs=2:duration=longest:normalize=0",
+            // Some audio drivers intermittently emit non-finite floating-point
+            // samples. Converting both sources to signed integer PCM before
+            // mixing makes those samples safe for AAC encoding.
+            "-filter_complex", "[0:a]aformat=sample_fmts=s16[system];[1:a]aformat=sample_fmts=s16[microphone];[system][microphone]amix=inputs=2:duration=longest:normalize=0",
             "-ar", "16000", "-ac", "1", "-c:a", "aac", "-b:a", "64k", output.path
         ]
         let stderr = Pipe()
