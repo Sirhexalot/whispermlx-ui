@@ -27,9 +27,9 @@ mkdir -p "$product_root"
 if [[ -d "$derived_app_path" ]]; then
   /usr/bin/xattr -cr "$derived_app_path"
 fi
-if [[ -d "$derived_data_path/SourcePackages" ]]; then
-  /usr/bin/xattr -cr "$derived_data_path/SourcePackages"
-fi
+# Swift package checkouts are managed and made read-only by Xcode. Do not
+# recursively alter their attributes: that fails on protected Sparkle sources
+# and is unrelated to the app bundle that is signed below.
 xcodebuild \
   -project WhisperMLXUI.xcodeproj \
   -scheme WhisperMLXUI \
