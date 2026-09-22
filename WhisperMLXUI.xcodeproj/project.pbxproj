@@ -20,10 +20,12 @@
 		7EF1CC382A4CB69E095687B3 /* SystemAudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890941EAD7CEA077F29BA9EB /* SystemAudioRecorder.swift */; };
 		A4EABC792E88443BF952DA41 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = CCC3E177A42099C12AC6BC66 /* Sparkle */; };
 		CC1568C3B8564A359CCBAD68 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8927AEE5C22EE729A1EDD0F8 /* AudioRecorder.swift */; };
+		F0C762A7126EAD594BEB2B43 /* TranscriptionLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58021E4576F4C8B93CDF8244 /* TranscriptionLog.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0A365206C349BFC386CB9540 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
+		58021E4576F4C8B93CDF8244 /* TranscriptionLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionLog.swift; sourceTree = "<group>"; };
 		646DEE8E6F5630B25061A6DC /* WhisperMLXUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperMLXUIApp.swift; sourceTree = "<group>"; };
 		774042A3194BD34BAA2E3584 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		7936A48F4F444F9B2FC646D6 /* WhisperMLXUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhisperMLXUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -63,6 +65,7 @@
 				8FE1158B68988A6CC61C5C68 /* RecordingPermissions.swift */,
 				890941EAD7CEA077F29BA9EB /* SystemAudioRecorder.swift */,
 				C157FFFA436DF03D52D8DFD0 /* TranscriptionController.swift */,
+				58021E4576F4C8B93CDF8244 /* TranscriptionLog.swift */,
 				7CA3AB1663A4F36287A4B3E9 /* UpdaterView.swift */,
 				646DEE8E6F5630B25061A6DC /* WhisperMLXUIApp.swift */,
 			);
@@ -196,6 +199,7 @@
 				60C50BEFE2ECB6062FC9D709 /* RecordingPermissions.swift in Sources */,
 				7EF1CC382A4CB69E095687B3 /* SystemAudioRecorder.swift in Sources */,
 				6DA6CCE4D2B6B2C84225E46D /* TranscriptionController.swift in Sources */,
+				F0C762A7126EAD594BEB2B43 /* TranscriptionLog.swift in Sources */,
 				7847175FE8DC99E82B71E303 /* UpdaterView.swift in Sources */,
 				0CF41909213CC4C93276A9A5 /* WhisperMLXUIApp.swift in Sources */,
 			);

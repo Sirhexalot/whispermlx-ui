@@ -22,15 +22,15 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.14</string>
+	<string>1.0.15</string>
 	<key>CFBundleVersion</key>
-	<string>14</string>
+	<string>15</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>14.0</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>WhisperMLX UI benötigt das Mikrofon, um lokale Aufnahmen zu transkribieren.</string>
 	<key>NSAudioCaptureUsageDescription</key>
 	<string>WhisperMLX UI benötigt Systemaudio, um lokale Aufnahmen zu transkribieren.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>WhisperMLX UI benötigt das Mikrofon, um lokale Aufnahmen zu transkribieren.</string>
 	<key>NSScreenCaptureUsageDescription</key>
 	<string>WhisperMLX UI benötigt Systemaudio, um lokale Aufnahmen zu transkribieren.</string>
 	<key>SUFeedURL</key>

@@ -45,6 +45,7 @@ You can:
 - Record from **microphone + system audio**
 - Choose a specific microphone (or just use the Mac default)
 - See progress + runtime logs while it works (so it doesn’t feel like it’s “stuck”)
+- Each transcription run saves a timestamped `.log` beside the source recording, including process output, errors, and exit status. Previous logs are preserved.
 - Download/remove AI models in Settings
 - Optional speaker diarization (speaker detection)
 - Outputs saved next to the source file for easy organization

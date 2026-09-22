@@ -132,7 +132,7 @@ final class TranscriptionController {
     }
 
     func start() {
-        guard let inputURL else { return }
+        guard !isRunning, let inputURL else { return }
         guard resolveCLI() != nil else {
             status = .failed(String(localized: "error.whisperMLXNotInstalled"))
             return
@@ -156,6 +156,16 @@ final class TranscriptionController {
 
         let scoped = inputURL.startAccessingSecurityScopedResource()
         if scoped { scopedURL = inputURL }
+
+        let runLog: TranscriptionLog
+        do {
+            runLog = try TranscriptionLog(inputURL: inputURL)
+        } catch {
+            scopedURL?.stopAccessingSecurityScopedResource()
+            scopedURL = nil
+            status = .failed("Logdatei konnte nicht angelegt werden: \(error.localizedDescription)")
+            return
+        }
 
         var arguments = [inputURL.path, "--model", model.rawValue, "--vad_method", vadMethod.rawValue]
         if let languageCode = transcriptionLanguage.whisperLanguageCode {
@@ -184,24 +194,23 @@ final class TranscriptionController {
                 environment["HF_TOKEN"] = token
             }
         }
+        environment["PYTHONUNBUFFERED"] = "1"
         newProcess.environment = environment
         newProcess.standardOutput = outputPipe
         newProcess.standardError = outputPipe
 
-        outputPipe.fileHandleForReading.readabilityHandler = { [weak self] handle in
-            let data = handle.availableData
-            guard !data.isEmpty, let text = String(data: data, encoding: .utf8) else { return }
-            Task { @MainActor in
-                guard let self else { return }
-                self.log.append(text)
-                self.updateProgress()
-            }
-        }
-
+        let outputFinished = DispatchGroup()
+        outputFinished.enter()
         newProcess.terminationHandler = { [weak self] process in
-            outputPipe.fileHandleForReading.readabilityHandler = nil
+            // Wait for EOF so the final traceback is saved before closing the log.
+            outputFinished.wait()
+            runLog.finish(exitCode: process.terminationStatus,
+                          signalled: process.terminationReason == .uncaughtSignal)
             Task { @MainActor in
                 guard let self else { return }
+                if let error = runLog.writeError {
+                    self.log.append("\nLogdatei konnte nicht vollständig geschrieben werden: \(error)\n")
+                }
                 self.scopedURL?.stopAccessingSecurityScopedResource()
                 self.scopedURL = nil
                 self.process = nil
@@ -221,14 +230,40 @@ final class TranscriptionController {
             }
         }
 
+        log = String(localized: "log.transcriptionStarted", defaultValue: "Transcription started ...") + "\n"
+        log += "Logdatei: \(runLog.url.path)\n"
+        runLog.append(Data(log.utf8))
         do {
             try newProcess.run()
             process = newProcess
             status = .running
             progress = 0
-            log = String(localized: "log.transcriptionStarted", defaultValue: "Transcription started ...") + "\n"
+            outputPipe.fileHandleForWriting.closeFile()
+            DispatchQueue.global(qos: .utility).async { [weak self] in
+                defer {
+                    outputPipe.fileHandleForReading.closeFile()
+                    outputFinished.leave()
+                }
+                // One reader preserves every byte, including split UTF-8 sequences.
+                while true {
+                    let data = outputPipe.fileHandleForReading.availableData
+                    guard !data.isEmpty else { break }
+                    runLog.append(data)
+                    let text = String(decoding: data, as: UTF8.self)
+                    Task { @MainActor in
+                        guard let self else { return }
+                        self.log.append(text)
+                        self.updateProgress()
+                    }
+                }
+            }
         } catch {
-            inputURL.stopAccessingSecurityScopedResource()
+            outputPipe.fileHandleForWriting.closeFile()
+            outputPipe.fileHandleForReading.closeFile()
+            outputFinished.leave()
+            runLog.append(Data("Start fehlgeschlagen: \(error.localizedDescription)\n".utf8))
+            runLog.finish(exitCode: nil, signalled: false)
+            scopedURL?.stopAccessingSecurityScopedResource()
             scopedURL = nil
             status = .failed(
                 String.localizedStringWithFormat(
