@@ -29,3 +29,7 @@ DerivedData/
 
 # Bundled/generated local binaries
 bin/ffmpeg
+
+# Python runtime/test caches
+__pycache__/
+*.pyc

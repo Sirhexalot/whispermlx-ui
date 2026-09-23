@@ -52,4 +52,4 @@ fi
   print -u2 "Python with WhisperMLX is not available. Install it with: brew install python@3.13 && /opt/homebrew/opt/python@3.13/bin/python3.13 -m pip install --upgrade whispermlx"
   exit 4
 }
-exec "$python" -m whispermlx "$input" "${extra[@]}"
+exec "$python" "${0:A:h}/whispermlx_runtime.py" "$input" "${extra[@]}"

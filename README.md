@@ -49,6 +49,7 @@ You can:
 - Download/remove AI models in Settings
 - Optional speaker diarization (speaker detection)
 - Outputs saved next to the source file for easy organization
+- Raw transcription JSON is saved in the transcript folder before alignment. Whisper GPU caches are released before alignment, with a CPU retry if the MPS backend runs out of memory.
 
 ---
 
