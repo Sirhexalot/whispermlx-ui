@@ -49,7 +49,9 @@ You can:
 - Download/remove AI models in Settings
 - Optional speaker diarization (speaker detection)
 - Outputs saved next to the source file for easy organization
-- Raw transcription JSON is saved in the transcript folder before alignment. Whisper GPU caches are released before alignment, with a CPU retry if the MPS backend runs out of memory.
+- Raw transcription JSON is saved before alignment and reused on retry when the recording and settings match.
+- Alignment runs on the CPU in separate processes, each handling at most four speech segments (up to two minutes). Completed blocks are saved in `.alignment-cache` and reused on retry; timestamps remain relative to the full recording.
+- To continue an older saved raw transcript explicitly, use `bin/whispermlx <recording> --resume-transcript <raw-transcript.json>` with the appropriate language and model options. Raw checkpoints and alignment block files are intermediate results, not quality-reviewed transcripts.
 
 ---
 
