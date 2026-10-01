@@ -2,12 +2,38 @@ import AVFoundation
 import Foundation
 
 @MainActor
+final class AudioLevels: ObservableObject {
+    @Published private(set) var microphone: Float = 0
+    @Published private(set) var system: Float = 0
+
+    func update(_ value: Float, systemAudio: Bool) {
+        let current = systemAudio ? system : microphone
+        let next = max(value, current * 0.72)
+        guard abs(next - current) >= 0.005 else { return }
+        if systemAudio { system = next } else { microphone = next }
+    }
+
+    func decay() {
+        let microphoneNext = microphone < 0.005 ? 0 : microphone * 0.82
+        let systemNext = system < 0.005 ? 0 : system * 0.82
+        if microphoneNext != microphone { microphone = microphoneNext }
+        if systemNext != system { system = systemNext }
+    }
+
+    func reset() {
+        if microphone != 0 { microphone = 0 }
+        if system != 0 { system = 0 }
+    }
+
+    var isActive: Bool { microphone > 0 || system > 0 }
+}
+
+@MainActor
 final class AudioRecorder: ObservableObject {
     @Published private(set) var isRecording = false
     @Published private(set) var isFinalizingRecording = false
     @Published private(set) var elapsed: TimeInterval = 0
-    @Published private(set) var level: Float = 0
-    @Published private(set) var systemLevel: Float = 0
+    let meters = AudioLevels()
     @Published private(set) var includesSystemAudio = false
     @Published private(set) var lastStartWarning: String?
     @Published private(set) var activeMicrophoneName: String?
@@ -42,14 +68,14 @@ final class AudioRecorder: ObservableObject {
         systemAudioRecorder.onLevel = { [weak self] newLevel in
             Task { @MainActor [weak self] in
                 guard let self else { return }
-                self.systemLevel = max(newLevel, self.systemLevel * 0.72)
+                self.updateLevel(newLevel, systemAudio: true)
                 self.noteRecordingLevel(newLevel)
             }
         }
         previewSystemAudioRecorder.onLevel = { [weak self] newLevel in
             Task { @MainActor [weak self] in
                 guard let self, !self.isRecording else { return }
-                self.systemLevel = max(newLevel, self.systemLevel * 0.72)
+                self.updateLevel(newLevel, systemAudio: true)
             }
         }
     }
@@ -78,7 +104,7 @@ final class AudioRecorder: ObservableObject {
         let capture = MicrophoneCapture { [weak self] newLevel in
             Task { @MainActor [weak self] in
                 guard let self else { return }
-                self.level = max(newLevel, self.level * 0.72)
+                self.updateLevel(newLevel, systemAudio: false)
                 self.noteRecordingLevel(newLevel)
             }
         }
@@ -110,12 +136,10 @@ final class AudioRecorder: ObservableObject {
         startedAt = .now
         lastAudibleAt = .now
         silenceAcknowledged = false
-        silenceWarning = false
+        if silenceWarning { silenceWarning = false }
         elapsed = 0
-        level = 0
-        systemLevel = 0
+        meters.reset()
         isRecording = true
-        startPreviewDecayTimer()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             Task { @MainActor [weak self] in
                 guard let self, let startedAt = self.startedAt else { return }
@@ -136,8 +160,7 @@ final class AudioRecorder: ObservableObject {
         lastAudibleAt = nil
         isFinalizingRecording = true
         elapsed = 0
-        level = 0
-        systemLevel = 0
+        meters.reset()
         activeMicrophoneName = nil
 
         defer {
@@ -177,7 +200,7 @@ final class AudioRecorder: ObservableObject {
         guard isRecording, level >= Self.silenceThreshold else { return }
         lastAudibleAt = .now
         silenceAcknowledged = false
-        silenceWarning = false
+        if silenceWarning { silenceWarning = false }
     }
 
     private func checkSilence() {
@@ -189,14 +212,13 @@ final class AudioRecorder: ObservableObject {
 
     func startPreviewMonitoringIfPossible() async {
         guard !isRecording else { return }
-        level = 0
-        systemLevel = 0
+        meters.reset()
 
         if previewMicrophoneCapture == nil, RecordingPermissions.hasMicrophoneAccess() {
             let capture = MicrophoneCapture { [weak self] newLevel in
                 Task { @MainActor [weak self] in
                     guard let self, !self.isRecording else { return }
-                    self.level = max(newLevel, self.level * 0.72)
+                    self.updateLevel(newLevel, systemAudio: false)
                 }
             }
             do {
@@ -220,7 +242,7 @@ final class AudioRecorder: ObservableObject {
             }
         }
 
-        startPreviewDecayTimer()
+        // The first non-silent capture buffer starts the decay timer.
     }
 
     func preparePreviewMonitoring() async {
@@ -247,18 +269,26 @@ final class AudioRecorder: ObservableObject {
         previewDecayTimer?.invalidate()
         previewDecayTimer = nil
         if !isRecording {
-            level = 0
-            systemLevel = 0
+            meters.reset()
         }
     }
 
+    private func updateLevel(_ value: Float, systemAudio: Bool) {
+        guard value >= 0.005 else { return }
+        meters.update(value, systemAudio: systemAudio)
+        if meters.isActive && previewDecayTimer == nil { startPreviewDecayTimer() }
+    }
+
     private func startPreviewDecayTimer() {
-        previewDecayTimer?.invalidate()
+        guard previewDecayTimer == nil else { return }
         previewDecayTimer = Timer.scheduledTimer(withTimeInterval: 0.08, repeats: true) { [weak self] _ in
             Task { @MainActor [weak self] in
                 guard let self else { return }
-                self.level *= 0.82
-                self.systemLevel *= 0.82
+                self.meters.decay()
+                if !self.meters.isActive {
+                    self.previewDecayTimer?.invalidate()
+                    self.previewDecayTimer = nil
+                }
             }
         }
     }

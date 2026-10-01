@@ -3,12 +3,6 @@ import UniformTypeIdentifiers
 import AppKit
 
 struct ContentView: View {
-    private static let microphoneLevelColor = Color(
-        red: 121 / 255,
-        green: 191 / 255,
-        blue: 67 / 255
-    )
-
     @Bindable var controller: TranscriptionController
     @ObservedObject private var recorder: AudioRecorder
     @State private var isImporting = false
@@ -151,10 +145,7 @@ struct ContentView: View {
                 }
             }
 
-            VStack(alignment: .leading, spacing: 12) {
-                audioLevel(label: "recording.level.microphone", value: recorder.level, tint: Self.microphoneLevelColor)
-                audioLevel(label: "recording.level.systemAudio", value: recorder.systemLevel, tint: .blue)
-            }
+            AudioLevelMeters(meters: recorder.meters, spacing: 12)
 
             Spacer()
             HStack {
@@ -189,15 +180,9 @@ struct ContentView: View {
                         Button("recording.stop") { controller.stopRecording() }
                             .buttonStyle(.borderedProminent)
                     }
-                    VStack(alignment: .leading, spacing: 5) {
-                        audioLevel(label: "recording.level.microphone", value: recorder.level, tint: Self.microphoneLevelColor)
-                        audioLevel(label: "recording.level.systemAudio", value: recorder.systemLevel, tint: .blue)
-                    }
+                    AudioLevelMeters(meters: recorder.meters, spacing: 5)
                 } else {
-                    VStack(alignment: .leading, spacing: 8) {
-                        audioLevel(label: "recording.level.microphone", value: recorder.level, tint: Self.microphoneLevelColor)
-                        audioLevel(label: "recording.level.systemAudio", value: recorder.systemLevel, tint: .blue)
-                    }
+                    AudioLevelMeters(meters: recorder.meters, spacing: 8)
 
                     HStack(alignment: .center, spacing: 14) {
                         Picker("settings.microphone.title", selection: $preferredMicrophoneUID) {
@@ -223,17 +208,6 @@ struct ContentView: View {
                 }
             }
             .padding(8)
-        }
-    }
-
-    private func audioLevel(label: LocalizedStringKey, value: Float, tint: Color) -> some View {
-        HStack(spacing: 7) {
-            Text(label)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-                .frame(width: 76, alignment: .leading)
-            ProgressView(value: Double(value), total: 1)
-                .tint(tint)
         }
     }
 
@@ -441,6 +415,29 @@ struct ContentView: View {
         let minutes = (totalSeconds % 3600) / 60
         let seconds = totalSeconds % 60
         return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+    }
+}
+
+private struct AudioLevelMeters: View {
+    @ObservedObject var meters: AudioLevels
+    let spacing: CGFloat
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: spacing) {
+            meter("recording.level.microphone", value: meters.microphone,
+                  tint: Color(red: 121 / 255, green: 191 / 255, blue: 67 / 255))
+            meter("recording.level.systemAudio", value: meters.system, tint: .blue)
+        }
+    }
+
+    private func meter(_ label: LocalizedStringKey, value: Float, tint: Color) -> some View {
+        HStack(spacing: 7) {
+            Text(label)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .frame(width: 76, alignment: .leading)
+            ProgressView(value: Double(value), total: 1).tint(tint)
+        }
     }
 }
 
