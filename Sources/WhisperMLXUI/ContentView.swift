@@ -41,6 +41,21 @@ struct ContentView: View {
         .sheet(isPresented: $showsRecordingStartModal) {
             recordingStartSheet
         }
+        .alert("recording.silence.title", isPresented: Binding(
+            get: { recorder.silenceWarning },
+            set: { if !$0 { recorder.continueAfterSilence() } }
+        )) {
+            Button("recording.silence.continue") { recorder.continueAfterSilence() }
+            Button("recording.silence.stop") { controller.stopRecording() }
+        } message: {
+            Text("recording.silence.message")
+        }
+        .onChange(of: recorder.silenceWarning) { _, warning in
+            guard warning else { return }
+            NSApp.activate(ignoringOtherApps: true)
+            (NSApp.mainWindow ?? NSApp.windows.first(where: { $0.isVisible && $0.canBecomeKey }))?
+                .makeKeyAndOrderFront(nil)
+        }
         .task {
             refreshMicrophones()
             await recorder.preparePreviewMonitoring()

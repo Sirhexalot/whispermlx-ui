@@ -866,6 +866,34 @@
         }
       }
     },
+    "recording.silence.continue" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufnahme fortsetzen" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Continue recording" } }
+      }
+    },
+    "recording.silence.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Seit 60 Sekunden wurde weder am Mikrofon noch im Systemaudio ein Signal erkannt. Soll die Aufnahme weiterlaufen?" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No microphone or system audio has been detected for 60 seconds. Keep recording?" } }
+      }
+    },
+    "recording.silence.stop" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Aufnahme beenden" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Stop recording" } }
+      }
+    },
+    "recording.silence.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Stille erkannt" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Silence detected" } }
+      }
+    },
     "recording.section" : {
       "extractionState" : "manual",
       "localizations" : {

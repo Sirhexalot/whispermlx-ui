@@ -25,6 +25,12 @@ case "$configuration" in
     ;;
 esac
 
+# Clear only generated build products for this project. Keep dist (including
+# previous releases/appcast) and Xcode's downloaded Swift package dependencies.
+/bin/rm -rf "$root/build" "$root/.build"
+derived_data_path="${WHISPERMLXUI_DERIVED_DATA_PATH:-${TMPDIR:-/tmp}/whispermlx-ui-derived-data}"
+/bin/rm -rf "$derived_data_path/Build"
+
 "$root/build.sh" "$configuration"
 
 /usr/bin/ditto "$root/dist/$configuration/$app_name" "$app_path"

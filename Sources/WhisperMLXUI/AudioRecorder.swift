@@ -11,6 +11,12 @@ final class AudioRecorder: ObservableObject {
     @Published private(set) var includesSystemAudio = false
     @Published private(set) var lastStartWarning: String?
     @Published private(set) var activeMicrophoneName: String?
+    @Published private(set) var silenceWarning = false
+
+    private static let silenceThreshold: Float = 0.01
+    private static let silenceInterval: TimeInterval = 60
+    private var lastAudibleAt: Date?
+    private var silenceAcknowledged = false
 
     var preferredMicrophoneUID: String?
 
@@ -37,6 +43,7 @@ final class AudioRecorder: ObservableObject {
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 self.systemLevel = max(newLevel, self.systemLevel * 0.72)
+                self.noteRecordingLevel(newLevel)
             }
         }
         previewSystemAudioRecorder.onLevel = { [weak self] newLevel in
@@ -72,6 +79,7 @@ final class AudioRecorder: ObservableObject {
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 self.level = max(newLevel, self.level * 0.72)
+                self.noteRecordingLevel(newLevel)
             }
         }
         let activeMicrophone = try capture.start(
@@ -100,6 +108,9 @@ final class AudioRecorder: ObservableObject {
         self.microphoneURL = microphoneURL
         activeMicrophoneName = activeMicrophone.name
         startedAt = .now
+        lastAudibleAt = .now
+        silenceAcknowledged = false
+        silenceWarning = false
         elapsed = 0
         level = 0
         systemLevel = 0
@@ -109,6 +120,7 @@ final class AudioRecorder: ObservableObject {
             Task { @MainActor [weak self] in
                 guard let self, let startedAt = self.startedAt else { return }
                 self.elapsed = Date.now.timeIntervalSince(startedAt)
+                self.checkSilence()
             }
         }
     }
@@ -120,6 +132,8 @@ final class AudioRecorder: ObservableObject {
         microphoneCapture = nil
         await systemAudioRecorder.stop()
         isRecording = false
+        silenceWarning = false
+        lastAudibleAt = nil
         isFinalizingRecording = true
         elapsed = 0
         level = 0
@@ -152,6 +166,25 @@ final class AudioRecorder: ObservableObject {
             NSLog("WhisperMLX UI: could not mix audio tracks: \(error.localizedDescription)")
             return nil
         }
+    }
+
+    func continueAfterSilence() {
+        silenceWarning = false
+        silenceAcknowledged = true
+    }
+
+    private func noteRecordingLevel(_ level: Float) {
+        guard isRecording, level >= Self.silenceThreshold else { return }
+        lastAudibleAt = .now
+        silenceAcknowledged = false
+        silenceWarning = false
+    }
+
+    private func checkSilence() {
+        guard isRecording, !silenceWarning, !silenceAcknowledged,
+              let lastAudibleAt,
+              Date.now.timeIntervalSince(lastAudibleAt) >= Self.silenceInterval else { return }
+        silenceWarning = true
     }
 
     func startPreviewMonitoringIfPossible() async {
