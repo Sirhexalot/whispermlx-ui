@@ -1,0 +1,38 @@
+#!/bin/zsh
+set -euo pipefail
+
+bin="${0:A:h}"
+uv="$bin/uv"
+[[ -x "$uv" ]] || { print -u2 'Bundled uv executable missing.'; exit 1; }
+root="$HOME/.local/share/whispermlx-ui"
+destination="$root/runtime"
+staging="$root/.runtime-install-$$"
+mkdir -p "$root"
+cleanup() { [[ -d "$staging" ]] && /bin/rm -rf "$staging" }
+trap cleanup EXIT
+
+print 'Downloading Python 3.13.14...'
+"$uv" python install 3.13.14 --install-dir "$staging/python" --no-bin
+python="$staging/python/cpython-3.13.14-macos-aarch64-none/bin/python3.13"
+[[ -x "$python" ]] || { print -u2 'Python installation incomplete.'; exit 1; }
+print 'Installing WhisperMLX 3.14.0 and MLX 0.32.3...'
+"$uv" pip install --require-hashes --break-system-packages --python "$python" \
+  -r "$bin/runtime-requirements.txt"
+"$python" -c 'import importlib.metadata as m; import mlx.core as mx; import onnxruntime; assert (m.version("whispermlx"),m.version("mlx"),m.version("mlx-metal")) == ("3.14.0","0.32.3","0.32.3"); mx.array([1]).sum().item()'
+# The Python tree must not depend on the staging path after moving it.
+if [[ -d "$destination" ]]; then
+  /bin/mv "$destination" "$root/.runtime-previous-$$"
+  previous="$root/.runtime-previous-$$"
+else
+  previous=""
+fi
+if /bin/mv "$staging/python/cpython-3.13.14-macos-aarch64-none" "$destination" &&
+   "$destination/bin/python3.13" -c 'import whispermlx, mlx.core'; then
+  print 'whispermlx=3.14.0 mlx=0.32.3 mlx-metal=0.32.3' > "$destination/runtime-version"
+  [[ -z "$previous" ]] || /bin/rm -rf "$previous"
+  print 'Runtime ready.'
+else
+  [[ ! -d "$destination" ]] || /bin/rm -rf "$destination"
+  [[ -z "$previous" ]] || /bin/mv "$previous" "$destination"
+  exit 1
+fi

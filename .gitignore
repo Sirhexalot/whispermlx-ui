@@ -29,6 +29,7 @@ DerivedData/
 
 # Bundled/generated local binaries
 bin/ffmpeg
+bin/uv
 
 # Python runtime/test caches
 __pycache__/

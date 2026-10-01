@@ -61,6 +61,15 @@ targets:
           cp "${SRCROOT}/bin/whispermlx" "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/whispermlx"
           chmod 755 "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/whispermlx"
           cp "${SRCROOT}/bin/whispermlx_runtime.py" "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/whispermlx_runtime.py"
+          if [ ! -x "${SRCROOT}/bin/uv" ]; then
+            echo "error: Bundled uv missing. Run scripts/build-bundled-uv.sh first."
+            exit 1
+          fi
+          cp "${SRCROOT}/bin/uv" "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/uv"
+          chmod 755 "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/uv"
+          cp "${SRCROOT}/bin/setup-runtime" "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/setup-runtime"
+          chmod 755 "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/setup-runtime"
+          cp "${SRCROOT}/runtime-requirements.txt" "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/runtime-requirements.txt"
           if [ ! -x "${SRCROOT}/bin/ffmpeg" ]; then
             echo "error: Die eingebettete FFmpeg-Version fehlt. Bitte scripts/build-bundled-ffmpeg.sh ausführen."
             exit 1

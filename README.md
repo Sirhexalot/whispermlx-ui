@@ -74,10 +74,11 @@ Your recordings don’t need to leave your computer to become text.
 ## Quick start
 
 1. **Choose a file** _or_ **start a recording**
-2. Open **Settings** and select an installed model
-3. (Optional) Pick a dedicated microphone
-4. (Optional) Enable speaker detection
-5. Hit **Start** — get readable text output
+2. On first launch, select **Set up now** to download the Python speech runtime (about 1.2 GB; internet required once)
+3. Open **Settings** and select an installed model
+4. (Optional) Pick a dedicated microphone
+5. (Optional) Enable speaker detection
+6. Hit **Start** — get readable text output
 
 ---
 
@@ -112,6 +113,7 @@ If you want to build from source, you’ll need:
 
 - Xcode 16+
 - `xcodegen`
+- `uv` to prepare the bundled setup tool (`./scripts/build-bundled-uv.sh`); `./build.sh` does this automatically when missing
 
 Generate project:
 

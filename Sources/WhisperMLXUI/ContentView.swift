@@ -18,6 +18,7 @@ struct ContentView: View {
     @State private var pendingRecordingFolderName = ""
     @State private var microphoneDevices: [AudioInputDevice] = []
     @State private var preferredMicrophoneUID: String = ""
+    @State private var runtimeSetup = RuntimeSetup()
 
     init(controller: TranscriptionController) {
         self.controller = controller
@@ -65,6 +66,9 @@ struct ContentView: View {
     private var fullView: some View {
         VStack(alignment: .leading, spacing: 24) {
             header
+            if !runtimeSetup.isReady || runtimeSetup.isInstalling {
+                runtimeSetupView
+            }
             recordingControls
             fileSelection
             controls
@@ -78,6 +82,24 @@ struct ContentView: View {
             if case let .success(urls) = result, let url = urls.first {
                 controller.selectFile(url)
             }
+        }
+    }
+
+    private var runtimeSetupView: some View {
+        GroupBox("runtime.title") {
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("runtime.description")
+                    if !runtimeSetup.message.isEmpty {
+                        Text(runtimeSetup.message).font(.caption).textSelection(.enabled)
+                    }
+                }
+                Spacer()
+                if runtimeSetup.isInstalling { ProgressView().controlSize(.small) }
+                Button("runtime.install") { runtimeSetup.install() }
+                    .disabled(runtimeSetup.isInstalling)
+            }
+            .padding(8)
         }
     }
 

@@ -1,0 +1,4 @@
+whispermlx==3.14.0
+mlx==0.32.3
+mlx-metal==0.32.3
+onnxruntime==1.30.0

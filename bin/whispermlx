@@ -35,21 +35,13 @@ if [[ -n "${WHISPERMLX_PYTHON:-}" ]]; then
 elif [[ -x "${0:A:h:h}/python/bin/python" ]]; then
   # Future self-contained app runtime, located at Contents/Resources/python.
   python="${0:A:h:h}/python/bin/python"
-elif [[ -x "$HOME/.local/share/whispermlx-ui/venv/bin/python" ]]; then
-  # Managed application runtime. The bare Homebrew interpreter does not carry
-  # WhisperMLX and must not be selected before this environment.
-  python="$HOME/.local/share/whispermlx-ui/venv/bin/python"
-elif [[ -x "/opt/homebrew/opt/python@3.13/bin/python3.13" ]]; then
-  python="/opt/homebrew/opt/python@3.13/bin/python3.13"
-elif (( $+commands[python3.13] )); then
-  python="${commands[python3.13]}"
-elif (( $+commands[python3] )); then
-  python="${commands[python3]}"
+elif [[ -x "$HOME/.local/share/whispermlx-ui/runtime/bin/python3.13" ]]; then
+  python="$HOME/.local/share/whispermlx-ui/runtime/bin/python3.13"
 else
   python=""
 fi
 [[ -x "$python" ]] || {
-  print -u2 "Python with WhisperMLX is not available. Install it with: brew install python@3.13 && /opt/homebrew/opt/python@3.13/bin/python3.13 -m pip install --upgrade whispermlx"
+  print -u2 "WhisperMLX runtime is unavailable. Open the app and run speech recognition setup first."
   exit 4
 }
 exec "$python" "${0:A:h}/whispermlx_runtime.py" "$input" "${extra[@]}"

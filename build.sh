@@ -20,6 +20,9 @@ case "$configuration" in
 esac
 
 cd "$root"
+if [[ ! -x "$root/bin/uv" ]]; then
+  "$root/scripts/build-bundled-uv.sh"
+fi
 xcodegen generate
 mkdir -p "$product_root"
 # Xcode may reuse an existing app bundle for incremental builds. Remove file

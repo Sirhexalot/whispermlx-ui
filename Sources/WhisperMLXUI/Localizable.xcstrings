@@ -894,6 +894,55 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Silence detected" } }
       }
     },
+    "runtime.description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Vor der ersten Transkription Python und WhisperMLX herunterladen (ca. 1,2 GB). Danach läuft die Verarbeitung lokal." } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Download Python and WhisperMLX before your first transcription (about 1.2 GB). Processing is local afterwards." } }
+      }
+    },
+    "runtime.failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Die Einrichtung ist fehlgeschlagen. Bitte erneut versuchen." } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Setup failed. Please try again." } }
+      }
+    },
+    "runtime.install" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Jetzt einrichten" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Set up now" } }
+      }
+    },
+    "runtime.installing" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Laufzeit wird heruntergeladen und eingerichtet. Bitte App geöffnet lassen …" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Downloading and setting up the runtime. Keep the app open …" } }
+      }
+    },
+    "runtime.ready" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Laufzeit ist bereit." } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Runtime is ready." } }
+      }
+    },
+    "runtime.required" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Bitte zuerst die Laufzeit einrichten." } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Set up the runtime first." } }
+      }
+    },
+    "runtime.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Einrichtung der Spracherkennung" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Speech recognition setup" } }
+      }
+    },
     "recording.section" : {
       "extractionState" : "manual",
       "localizations" : {

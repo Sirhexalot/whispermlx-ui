@@ -133,6 +133,10 @@ final class TranscriptionController {
 
     func start() {
         guard !isRunning, let inputURL else { return }
+        guard RuntimeSetup.isInstalled else {
+            status = .failed(String(localized: "runtime.required"))
+            return
+        }
         guard resolveCLI() != nil else {
             status = .failed(String(localized: "error.whisperMLXNotInstalled"))
             return

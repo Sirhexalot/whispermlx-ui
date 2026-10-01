@@ -41,11 +41,8 @@ final class ModelManager {
 
         Task { @MainActor [weak self] in
             guard let self else { return }
-            let candidates = [
-                Bundle.main.bundleURL.appendingPathComponent("Contents/Resources/python/bin/python").path,
-                NSHomeDirectory() + "/.local/share/whispermlx-ui/venv/bin/python"
-            ]
-            guard let python = candidates.first(where: { FileManager.default.isExecutableFile(atPath: $0) }) else {
+            let python = NSHomeDirectory() + "/.local/share/whispermlx-ui/runtime/bin/python3.13"
+            guard RuntimeSetup.isInstalled else {
                 self.errorMessage = String(localized: "error.modelRuntimeMissing")
                 self.downloading = nil
                 return

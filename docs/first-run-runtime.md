@@ -1,0 +1,7 @@
+# First-run runtime
+
+The app includes FFmpeg, its own CLI and a native `uv` installer. It does not contain Python, WhisperMLX or the model weights. The setup button installs CPython 3.13.14 and the hash-locked dependencies from `runtime-requirements.txt` into `~/.local/share/whispermlx-ui/runtime`, using a temporary staging directory. Only after an import/version check does it replace the previously installed runtime and write `runtime-version`. A failed install leaves the previous runtime intact. Existing `~/.local/share/whispermlx-ui/venv` is not touched. Model downloads remain separate.
+
+To update dependencies, edit `runtime-requirements.in`, regenerate the lockfile with `uv pip compile runtime-requirements.in --python <CPython-3.13-path> --generate-hashes -o runtime-requirements.txt`, and update the version receipt check in `RuntimeSetup.swift` and `bin/setup-runtime`. `./build.sh` requires `uv` locally to copy its executable into the app; `bin/uv` is ignored by Git. Prepare an actual macOS-arm64 release build on macOS, and check notarization with nested `uv` before publishing.
+
+Before release: run the setup script with an empty temporary `HOME`, then launch its Python independently of the old venv and transcribe an audio file with alignment and optional diarization. Test the visible first-run prompt and retry path in the app, verify startup without Homebrew or the old venv, and check the resulting size and macOS 14 compatibility. Installing Python and models requires internet and free disk space; subsequent transcription stays local.
