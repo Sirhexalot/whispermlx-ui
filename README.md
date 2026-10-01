@@ -1,5 +1,7 @@
 # WhisperMLX UI 🎙️📝
 
+[![Downloads](https://img.shields.io/github/downloads/Sirhexalot/whispermlx-ui/total?label=downloads)](https://github.com/Sirhexalot/whispermlx-ui/releases)
+
 **Turn meetings, interviews, and recordings into clean, readable text — locally on your Mac.**  
 No cloud. No “upload your private audio somewhere”. Just fast on-device AI.
 
