@@ -5,6 +5,11 @@ import Observation
 @Observable
 final class RuntimeSetup {
     static let version = "whispermlx=3.14.0 mlx=0.32.3 mlx-metal=0.32.3"
+    static var rootURL: URL {
+        let home = ProcessInfo.processInfo.environment["HOME"] ?? NSHomeDirectory()
+        return URL(fileURLWithPath: home, isDirectory: true)
+            .appendingPathComponent(".local/share/whispermlx-ui/runtime", isDirectory: true)
+    }
     private(set) var isInstalling = false
     private(set) var message = ""
     private(set) var isReady = false
@@ -16,8 +21,7 @@ final class RuntimeSetup {
     }
 
     static var isInstalled: Bool {
-        let root = URL(fileURLWithPath: NSHomeDirectory())
-            .appendingPathComponent(".local/share/whispermlx-ui/runtime")
+        let root = rootURL
         let receipt = try? String(contentsOf: root.appendingPathComponent("runtime-version"), encoding: .utf8)
         return receipt?.trimmingCharacters(in: .whitespacesAndNewlines) == version &&
             FileManager.default.isExecutableFile(atPath: root.appendingPathComponent("bin/python3.13").path)

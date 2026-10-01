@@ -27,7 +27,9 @@ struct ContentView: View {
 
     var body: some View {
         Group {
-            if recorder.isRecording || recorder.isFinalizingRecording {
+            if !runtimeSetup.isReady {
+                Color.clear.frame(width: 520, height: 300)
+            } else if recorder.isRecording || recorder.isFinalizingRecording {
                 compactRecordingView
                     .frame(width: 480, height: 260)
             } else {
@@ -36,6 +38,13 @@ struct ContentView: View {
             }
         }
         .background(WindowSizeConfigurator(isCompact: recorder.isRecording))
+        .sheet(isPresented: Binding(
+            get: { !runtimeSetup.isReady },
+            set: { _ in }
+        )) {
+            runtimeSetupView
+                .interactiveDismissDisabled()
+        }
         .sheet(isPresented: $showsSettings) {
             SettingsView(controller: controller)
         }
@@ -58,17 +67,21 @@ struct ContentView: View {
                 .makeKeyAndOrderFront(nil)
         }
         .task {
+            if runtimeSetup.isReady {
+                refreshMicrophones()
+                await recorder.preparePreviewMonitoring()
+            }
+        }
+        .onChange(of: runtimeSetup.isReady) { _, ready in
+            guard ready else { return }
             refreshMicrophones()
-            await recorder.preparePreviewMonitoring()
+            Task { await recorder.preparePreviewMonitoring() }
         }
     }
 
     private var fullView: some View {
         VStack(alignment: .leading, spacing: 24) {
             header
-            if !runtimeSetup.isReady || runtimeSetup.isInstalling {
-                runtimeSetupView
-            }
             recordingControls
             fileSelection
             controls
@@ -86,21 +99,32 @@ struct ContentView: View {
     }
 
     private var runtimeSetupView: some View {
-        GroupBox("runtime.title") {
-            HStack {
-                VStack(alignment: .leading) {
-                    Text("runtime.description")
-                    if !runtimeSetup.message.isEmpty {
-                        Text(runtimeSetup.message).font(.caption).textSelection(.enabled)
-                    }
+        VStack(alignment: .leading, spacing: 18) {
+            Text("runtime.title").font(.title2.weight(.semibold))
+            Text("runtime.description")
+                .foregroundStyle(.secondary)
+            if runtimeSetup.isInstalling { ProgressView() }
+            if !runtimeSetup.message.isEmpty {
+                ScrollView {
+                    Text(runtimeSetup.message)
+                        .font(.caption)
+                        .textSelection(.enabled)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                Spacer()
-                if runtimeSetup.isInstalling { ProgressView().controlSize(.small) }
-                Button("runtime.install") { runtimeSetup.install() }
-                    .disabled(runtimeSetup.isInstalling)
+                .frame(maxHeight: 100)
             }
-            .padding(8)
+            HStack {
+                Spacer()
+                Button(runtimeSetup.message.hasPrefix(String(localized: "runtime.failed"))
+                       ? "runtime.retry" : "runtime.install") {
+                    runtimeSetup.install()
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(runtimeSetup.isInstalling)
+            }
         }
+        .padding(24)
+        .frame(width: 480)
     }
 
     private var compactRecordingView: some View {

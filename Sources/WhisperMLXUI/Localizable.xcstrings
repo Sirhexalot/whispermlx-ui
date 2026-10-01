@@ -936,6 +936,13 @@
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Set up the runtime first." } }
       }
     },
+    "runtime.retry" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Erneut versuchen" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Try again" } }
+      }
+    },
     "runtime.title" : {
       "extractionState" : "manual",
       "localizations" : {
