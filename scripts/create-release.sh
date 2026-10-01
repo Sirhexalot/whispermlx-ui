@@ -25,9 +25,10 @@ case "$configuration" in
     ;;
 esac
 
-# Clear only generated build products for this project. Keep dist (including
-# previous releases/appcast) and Xcode's downloaded Swift package dependencies.
+# Clear generated build products and stale Debug apps. Keep Release outputs,
+# Sparkle updates, and Xcode's downloaded Swift package dependencies.
 /bin/rm -rf "$root/build" "$root/.build"
+/bin/rm -rf "$root/dist/Debug"
 derived_data_path="${WHISPERMLXUI_DERIVED_DATA_PATH:-${TMPDIR:-/tmp}/whispermlx-ui-derived-data}"
 /bin/rm -rf "$derived_data_path/Build"
 
