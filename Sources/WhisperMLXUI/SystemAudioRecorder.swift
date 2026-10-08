@@ -16,7 +16,12 @@ final class SystemAudioRecorder: NSObject, SCStreamOutput {
     var onLevel: ((Float) -> Void)?
     var isCapturing: Bool { stream != nil }
 
+    /// Set when the capture pipeline could not persist system audio, so the
+    /// recorder can surface it instead of only logging to the console.
+    private(set) var writeErrorMessage: String?
+
     func start(to outputURL: URL?) async throws {
+        writeErrorMessage = nil
         guard RecordingPermissions.ensureSystemAudioAccess() else {
             throw SystemAudioRecorderError.permissionDenied
         }
@@ -92,6 +97,7 @@ final class SystemAudioRecorder: NSObject, SCStreamOutput {
                 try self.audioFile?.write(from: copy)
             } catch {
                 NSLog("WhisperMLX UI: could not write system audio: \(error.localizedDescription)")
+                self.writeErrorMessage = error.localizedDescription
             }
         }
     }

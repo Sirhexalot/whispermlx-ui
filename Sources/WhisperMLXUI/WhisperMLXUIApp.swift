@@ -1,14 +1,33 @@
 import SwiftUI
+import AppKit
 import Security
 import Sparkle
 
+/// Coordinates a graceful shutdown: an in-progress recording is finalized and
+/// a running transcription helper is terminated before the app exits.
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    static weak var controller: TranscriptionController?
+
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        guard let controller = Self.controller, controller.isBusy else { return .terminateNow }
+        Task { @MainActor in
+            await controller.shutdown()
+            NSApp.reply(toApplicationShouldTerminate: true)
+        }
+        return .terminateLater
+    }
+}
+
 @main
 struct WhisperMLXUIApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @State private var controller: TranscriptionController
     private let updaterController: SPUStandardUpdaterController
 
     init() {
-        _controller = State(initialValue: TranscriptionController())
+        let controller = TranscriptionController()
+        _controller = State(initialValue: controller)
+        AppDelegate.controller = controller
         updaterController = SPUStandardUpdaterController(
             startingUpdater: true,
             updaterDelegate: nil,
@@ -66,7 +85,7 @@ enum TokenStore {
         return (String(decoding: data, as: UTF8.self), status)
     }
 
-    static func save(_ token: String) {
+    static func save(_ token: String) -> OSStatus {
         let query: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
             kSecAttrService: service,
@@ -79,7 +98,7 @@ enum TokenStore {
             kSecAttrAccount: account,
             kSecValueData: Data(token.utf8)
         ]
-        SecItemAdd(value as CFDictionary, nil)
+        return SecItemAdd(value as CFDictionary, nil)
     }
 }
 
@@ -138,6 +157,7 @@ struct SettingsView: View {
     @State private var localDiarizationModelPath = ""
     @State private var tokenLoadMessage: String?
     @State private var tokenLoadSucceeded = false
+    @State private var tokenSaveError: String?
     @State private var modelManager = ModelManager()
     @State private var diarizationModelManager = DiarizationModelManager()
     @State private var modelToRemove: TranscriptionController.Model?
@@ -175,6 +195,17 @@ struct SettingsView: View {
         }
         .frame(width: 760, height: 500)
         .onAppear { resetDraft() }
+        .alert(
+            "settings.token.saveFailed.title",
+            isPresented: Binding(
+                get: { tokenSaveError != nil },
+                set: { if !$0 { tokenSaveError = nil } }
+            )
+        ) {
+            Button("action.close") { tokenSaveError = nil }
+        } message: {
+            Text(tokenSaveError ?? "")
+        }
     }
 
     private var transcriptionSettings: some View {
@@ -386,6 +417,16 @@ struct SettingsView: View {
 
     private func apply() {
         let newToken = token.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !newToken.isEmpty {
+            let status = TokenStore.save(newToken)
+            if status != errSecSuccess {
+                tokenSaveError = String.localizedStringWithFormat(
+                    String(localized: "settings.token.saveFailed"),
+                    Int(status)
+                )
+                return
+            }
+        }
         let newLocalPath = localDiarizationModelPath.trimmingCharacters(in: .whitespacesAndNewlines)
         let hasToken = !newToken.isEmpty || (diarizationEnabled && !TokenStore.load().trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         let hasOfflineModel = diarizationModelManager.status == .ready
@@ -397,7 +438,6 @@ struct SettingsView: View {
         controller.speakerCount = speakerCount
         controller.preferredMicrophoneUID = preferredMicrophoneUID.isEmpty ? nil : preferredMicrophoneUID
         controller.recorder.preferredMicrophoneUID = controller.preferredMicrophoneUID
-        if !newToken.isEmpty { TokenStore.save(newToken) }
         LocalDiarizationModelStore.save(newLocalPath)
         TranscriptionLanguageStore.save(transcriptionLanguage)
         AudioInputDeviceStore.save(controller.preferredMicrophoneUID)

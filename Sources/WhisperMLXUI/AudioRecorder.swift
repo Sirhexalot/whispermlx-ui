@@ -36,6 +36,7 @@ final class AudioRecorder: ObservableObject {
     let meters = AudioLevels()
     @Published private(set) var includesSystemAudio = false
     @Published private(set) var lastStartWarning: String?
+    @Published private(set) var lastFinalizeWarning: String?
     @Published private(set) var activeMicrophoneName: String?
     @Published private(set) var silenceWarning = false
 
@@ -64,6 +65,72 @@ final class AudioRecorder: ObservableObject {
         )).deletingPathExtension().lastPathComponent
     }
 
+    /// Fixed, non-localized recordings folder so sessions stay discoverable
+    /// regardless of the app's display language.
+    static let recordingsFolderName = "WhisperMLX Recordings"
+
+    static func moviesFolderURL() -> URL {
+        FileManager.default.urls(for: .moviesDirectory, in: .userDomainMask)[0]
+    }
+
+    /// Root folder that holds all recording sessions.
+    static func recordingsFolderURL() -> URL {
+        moviesFolderURL().appendingPathComponent(recordingsFolderName, isDirectory: true)
+    }
+
+    /// Folder names that may hold sessions: the canonical name plus the older
+    /// localized names so recordings made before the name was fixed keep
+    /// working.
+    static func knownRecordingsFolderNames() -> [String] {
+        var names = [recordingsFolderName]
+        for candidate in [
+            String(localized: "recordings.folderName", defaultValue: "WhisperMLX Recordings"),
+            "WhisperMLX-Aufnahmen"
+        ] where !candidate.isEmpty && !names.contains(candidate) {
+            names.append(candidate)
+        }
+        return names
+    }
+
+    static func knownRecordingsFolderURLs() -> [URL] {
+        let movies = moviesFolderURL()
+        return knownRecordingsFolderNames().map { movies.appendingPathComponent($0, isDirectory: true) }
+    }
+
+    /// Name of the subfolder that holds the raw microphone and system tracks.
+    static var sourceFolderName: String {
+        String(localized: "recordings.sourceFolderName", defaultValue: "source")
+    }
+
+    /// Source subfolder names used by older builds (localized) so legacy
+    /// sessions can still be recognized.
+    static func knownSourceFolderNames() -> [String] {
+        var names = [sourceFolderName]
+        for candidate in ["source", "Quellen"] where !names.contains(candidate) {
+            names.append(candidate)
+        }
+        return names
+    }
+
+    /// Moves an older localized recordings folder to the canonical name on
+    /// first use, so existing sessions remain in one place.
+    static func adoptLegacyRecordingsFolderIfNeeded() {
+        let fileManager = FileManager.default
+        let canonical = recordingsFolderURL()
+        guard !fileManager.fileExists(atPath: canonical.path) else { return }
+        let movies = moviesFolderURL()
+        for name in knownRecordingsFolderNames().dropFirst() {
+            let legacy = movies.appendingPathComponent(name, isDirectory: true)
+            guard fileManager.fileExists(atPath: legacy.path) else { continue }
+            try? fileManager.moveItem(at: legacy, to: canonical)
+            return
+        }
+    }
+
+    /// Marker written into every session folder so the app can recognize its
+    /// own recordings independently of the localized folder names.
+    static let sessionMarkerName = ".whispermlx-session"
+
     init() {
         systemAudioRecorder.onLevel = { [weak self] newLevel in
             Task { @MainActor [weak self] in
@@ -84,14 +151,20 @@ final class AudioRecorder: ObservableObject {
         guard !isRecording else { return }
         await stopPreviewMonitoring()
         try await RecordingPermissions.ensureMicrophoneAccess()
-        let recordingsFolder = FileManager.default.urls(for: .moviesDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent(String(localized: "recordings.folderName", defaultValue: "WhisperMLX Recordings"), isDirectory: true)
+        AudioRecorder.adoptLegacyRecordingsFolderIfNeeded()
+        let recordingsFolder = AudioRecorder.recordingsFolderURL()
         try FileManager.default.createDirectory(at: recordingsFolder, withIntermediateDirectories: true)
         let sessionName = Self.sanitizedSessionFolderName(sessionFolderName)
         let sessionFolder = recordingsFolder.appendingPathComponent(sessionName, isDirectory: true)
         try FileManager.default.createDirectory(at: sessionFolder, withIntermediateDirectories: true)
+        // Mark the folder as one of our sessions so audio cleanup does not rely
+        // on the localized folder name or the source subfolder being present.
+        try? Data().write(
+            to: sessionFolder.appendingPathComponent(Self.sessionMarkerName),
+            options: .atomic
+        )
         let sourceFolder = sessionFolder.appendingPathComponent(
-            String(localized: "recordings.sourceFolderName", defaultValue: "source"),
+            AudioRecorder.sourceFolderName,
             isDirectory: true
         )
         try FileManager.default.createDirectory(at: sourceFolder, withIntermediateDirectories: true)
@@ -136,6 +209,7 @@ final class AudioRecorder: ObservableObject {
         startedAt = .now
         lastAudibleAt = .now
         silenceAcknowledged = false
+        lastFinalizeWarning = nil
         if silenceWarning { silenceWarning = false }
         elapsed = 0
         meters.reset()
@@ -155,6 +229,9 @@ final class AudioRecorder: ObservableObject {
         let didWriteMicrophoneAudio = microphoneCapture?.stop() == true
         microphoneCapture = nil
         await systemAudioRecorder.stop()
+        lastFinalizeWarning = systemAudioRecorder.writeErrorMessage.map {
+            String.localizedStringWithFormat(String(localized: "log.systemAudioWriteFailed"), $0)
+        }
         isRecording = false
         silenceWarning = false
         lastAudibleAt = nil

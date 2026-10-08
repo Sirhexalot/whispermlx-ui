@@ -136,6 +136,108 @@
         }
       }
     },
+    "deleteAudio.delete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio löschen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Audio"
+          }
+        }
+      }
+    },
+    "deleteAudio.error.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio konnte nicht entfernt werden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio could not be removed"
+          }
+        }
+      }
+    },
+    "deleteAudio.keep" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht löschen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep Audio"
+          }
+        }
+      }
+    },
+    "deleteAudio.message.file" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Audiodatei „%@“ wird in den Papierkorb verschoben. Das Transkript bleibt erhalten."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The audio file “%@” will be moved to the Trash. The transcript is kept."
+          }
+        }
+      }
+    },
+    "deleteAudio.message.session" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Audiodateien der Aufnahme „%@“ werden in den Papierkorb verschoben. Das Transkript bleibt erhalten."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All audio files of the recording “%@” will be moved to the Trash. The transcript is kept."
+          }
+        }
+      }
+    },
+    "deleteAudio.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio löschen?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete audio?"
+          }
+        }
+      }
+    },
     "details.emptyLog" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -199,6 +301,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enable speaker recognition"
+          }
+        }
+      }
+    },
+    "error.audioDeletionFailed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio konnte nicht in den Papierkorb verschoben werden: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not move audio to the Trash: %@"
           }
         }
       }
@@ -641,6 +760,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Recording saved: %@\nReady to transcribe."
+          }
+        }
+      }
+    },
+    "log.systemAudioWriteFailed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Systemaudio konnte nicht vollständig gespeichert werden: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System audio could not be saved completely: %@"
           }
         }
       }
@@ -1167,6 +1303,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "System Audio.caf"
+          }
+        }
+      }
+    },
+    "runtime.versionMismatch" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eine andere Laufzeit ist installiert (%@). Erwartet wird %@. Bitte neu installieren."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A different runtime is installed (%@). Expected %@. Please reinstall."
           }
         }
       }
@@ -1754,6 +1907,40 @@
         }
       }
     },
+    "settings.token.saveFailed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Token konnte nicht im Schlüsselbund gespeichert werden (Status %d)."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The token could not be saved to the Keychain (status %d)."
+          }
+        }
+      }
+    },
+    "settings.token.saveFailed.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Token nicht gespeichert"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Token not saved"
+          }
+        }
+      }
+    },
     "settings.token.saved" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1882,6 +2069,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%d People"
+          }
+        }
+      }
+    },
+    "transcription.audioDeleted" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio gelöscht"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio deleted"
           }
         }
       }

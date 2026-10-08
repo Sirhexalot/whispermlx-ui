@@ -18,6 +18,17 @@ final class RuntimeSetup {
 
     func refresh() {
         isReady = Self.isInstalled
+        guard !isReady else { return }
+        // A receipt with a different version means a stale or foreign runtime is
+        // present; explain it instead of silently offering a reinstall.
+        let receipt = try? String(contentsOf: Self.rootURL.appendingPathComponent("runtime-version"), encoding: .utf8)
+        if let receipt, !receipt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            message = String.localizedStringWithFormat(
+                String(localized: "runtime.versionMismatch"),
+                receipt.trimmingCharacters(in: .whitespacesAndNewlines),
+                Self.version
+            )
+        }
     }
 
     static var isInstalled: Bool {

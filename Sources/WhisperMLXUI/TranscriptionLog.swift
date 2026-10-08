@@ -55,4 +55,26 @@ final class TranscriptionLog: @unchecked Sendable {
         }
         closed = true
     }
+
+    /// Keeps only the newest `keeping` log files that belong to the same source
+    /// recording, so repeated transcriptions do not accumulate logs forever.
+    static func prune(beside inputURL: URL, keeping: Int = 5) {
+        let fileManager = FileManager.default
+        let directory = inputURL.deletingLastPathComponent()
+        let prefix = "\(inputURL.deletingPathExtension().lastPathComponent).transkription-"
+        guard let contents = try? fileManager.contentsOfDirectory(
+            at: directory,
+            includingPropertiesForKeys: [.contentModificationDateKey]
+        ) else { return }
+        let logs = contents
+            .filter { $0.lastPathComponent.hasPrefix(prefix) && $0.pathExtension == "log" }
+            .sorted { lhs, rhs in
+                let lhsDate = (try? lhs.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast
+                let rhsDate = (try? rhs.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast
+                return lhsDate > rhsDate
+            }
+        for url in logs.dropFirst(keeping) {
+            try? fileManager.removeItem(at: url)
+        }
+    }
 }

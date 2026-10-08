@@ -1,5 +1,7 @@
+import Darwin
 import Foundation
 import Observation
+import UniformTypeIdentifiers
 
 @MainActor
 @Observable
@@ -116,19 +118,175 @@ final class TranscriptionController {
             .appendingPathExtension(String(localized: "file.outputExtension", defaultValue: "transcript"))
     }
 
+    /// True after the audio files of a successful transcription were removed.
+    var audioDeleted = false
+
+    /// Set when removing the audio failed, so the interface can surface it.
+    var deletionErrorMessage: String?
+
+    /// True when the transcript output folder was actually written to disk with
+    /// at least one visible result file.
+    var hasSavedTranscript: Bool {
+        guard let outputURL else { return false }
+        let fileManager = FileManager.default
+        guard let enumerator = fileManager.enumerator(
+            at: outputURL,
+            includingPropertiesForKeys: [.isRegularFileKey],
+            options: [.skipsHiddenFiles]
+        ) else { return false }
+        for case let url as URL in enumerator {
+            if (try? url.resourceValues(forKeys: [.isRegularFileKey]))?.isRegularFile == true {
+                return true
+            }
+        }
+        return false
+    }
+
+    /// The recording session folder that contains the transcribed audio, when
+    /// the input was produced by the built-in recorder. Imported files return
+    /// nil so only the selected file itself is treated as audio.
+    var recordingSessionFolder: URL? {
+        guard let inputURL else { return nil }
+        return Self.sessionFolder(containing: inputURL, recordingsRoots: AudioRecorder.knownRecordingsFolderURLs())
+    }
+
+    /// Finds the session folder that owns `fileURL`. The file must live below a
+    /// known recordings root and the first path component below it must look
+    /// like one of our sessions (session marker or a source subfolder). This
+    /// keeps imported files outside the recordings folders untouched.
+    static func sessionFolder(containing fileURL: URL, recordingsRoots: [URL]) -> URL? {
+        let fileManager = FileManager.default
+        let fileComponents = fileURL.standardizedFileURL.pathComponents
+        let sourceNames = AudioRecorder.knownSourceFolderNames()
+        for root in recordingsRoots {
+            let rootURL = root.standardizedFileURL
+            let rootComponents = rootURL.pathComponents
+            guard fileComponents.count >= rootComponents.count + 2,
+                  Array(fileComponents.prefix(rootComponents.count)) == rootComponents else { continue }
+            let session = rootURL.appendingPathComponent(fileComponents[rootComponents.count], isDirectory: true)
+            if fileManager.fileExists(atPath: session.appendingPathComponent(AudioRecorder.sessionMarkerName).path) {
+                return session
+            }
+            for sourceName in sourceNames {
+                let sourceFolder = session.appendingPathComponent(sourceName, isDirectory: true)
+                var isDirectory: ObjCBool = false
+                if fileManager.fileExists(atPath: sourceFolder.path, isDirectory: &isDirectory), isDirectory.boolValue {
+                    return session
+                }
+            }
+        }
+        return nil
+    }
+
+    /// True for files whose type is an audio format.
+    static func isAudioFile(_ url: URL) -> Bool {
+        guard let type = UTType(filenameExtension: url.pathExtension) else { return false }
+        return type.conforms(to: .audio)
+    }
+
+    /// Audio files that can be removed after a successful transcription. For
+    /// recordings this covers the mixed file and the raw source tracks. Only
+    /// regular audio files are returned, so the generated transcript directory
+    /// (which can live inside the source folder for microphone-only recordings)
+    /// and any unrelated files are always preserved.
+    var deletableAudioURLs: [URL] {
+        guard let inputURL else { return [] }
+        let fileManager = FileManager.default
+        var urls: [URL] = []
+        if let sessionFolder = recordingSessionFolder {
+            for sourceName in AudioRecorder.knownSourceFolderNames() {
+                let sourceFolder = sessionFolder.appendingPathComponent(sourceName, isDirectory: true)
+                if let contents = try? fileManager.contentsOfDirectory(
+                    at: sourceFolder,
+                    includingPropertiesForKeys: [.isRegularFileKey],
+                    options: [.skipsHiddenFiles]
+                ) {
+                    for url in contents where Self.isAudioFile(url) {
+                        urls.append(url)
+                    }
+                }
+            }
+        }
+        if fileManager.fileExists(atPath: inputURL.path) {
+            urls.append(inputURL)
+        }
+        var seen = Set<String>()
+        return urls.filter { seen.insert($0.standardizedFileURL.path).inserted }
+    }
+
+    /// Human-readable description of what deleting the audio removes.
+    var audioDeletionPromptDetail: String {
+        if let sessionFolder = recordingSessionFolder {
+            return String.localizedStringWithFormat(
+                String(localized: "deleteAudio.message.session"),
+                sessionFolder.lastPathComponent
+            )
+        }
+        guard let name = inputURL?.lastPathComponent else { return "" }
+        return String.localizedStringWithFormat(String(localized: "deleteAudio.message.file"), name)
+    }
+
     var isRunning: Bool {
         if case .running = status { return true }
         return false
     }
 
+    var isBusy: Bool {
+        isRunning || recorder.isRecording || recorder.isFinalizingRecording
+    }
+
     var canStart: Bool {
-        inputURL != nil && !isRunning
+        guard let inputURL else { return false }
+        return !isRunning && FileManager.default.fileExists(atPath: inputURL.path)
     }
 
     func selectFile(_ url: URL) {
         inputURL = url
         status = .ready
         log = ""
+        audioDeleted = false
+        deletionErrorMessage = nil
+    }
+
+    /// Moves the audio files of the just transcribed input to the Trash. The
+    /// transcript output stays in place.
+    func deleteAudioAfterTranscription() {
+        let urls = deletableAudioURLs
+        guard !urls.isEmpty else { return }
+        let fileManager = FileManager.default
+        var failed: [String] = []
+        for url in urls where fileManager.fileExists(atPath: url.path) {
+            do {
+                try fileManager.trashItem(at: url, resultingItemURL: nil)
+            } catch {
+                failed.append(url.lastPathComponent)
+            }
+        }
+        if failed.isEmpty {
+            audioDeleted = true
+            deletionErrorMessage = nil
+            log += "\n" + String(localized: "transcription.audioDeleted") + "\n"
+        } else {
+            deletionErrorMessage = String.localizedStringWithFormat(
+                String(localized: "error.audioDeletionFailed"),
+                failed.joined(separator: ", ")
+            )
+            log += "\n" + (deletionErrorMessage ?? "") + "\n"
+        }
+    }
+
+    /// Removes intermediate transcription artifacts that are only useful while
+    /// a run is in progress: alignment block caches and resumable raw
+    /// transcripts. Final transcript files are never touched.
+    private func pruneIntermediateArtifacts(for outputURL: URL) {
+        let fileManager = FileManager.default
+        try? fileManager.removeItem(at: outputURL.appendingPathComponent(".alignment-cache", isDirectory: true))
+        if let contents = try? fileManager.contentsOfDirectory(at: outputURL, includingPropertiesForKeys: nil) {
+            for url in contents
+            where url.pathExtension == "json" && url.lastPathComponent.contains(".rohtranskript-") {
+                try? fileManager.removeItem(at: url)
+            }
+        }
     }
 
     func start() {
@@ -222,6 +380,10 @@ final class TranscriptionController {
                 if process.terminationReason == .uncaughtSignal {
                     self.status = .cancelled
                 } else if process.terminationStatus == 0, let outputURL = self.outputURL {
+                    self.pruneIntermediateArtifacts(for: outputURL)
+                    if let inputURL = self.inputURL {
+                        TranscriptionLog.prune(beside: inputURL)
+                    }
                     self.status = .succeeded(outputURL)
                 } else {
                     self.status = .failed(
@@ -235,6 +397,7 @@ final class TranscriptionController {
         }
 
         log = String(localized: "log.transcriptionStarted", defaultValue: "Transcription started ...") + "\n"
+        audioDeleted = false
         log += "Logdatei: \(runLog.url.path)\n"
         runLog.append(Data(log.utf8))
         do {
@@ -279,7 +442,27 @@ final class TranscriptionController {
     }
 
     func cancel() {
-        process?.terminate()
+        guard let process, process.isRunning else { return }
+        let pid = process.processIdentifier
+        process.terminate()
+        // Escalate to SIGKILL if the helper ignores the polite termination.
+        DispatchQueue.global().asyncAfter(deadline: .now() + 5) { [weak self] in
+            Task { @MainActor in
+                guard let self, let process = self.process, process.isRunning else { return }
+                kill(pid, SIGKILL)
+            }
+        }
+    }
+
+    /// Stops any running work so the app can quit without leaving an orphaned
+    /// helper process behind or losing an in-progress recording.
+    func shutdown() async {
+        if recorder.isRecording || recorder.isFinalizingRecording {
+            _ = await recorder.stop()
+        }
+        if let process, process.isRunning {
+            process.terminate()
+        }
     }
 
     func suggestedRecordingFolderName() -> String {
@@ -307,10 +490,14 @@ final class TranscriptionController {
                 return
             }
             selectFile(url)
-            log = String.localizedStringWithFormat(
+            var message = String.localizedStringWithFormat(
                 String(localized: "log.recordingSaved"),
                 url.lastPathComponent
             )
+            if let warning = recorder.lastFinalizeWarning, !warning.isEmpty {
+                message += "\n" + warning
+            }
+            log = message
         }
     }
 
@@ -332,10 +519,6 @@ final class TranscriptionController {
               let valueRange = Range(match.range(at: 1), in: log),
               let value = Double(log[valueRange]) else { return }
         progress = min(max(value, 0), 100)
-    }
-
-    private func hasLocalDiarizationModel() -> Bool {
-        Self.isUsableDiarizationModelPath(diarizationModelPath)
     }
 
     private func validatedDiarizationModelPath() -> String? {

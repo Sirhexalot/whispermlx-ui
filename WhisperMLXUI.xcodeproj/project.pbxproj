@@ -13,6 +13,7 @@
 		137729590D1C4E733E0099AF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FEB2E64477CA09E528E90C1F /* Assets.xcassets */; };
 		36563A15B2BC2B60A92825A9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BEB90783F0420DA4758E9F /* ContentView.swift */; };
 		43CC3C438DFCACECEA50E802 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 0A365206C349BFC386CB9540 /* InfoPlist.xcstrings */; };
+		50297CB1C0C25119F20F1410 /* TranscriptionControllerLogicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EB193DEEA6ED630AC57477 /* TranscriptionControllerLogicTests.swift */; };
 		60C50BEFE2ECB6062FC9D709 /* RecordingPermissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FE1158B68988A6CC61C5C68 /* RecordingPermissions.swift */; };
 		61E615AB97E0555944203EA1 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 774042A3194BD34BAA2E3584 /* Localizable.xcstrings */; };
 		6DA6CCE4D2B6B2C84225E46D /* TranscriptionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C157FFFA436DF03D52D8DFD0 /* TranscriptionController.swift */; };
@@ -24,9 +25,20 @@
 		F0C762A7126EAD594BEB2B43 /* TranscriptionLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58021E4576F4C8B93CDF8244 /* TranscriptionLog.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		E0D1BC95CEB2F71E802E2C47 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5C59657AEF6ADDF7756A0502 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3AA7A42ADA635D16B582C891;
+			remoteInfo = WhisperMLXUI;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		0A365206C349BFC386CB9540 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		24E0CE9B415D51EAA9843DF6 /* RuntimeSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeSetup.swift; sourceTree = "<group>"; };
+		4213D2D0C2592CBFC61BEDD5 /* WhisperMLXUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WhisperMLXUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		58021E4576F4C8B93CDF8244 /* TranscriptionLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionLog.swift; sourceTree = "<group>"; };
 		646DEE8E6F5630B25061A6DC /* WhisperMLXUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperMLXUIApp.swift; sourceTree = "<group>"; };
 		774042A3194BD34BAA2E3584 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
@@ -36,6 +48,7 @@
 		8927AEE5C22EE729A1EDD0F8 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
 		8FE1158B68988A6CC61C5C68 /* RecordingPermissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingPermissions.swift; sourceTree = "<group>"; };
 		92BE892F39B7A3FC5D62E0D9 /* AudioInputDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioInputDevice.swift; sourceTree = "<group>"; };
+		A0EB193DEEA6ED630AC57477 /* TranscriptionControllerLogicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionControllerLogicTests.swift; sourceTree = "<group>"; };
 		B997424F0FC0A620D488B23D /* ModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelManager.swift; sourceTree = "<group>"; };
 		C157FFFA436DF03D52D8DFD0 /* TranscriptionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionController.swift; sourceTree = "<group>"; };
 		C2BEB90783F0420DA4758E9F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -80,14 +93,25 @@
 			isa = PBXGroup;
 			children = (
 				7936A48F4F444F9B2FC646D6 /* WhisperMLXUI.app */,
+				4213D2D0C2592CBFC61BEDD5 /* WhisperMLXUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		CFDDEE14A8110BAAABB0E921 /* WhisperMLXUI */ = {
+			isa = PBXGroup;
+			children = (
+				A0EB193DEEA6ED630AC57477 /* TranscriptionControllerLogicTests.swift */,
+			);
+			name = WhisperMLXUI;
+			path = tests/WhisperMLXUI;
 			sourceTree = "<group>";
 		};
 		FC699C3ADF2EAEC7F8C0B3AD = {
 			isa = PBXGroup;
 			children = (
 				2725360F8FE9ACB8BB7A9BEB /* WhisperMLXUI */,
+				CFDDEE14A8110BAAABB0E921 /* WhisperMLXUI */,
 				4C24C73C9913A82FF38593B4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -116,6 +140,24 @@
 			productReference = 7936A48F4F444F9B2FC646D6 /* WhisperMLXUI.app */;
 			productType = "com.apple.product-type.application";
 		};
+		CBBEC8B0D9AC7F0C49D31442 /* WhisperMLXUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 00C75DA20F71B9F4A45C5436 /* Build configuration list for PBXNativeTarget "WhisperMLXUITests" */;
+			buildPhases = (
+				2C0FAC39C7C5FD0C549D159D /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				ABC52A35A07C3CC3C189B3A2 /* PBXTargetDependency */,
+			);
+			name = WhisperMLXUITests;
+			packageProductDependencies = (
+			);
+			productName = WhisperMLXUITests;
+			productReference = 4213D2D0C2592CBFC61BEDD5 /* WhisperMLXUITests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -126,6 +168,10 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					3AA7A42ADA635D16B582C891 = {
+						DevelopmentTeam = F22N2AUDUL;
+						ProvisioningStyle = Automatic;
+					};
+					CBBEC8B0D9AC7F0C49D31442 = {
 						DevelopmentTeam = F22N2AUDUL;
 						ProvisioningStyle = Automatic;
 					};
@@ -150,6 +196,7 @@
 			projectRoot = "";
 			targets = (
 				3AA7A42ADA635D16B582C891 /* WhisperMLXUI */,
+				CBBEC8B0D9AC7F0C49D31442 /* WhisperMLXUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -191,6 +238,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2C0FAC39C7C5FD0C549D159D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50297CB1C0C25119F20F1410 /* TranscriptionControllerLogicTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		86BD967C342FA993E333BBBE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -210,6 +265,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		ABC52A35A07C3CC3C189B3A2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3AA7A42ADA635D16B582C891 /* WhisperMLXUI */;
+			targetProxy = E0D1BC95CEB2F71E802E2C47 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		2B25B3FA28C0A38A6E7CF90C /* Debug */ = {
@@ -280,6 +343,40 @@
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
+		};
+		452476D4813CA11A0D97D18F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = local.whispermlx.ui.tests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WhisperMLX UI.app/Contents/MacOS/WhisperMLX UI";
+			};
+			name = Debug;
+		};
+		8608659E13230AA2094EED6A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = local.whispermlx.ui.tests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WhisperMLX UI.app/Contents/MacOS/WhisperMLX UI";
+			};
+			name = Release;
 		};
 		9960B699772C50CCEDE3D60C /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -380,6 +477,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		00C75DA20F71B9F4A45C5436 /* Build configuration list for PBXNativeTarget "WhisperMLXUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				452476D4813CA11A0D97D18F /* Debug */,
+				8608659E13230AA2094EED6A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		DA3A7C50846562CD2F2D4926 /* Build configuration list for PBXProject "WhisperMLXUI" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -10,6 +10,7 @@ struct ContentView: View {
     @State private var showsSettings = false
     @State private var showsRecordingStartModal = false
     @State private var pendingRecordingFolderName = ""
+    @State private var showsDeleteAudioPrompt = false
     @State private var microphoneDevices: [AudioInputDevice] = []
     @State private var preferredMicrophoneUID: String = ""
     @State private var runtimeSetup = RuntimeSetup()
@@ -60,6 +61,15 @@ struct ContentView: View {
             (NSApp.mainWindow ?? NSApp.windows.first(where: { $0.isVisible && $0.canBecomeKey }))?
                 .makeKeyAndOrderFront(nil)
         }
+        .onChange(of: controller.status) { _, newValue in
+            guard case .succeeded = newValue,
+                  controller.hasSavedTranscript,
+                  !controller.deletableAudioURLs.isEmpty else { return }
+            NSApp.activate(ignoringOtherApps: true)
+            (NSApp.mainWindow ?? NSApp.windows.first(where: { $0.isVisible && $0.canBecomeKey }))?
+                .makeKeyAndOrderFront(nil)
+            showsDeleteAudioPrompt = true
+        }
         .task {
             if runtimeSetup.isReady {
                 refreshMicrophones()
@@ -89,6 +99,25 @@ struct ContentView: View {
             if case let .success(urls) = result, let url = urls.first {
                 controller.selectFile(url)
             }
+        }
+        .alert("deleteAudio.title", isPresented: $showsDeleteAudioPrompt) {
+            Button("deleteAudio.delete", role: .destructive) {
+                controller.deleteAudioAfterTranscription()
+            }
+            Button("deleteAudio.keep", role: .cancel) {}
+        } message: {
+            Text(controller.audioDeletionPromptDetail)
+        }
+        .alert(
+            "deleteAudio.error.title",
+            isPresented: Binding(
+                get: { controller.deletionErrorMessage != nil },
+                set: { if !$0 { controller.deletionErrorMessage = nil } }
+            )
+        ) {
+            Button("action.close") { controller.deletionErrorMessage = nil }
+        } message: {
+            Text(controller.deletionErrorMessage ?? "")
         }
     }
 
@@ -333,6 +362,11 @@ struct ContentView: View {
                     systemImage: "checkmark.circle.fill"
                 )
                     .foregroundStyle(.green)
+                if controller.audioDeleted {
+                    Text("transcription.audioDeleted")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
                 Spacer()
                 Button("action.openFolder") {
                     NSWorkspace.shared.open(outputURL)

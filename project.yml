@@ -38,8 +38,8 @@ targets:
           - de
           - en
         CFBundleIdentifier: local.whispermlx.ui
-        CFBundleShortVersionString: "1.0.20"
-        CFBundleVersion: "20"
+        CFBundleShortVersionString: "1.1.0"
+        CFBundleVersion: "22"
         LSMinimumSystemVersion: "14.0"
         NSMicrophoneUsageDescription: WhisperMLX UI benötigt das Mikrofon, um lokale Aufnahmen zu transkribieren.
         NSAudioCaptureUsageDescription: WhisperMLX UI benötigt Systemaudio, um lokale Aufnahmen zu transkribieren.
@@ -51,6 +51,9 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: local.whispermlx.ui
         PRODUCT_NAME: WhisperMLX UI
         GENERATE_INFOPLIST_FILE: NO
+    scheme:
+      testTargets:
+        - WhisperMLXUITests
     postBuildScripts:
       - name: WhisperMLX-Befehl einbetten
         basedOnDependencyAnalysis: false
@@ -78,3 +81,16 @@ targets:
           chmod 755 "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/ffmpeg"
           # iCloud/File Provider metadata would invalidate the app signature.
           xattr -cr "${TARGET_BUILD_DIR}/${WRAPPER_NAME}"
+  WhisperMLXUITests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: tests/WhisperMLXUI
+    dependencies:
+      - target: WhisperMLXUI
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: local.whispermlx.ui.tests
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/WhisperMLX UI.app/Contents/MacOS/WhisperMLX UI"
+        BUNDLE_LOADER: "$(TEST_HOST)"
