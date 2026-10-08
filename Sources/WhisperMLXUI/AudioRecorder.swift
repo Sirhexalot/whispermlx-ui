@@ -245,14 +245,7 @@ final class AudioRecorder: ObservableObject {
         }
 
         guard didWriteMicrophoneAudio, let microphoneURL else {
-            await startPreviewMonitoringIfPossible()
             return nil
-        }
-
-        defer {
-            Task { @MainActor [weak self] in
-                await self?.startPreviewMonitoringIfPossible()
-            }
         }
 
         guard let systemAudioURL else { return microphoneURL }
@@ -287,59 +280,61 @@ final class AudioRecorder: ObservableObject {
         silenceWarning = true
     }
 
-    func startPreviewMonitoringIfPossible() async {
+    /// Starts the (comparatively cheap) microphone level preview. It only runs
+    /// while the app is active and not recording; the system-audio stream is
+    /// started separately and on demand.
+    func startMicrophonePreviewIfPossible() {
         guard !isRecording else { return }
+        guard previewMicrophoneCapture == nil, RecordingPermissions.hasMicrophoneAccess() else { return }
         meters.reset()
 
-        if previewMicrophoneCapture == nil, RecordingPermissions.hasMicrophoneAccess() {
-            let capture = MicrophoneCapture { [weak self] newLevel in
-                Task { @MainActor [weak self] in
-                    guard let self, !self.isRecording else { return }
-                    self.updateLevel(newLevel, systemAudio: false)
-                }
-            }
-            do {
-                _ = try capture.start(
-                    preferredDeviceID: preferredMicrophoneUID,
-                    outputURL: nil,
-                    enableFileWriting: false
-                )
-                previewMicrophoneCapture = capture
-            } catch {
-                NSLog("WhisperMLX UI: could not start microphone preview: \(error.localizedDescription)")
+        let capture = MicrophoneCapture { [weak self] newLevel in
+            Task { @MainActor [weak self] in
+                guard let self, !self.isRecording else { return }
+                self.updateLevel(newLevel, systemAudio: false)
             }
         }
-
-        if RecordingPermissions.hasSystemAudioAccess(),
-           !previewSystemAudioRecorder.isCapturing {
-            do {
-                try await previewSystemAudioRecorder.start(to: nil)
-            } catch {
-                NSLog("WhisperMLX UI: could not start system-audio preview: \(error.localizedDescription)")
-            }
+        do {
+            _ = try capture.start(
+                preferredDeviceID: preferredMicrophoneUID,
+                outputURL: nil,
+                enableFileWriting: false
+            )
+            previewMicrophoneCapture = capture
+        } catch {
+            NSLog("WhisperMLX UI: could not start microphone preview: \(error.localizedDescription)")
         }
 
         // The first non-silent capture buffer starts the decay timer.
     }
 
-    func preparePreviewMonitoring() async {
-        guard !didAttemptPreviewPermissions else {
-            await startPreviewMonitoringIfPossible()
-            return
+    /// Starts the ScreenCaptureKit system-audio preview on demand. That stream
+    /// also captures screen frames, so it is only run while the user is
+    /// actively engaging with the recording controls.
+    func startSystemAudioPreviewIfPossible() async {
+        guard !isRecording, RecordingPermissions.hasSystemAudioAccess(),
+              !previewSystemAudioRecorder.isCapturing else { return }
+        do {
+            try await previewSystemAudioRecorder.start(to: nil)
+        } catch {
+            NSLog("WhisperMLX UI: could not start system-audio preview: \(error.localizedDescription)")
         }
+    }
 
+    func stopSystemAudioPreview() async {
+        await previewSystemAudioRecorder.stop()
+    }
+
+    /// Requests capture permissions once. Starting and stopping the actual
+    /// preview streams is driven by the interface based on window activity.
+    func preparePreviewMonitoring() async {
+        guard !didAttemptPreviewPermissions else { return }
         didAttemptPreviewPermissions = true
         _ = await RecordingPermissions.requestMicrophoneAccessIfNeeded()
         _ = RecordingPermissions.requestSystemAudioAccessIfNeeded()
-        await startPreviewMonitoringIfPossible()
     }
 
-    func refreshPreviewMonitoring() async {
-        await stopPreviewMonitoring()
-        await startPreviewMonitoringIfPossible()
-    }
-
-    private func stopPreviewMonitoring() async {
+    func stopPreviewMonitoring() async {
         _ = previewMicrophoneCapture?.stop()
         previewMicrophoneCapture = nil
         await previewSystemAudioRecorder.stop()

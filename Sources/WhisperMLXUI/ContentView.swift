@@ -1,6 +1,7 @@
 import SwiftUI
 import UniformTypeIdentifiers
 import AppKit
+import Combine
 
 struct ContentView: View {
     @Bindable var controller: TranscriptionController
@@ -11,6 +12,8 @@ struct ContentView: View {
     @State private var showsRecordingStartModal = false
     @State private var pendingRecordingFolderName = ""
     @State private var showsDeleteAudioPrompt = false
+    @State private var isAppActive = true
+    @State private var isHoveringRecordingControls = false
     @State private var microphoneDevices: [AudioInputDevice] = []
     @State private var preferredMicrophoneUID: String = ""
     @State private var runtimeSetup = RuntimeSetup()
@@ -74,12 +77,55 @@ struct ContentView: View {
             if runtimeSetup.isReady {
                 refreshMicrophones()
                 await recorder.preparePreviewMonitoring()
+                refreshPreview()
             }
         }
         .onChange(of: runtimeSetup.isReady) { _, ready in
             guard ready else { return }
             refreshMicrophones()
-            Task { await recorder.preparePreviewMonitoring() }
+            Task {
+                await recorder.preparePreviewMonitoring()
+                refreshPreview()
+            }
+        }
+        .onChange(of: recorder.isRecording) { _, _ in refreshPreview() }
+        .onChange(of: recorder.isFinalizingRecording) { _, _ in refreshPreview() }
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
+            isAppActive = true
+            refreshPreview()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didResignActiveNotification)) { _ in
+            isAppActive = false
+            refreshPreview()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didHideNotification)) { _ in
+            isAppActive = false
+            refreshPreview()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didUnhideNotification)) { _ in
+            isAppActive = true
+            refreshPreview()
+        }
+    }
+
+    /// Drives audio preview capture from the window's activity. Microphone
+    /// metering runs only while the app is active and not recording; the
+    /// system-audio stream is additionally limited to an active hover over the
+    /// recording controls, because it also captures screen frames.
+    private func refreshPreview() {
+        let monitoring = isAppActive && !recorder.isRecording && !recorder.isFinalizingRecording
+        let systemAudio = monitoring && isHoveringRecordingControls
+        Task {
+            if monitoring {
+                recorder.startMicrophonePreviewIfPossible()
+            } else {
+                await recorder.stopPreviewMonitoring()
+            }
+            if systemAudio {
+                await recorder.startSystemAudioPreviewIfPossible()
+            } else {
+                await recorder.stopSystemAudioPreview()
+            }
         }
     }
 
@@ -237,6 +283,10 @@ struct ContentView: View {
                 }
             }
             .padding(8)
+        }
+        .onHover { hovering in
+            isHoveringRecordingControls = hovering
+            refreshPreview()
         }
     }
 
@@ -428,7 +478,8 @@ struct ContentView: View {
         controller.recorder.preferredMicrophoneUID = resolvedUID
         AudioInputDeviceStore.save(resolvedUID)
         Task {
-            await controller.recorder.refreshPreviewMonitoring()
+            await controller.recorder.stopPreviewMonitoring()
+            refreshPreview()
         }
     }
 
