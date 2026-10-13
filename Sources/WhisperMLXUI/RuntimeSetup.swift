@@ -31,11 +31,21 @@ final class RuntimeSetup {
         }
     }
 
+    // python3 is the stable runtime entry point. Keep the old name only for
+    // installations created before the installer guaranteed that entry point.
+    nonisolated static func pythonURL(in root: URL) -> URL? {
+        ["bin/python3", "bin/python3.13"]
+            .map { root.appendingPathComponent($0) }
+            .first { FileManager.default.isExecutableFile(atPath: $0.path) }
+    }
+
+    static var pythonURL: URL? { pythonURL(in: rootURL) }
+
     static var isInstalled: Bool {
         let root = rootURL
         let receipt = try? String(contentsOf: root.appendingPathComponent("runtime-version"), encoding: .utf8)
         return receipt?.trimmingCharacters(in: .whitespacesAndNewlines) == version &&
-            FileManager.default.isExecutableFile(atPath: root.appendingPathComponent("bin/python3.13").path)
+            pythonURL(in: root) != nil
     }
 
     func install() {

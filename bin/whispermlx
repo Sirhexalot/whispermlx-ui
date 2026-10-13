@@ -35,7 +35,10 @@ if [[ -n "${WHISPERMLX_PYTHON:-}" ]]; then
 elif [[ -x "${0:A:h:h}/python/bin/python" ]]; then
   # Future self-contained app runtime, located at Contents/Resources/python.
   python="${0:A:h:h}/python/bin/python"
+elif [[ -x "$HOME/.local/share/whispermlx-ui/runtime/bin/python3" ]]; then
+  python="$HOME/.local/share/whispermlx-ui/runtime/bin/python3"
 elif [[ -x "$HOME/.local/share/whispermlx-ui/runtime/bin/python3.13" ]]; then
+  # Compatibility with runtimes installed before the stable entry point.
   python="$HOME/.local/share/whispermlx-ui/runtime/bin/python3.13"
 else
   python=""

@@ -41,15 +41,14 @@ final class ModelManager {
 
         Task { @MainActor [weak self] in
             guard let self else { return }
-            let python = RuntimeSetup.rootURL.appendingPathComponent("bin/python3.13").path
-            guard RuntimeSetup.isInstalled else {
+            guard RuntimeSetup.isInstalled, let python = RuntimeSetup.pythonURL else {
                 self.errorMessage = String(localized: "error.modelRuntimeMissing")
                 self.downloading = nil
                 return
             }
 
             let process = Process()
-            process.executableURL = URL(fileURLWithPath: python)
+            process.executableURL = python
             process.arguments = ["-c", "from huggingface_hub import snapshot_download; snapshot_download(\"\(repository)\")"]
             do {
                 try await withCheckedThrowingContinuation { continuation in
@@ -123,11 +122,7 @@ final class DiarizationModelManager {
 
         Task { @MainActor [weak self] in
             guard let self else { return }
-            let candidates = [
-                Bundle.main.bundleURL.appendingPathComponent("Contents/Resources/python/bin/python").path,
-                NSHomeDirectory() + "/.local/share/whispermlx-ui/venv/bin/python"
-            ]
-            guard let python = candidates.first(where: { FileManager.default.isExecutableFile(atPath: $0) }) else {
+            guard RuntimeSetup.isInstalled, let python = RuntimeSetup.pythonURL else {
                 self.errorMessage = String(localized: "error.modelRuntimeMissing")
                 self.isDownloading = false
                 return
@@ -150,7 +145,7 @@ final class DiarizationModelManager {
                 .replacingOccurrences(of: "\"", with: "\\\"")
 
             let process = Process()
-            process.executableURL = URL(fileURLWithPath: python)
+            process.executableURL = python
             process.arguments = [
                 "-c",
                 """

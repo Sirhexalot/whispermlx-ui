@@ -11,6 +11,7 @@
 		0FEA07002974FCB902137FAC /* ModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B997424F0FC0A620D488B23D /* ModelManager.swift */; };
 		11393EE57C296D276451FEBF /* AudioInputDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BE892F39B7A3FC5D62E0D9 /* AudioInputDevice.swift */; };
 		137729590D1C4E733E0099AF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FEB2E64477CA09E528E90C1F /* Assets.xcassets */; };
+		1628806DDB0D4C41049FE290 /* RuntimeSetupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B273C83100E694B3A92E8F29 /* RuntimeSetupTests.swift */; };
 		36563A15B2BC2B60A92825A9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BEB90783F0420DA4758E9F /* ContentView.swift */; };
 		43CC3C438DFCACECEA50E802 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 0A365206C349BFC386CB9540 /* InfoPlist.xcstrings */; };
 		50297CB1C0C25119F20F1410 /* TranscriptionControllerLogicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0EB193DEEA6ED630AC57477 /* TranscriptionControllerLogicTests.swift */; };
@@ -49,6 +50,7 @@
 		8FE1158B68988A6CC61C5C68 /* RecordingPermissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingPermissions.swift; sourceTree = "<group>"; };
 		92BE892F39B7A3FC5D62E0D9 /* AudioInputDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioInputDevice.swift; sourceTree = "<group>"; };
 		A0EB193DEEA6ED630AC57477 /* TranscriptionControllerLogicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionControllerLogicTests.swift; sourceTree = "<group>"; };
+		B273C83100E694B3A92E8F29 /* RuntimeSetupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeSetupTests.swift; sourceTree = "<group>"; };
 		B997424F0FC0A620D488B23D /* ModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelManager.swift; sourceTree = "<group>"; };
 		C157FFFA436DF03D52D8DFD0 /* TranscriptionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionController.swift; sourceTree = "<group>"; };
 		C2BEB90783F0420DA4758E9F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 		CFDDEE14A8110BAAABB0E921 /* WhisperMLXUI */ = {
 			isa = PBXGroup;
 			children = (
+				B273C83100E694B3A92E8F29 /* RuntimeSetupTests.swift */,
 				A0EB193DEEA6ED630AC57477 /* TranscriptionControllerLogicTests.swift */,
 			);
 			name = WhisperMLXUI;
@@ -242,6 +245,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1628806DDB0D4C41049FE290 /* RuntimeSetupTests.swift in Sources */,
 				50297CB1C0C25119F20F1410 /* TranscriptionControllerLogicTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
