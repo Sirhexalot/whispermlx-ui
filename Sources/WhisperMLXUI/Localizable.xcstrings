@@ -1396,13 +1396,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Das Sprechertrennungsmodell ist in der App enthalten. Kein zusätzlicher Modelldownload und kein Hugging-Face-Token nötig."
+            "value" : "Sprechertrennung funktioniert offline. Das Modell ist in der App enthalten."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The speaker-diarization model is included in the app. No additional model download or Hugging Face token is needed."
+            "value" : "Speaker diarization works offline. The model is included in the app."
           }
         }
       }

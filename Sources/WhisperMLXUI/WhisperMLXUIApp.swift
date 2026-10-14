@@ -264,12 +264,11 @@ struct SettingsView: View {
                             .font(.headline)
                         Text("settings.diarization.offline.description")
                             .font(.caption).foregroundStyle(.secondary)
-                        Label(diarizationStatusText, systemImage: diarizationStatusIcon)
-                            .foregroundStyle(diarizationStatusColor)
-                        Text(localDiarizationModelPath)
-                            .font(.caption.monospaced())
-                            .foregroundStyle(.secondary)
-                            .textSelection(.enabled)
+                        if diarizationModelManager.status != .ready {
+                            Label("error.diarizationModelPathInvalid", systemImage: "exclamationmark.triangle.fill")
+                                .font(.caption)
+                                .foregroundStyle(.red)
+                        }
                         if let errorMessage = diarizationModelManager.errorMessage {
                             Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
                                 .font(.caption)
@@ -375,38 +374,6 @@ struct SettingsView: View {
         dismiss()
     }
 
-    private var diarizationStatusText: LocalizedStringKey {
-        switch diarizationModelManager.status {
-        case .notInstalled:
-            "settings.diarization.offline.notInstalled"
-        case .ready:
-            "settings.diarization.offline.installed"
-        case .missing:
-            "settings.diarization.offline.missing"
-        }
-    }
-
-    private var diarizationStatusIcon: String {
-        switch diarizationModelManager.status {
-        case .notInstalled:
-            "arrow.down.circle"
-        case .ready:
-            "checkmark.circle.fill"
-        case .missing:
-            "exclamationmark.triangle.fill"
-        }
-    }
-
-    private var diarizationStatusColor: Color {
-        switch diarizationModelManager.status {
-        case .notInstalled:
-            .secondary
-        case .ready:
-            .green
-        case .missing:
-            .orange
-        }
-    }
 }
 
 private enum SettingsSection: String, CaseIterable, Identifiable {
