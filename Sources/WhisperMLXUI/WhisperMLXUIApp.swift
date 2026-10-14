@@ -33,6 +33,11 @@ struct WhisperMLXUIApp: App {
             updaterDelegate: nil,
             userDriverDelegate: nil
         )
+        // Sparkle recommends forcing launch checks immediately after startup,
+        // before its scheduled update cycle begins. Respect the user's opt-out.
+        if updaterController.updater.automaticallyChecksForUpdates {
+            updaterController.updater.checkForUpdatesInBackground()
+        }
     }
 
     var body: some Scene {
