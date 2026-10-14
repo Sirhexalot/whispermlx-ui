@@ -132,6 +132,7 @@
 				86BD967C342FA993E333BBBE /* Sources */,
 				1F9F168024925CB3F6BD0E75 /* Resources */,
 				5F7C6E0D4405ED5969C0ED8C /* Frameworks */,
+				E8881B7AAFD842911996B1A5 /* Sprechertrennungsmodell einbetten */,
 				917221C1555BB02CE1DABA78 /* WhisperMLX-Befehl einbetten */,
 			);
 			buildRules = (
@@ -240,6 +241,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "mkdir -p \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin\"\ncp \"${SRCROOT}/bin/whispermlx\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/whispermlx\"\nchmod 755 \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/whispermlx\"\ncp \"${SRCROOT}/bin/whispermlx_runtime.py\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/whispermlx_runtime.py\"\nif [ ! -x \"${SRCROOT}/bin/uv\" ]; then\n  echo \"error: Bundled uv missing. Run scripts/build-bundled-uv.sh first.\"\n  exit 1\nfi\ncp \"${SRCROOT}/bin/uv\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/uv\"\nchmod 755 \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/uv\"\ncp \"${SRCROOT}/bin/setup-runtime\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/setup-runtime\"\nchmod 755 \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/setup-runtime\"\ncp \"${SRCROOT}/runtime-requirements.txt\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/runtime-requirements.txt\"\nif [ ! -x \"${SRCROOT}/bin/ffmpeg\" ]; then\n  echo \"error: Die eingebettete FFmpeg-Version fehlt. Bitte scripts/build-bundled-ffmpeg.sh ausführen.\"\n  exit 1\nfi\ncp \"${SRCROOT}/bin/ffmpeg\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/ffmpeg\"\nchmod 755 \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/ffmpeg\"\n# iCloud/File Provider metadata would invalidate the app signature.\nxattr -cr \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}\"\n";
+		};
+		E8881B7AAFD842911996B1A5 /* Sprechertrennungsmodell einbetten */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Sprechertrennungsmodell einbetten";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\ncd \"${SRCROOT}/Resources/BundledDiarizationModel\"\n/usr/bin/shasum -a 256 --strict -c \"${SRCROOT}/bundled-diarization.sha256\"\ndestination=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/models/speaker-diarization-community-1\"\nmkdir -p \"$destination\"\n/usr/bin/ditto \"${SRCROOT}/Resources/BundledDiarizationModel\" \"$destination\"\ncp \"${SRCROOT}/THIRD-PARTY-MODELS.md\" \"$destination/THIRD-PARTY-MODELS.md\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

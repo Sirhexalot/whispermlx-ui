@@ -3,12 +3,12 @@
     <channel>
         <title>WhisperMLX UI</title>
         <item>
-            <title>1.1.4</title>
-            <pubDate>Wed, 14 Oct 2026 09:43:44 +0200</pubDate>
-            <sparkle:version>26</sparkle:version>
-            <sparkle:shortVersionString>1.1.4</sparkle:shortVersionString>
+            <title>1.1.5</title>
+            <pubDate>Wed, 14 Oct 2026 10:01:07 +0200</pubDate>
+            <sparkle:version>27</sparkle:version>
+            <sparkle:shortVersionString>1.1.5</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/Sirhexalot/whispermlx-ui/releases/download/v1.1.4/WhisperMLX-UI-macOS.zip" sparkle:edSignature="UQ3MVRjF74EoQh9OWQItRosylUw06Dj/hbtpFiArtG/kZqdVF3YTqYANNHjwp9qw56fyYqKIvWw9bA2B/9iYCg==" length="30219870" type="application/octet-stream"/>
+            <enclosure url="https://github.com/Sirhexalot/whispermlx-ui/releases/download/v1.1.5/WhisperMLX-UI-macOS.zip" sparkle:edSignature="pXlm+OeBx4Kp6Edt+tVJkUIV0TbIByPfyGMdMuFKEKgdM21TUfyyCEn9IKnRmaikKegJDHQFKD3vPS4HIuIWAw==" length="60647467" type="application/octet-stream"/>
         </item>
     </channel>
 </rss>

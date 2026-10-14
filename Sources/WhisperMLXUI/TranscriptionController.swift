@@ -110,7 +110,7 @@ final class TranscriptionController {
         recorder.preferredMicrophoneUID = initialMicrophoneUID
         // A saved token or a local pipeline directory are sufficient for the
         // default; the secret value is only retrieved when it is actually used.
-        diarizationEnabled = TokenStore.exists() || Self.isUsableDiarizationModelPath(initialDiarizationModelPath)
+        diarizationEnabled = Self.isUsableDiarizationModelPath(initialDiarizationModelPath)
     }
 
     var outputURL: URL? {
@@ -251,12 +251,8 @@ final class TranscriptionController {
         guard ModelManager.isInstalled(model) else { return String(localized: "error.modelNotInstalled") }
         if diarizationEnabled {
             let path = diarizationModelPath.trimmingCharacters(in: .whitespacesAndNewlines)
-            if !path.isEmpty && !DiarizationModelValidation.isInstalled(at: path) {
+            if !DiarizationModelValidation.isInstalled(at: path) {
                 return String(localized: "error.diarizationModelPathInvalid")
-            }
-            // Do not read a Keychain secret merely to render a button.
-            if path.isEmpty && !TokenStore.exists() {
-                return String(localized: "error.huggingFaceTokenRequired")
             }
         }
         return nil
@@ -319,11 +315,6 @@ final class TranscriptionController {
         }
 
         let localDiarizationModel = validatedDiarizationModelPath()
-        if diarizationEnabled && localDiarizationModel == nil && TokenStore.load().trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            status = .failed(String(localized: "error.huggingFaceTokenRequired"))
-            log = String(localized: "log.huggingFaceTokenRequired") + "\n"
-            return
-        }
         guard let executableURL = resolveCLI() else { return }
 
         let scoped = inputURL.startAccessingSecurityScopedResource()
@@ -360,12 +351,7 @@ final class TranscriptionController {
         var environment = ProcessInfo.processInfo.environment
         let bundledBin = Bundle.main.bundleURL.appendingPathComponent("Contents/Resources/bin").path
         environment["PATH"] = "\(bundledBin):/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
-        if diarizationEnabled && localDiarizationModel == nil {
-            let token = TokenStore.load()
-            if !token.isEmpty {
-                environment["HF_TOKEN"] = token
-            }
-        }
+        environment.removeValue(forKey: "HF_TOKEN")
         environment["PYTHONUNBUFFERED"] = "1"
         newProcess.environment = environment
         newProcess.standardOutput = outputPipe

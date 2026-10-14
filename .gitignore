@@ -32,6 +32,7 @@ DerivedData/
 # Bundled/generated local binaries
 bin/ffmpeg
 bin/uv
+Resources/BundledDiarizationModel/
 
 # Python runtime/test caches
 __pycache__/

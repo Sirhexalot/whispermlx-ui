@@ -396,13 +396,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Das lokale pyannote-Modell fehlt oder ist unvollständig. Bitte lade es in den Einstellungen erneut herunter."
+            "value" : "Das mitgelieferte Sprechertrennungsmodell fehlt oder ist unvollständig. Bitte installiere die App erneut."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The offline pyannote model is missing or incomplete. Download it again in Settings."
+            "value" : "The bundled speaker-diarization model is missing or incomplete. Reinstall the app."
           }
         }
       }
@@ -1396,15 +1396,22 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lade das pyannote-Offlinemodell einmal in den von der App verwalteten lokalen Ordner. Danach kann die Sprechertrennung ohne Internetverbindung laufen."
+            "value" : "Das Sprechertrennungsmodell ist in der App enthalten. Kein zusätzlicher Modelldownload und kein Hugging-Face-Token nötig."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Download the pyannote offline model once into the app-managed local folder. After that, speaker diarization can run without internet access."
+            "value" : "The speaker-diarization model is included in the app. No additional model download or Hugging Face token is needed."
           }
         }
+      }
+    },
+    "settings.diarization.modelLicense" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Modellquelle und Lizenz (CC BY 4.0)" } },
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Model source and license (CC BY 4.0)" } }
       }
     },
     "settings.diarization.offline.download" : {
@@ -1463,13 +1470,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Offline-Modell fehlt oder ist unvollständig – bitte erneut herunterladen"
+            "value" : "Mitgeliefertes Modell fehlt oder ist unvollständig – bitte App erneut installieren"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Offline model is missing or incomplete — download it again"
+            "value" : "Bundled model is missing or incomplete — reinstall the app"
           }
         }
       }

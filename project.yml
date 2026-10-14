@@ -38,8 +38,8 @@ targets:
           - de
           - en
         CFBundleIdentifier: local.whispermlx.ui
-        CFBundleShortVersionString: "1.1.4"
-        CFBundleVersion: "26"
+        CFBundleShortVersionString: "1.1.5"
+        CFBundleVersion: "27"
         LSMinimumSystemVersion: "14.0"
         NSMicrophoneUsageDescription: WhisperMLX UI benötigt das Mikrofon, um lokale Aufnahmen zu transkribieren.
         NSAudioCaptureUsageDescription: WhisperMLX UI benötigt Systemaudio, um lokale Aufnahmen zu transkribieren.
@@ -56,6 +56,16 @@ targets:
       testTargets:
         - WhisperMLXUITests
     postBuildScripts:
+      - name: Sprechertrennungsmodell einbetten
+        basedOnDependencyAnalysis: false
+        script: |
+          set -e
+          cd "${SRCROOT}/Resources/BundledDiarizationModel"
+          /usr/bin/shasum -a 256 --strict -c "${SRCROOT}/bundled-diarization.sha256"
+          destination="${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/models/speaker-diarization-community-1"
+          mkdir -p "$destination"
+          /usr/bin/ditto "${SRCROOT}/Resources/BundledDiarizationModel" "$destination"
+          cp "${SRCROOT}/THIRD-PARTY-MODELS.md" "$destination/THIRD-PARTY-MODELS.md"
       - name: WhisperMLX-Befehl einbetten
         basedOnDependencyAnalysis: false
         outputFiles:

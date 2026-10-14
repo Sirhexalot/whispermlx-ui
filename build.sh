@@ -24,6 +24,10 @@ if [[ ! -x "$root/bin/uv" ]]; then
   "$root/scripts/build-bundled-uv.sh"
 fi
 xcodegen generate
+(
+  cd "$root/Resources/BundledDiarizationModel"
+  /usr/bin/shasum -a 256 --strict -c "$root/bundled-diarization.sha256"
+)
 mkdir -p "$product_root"
 # Xcode may reuse an existing app bundle for incremental builds. Remove file
 # provider metadata before its final CodeSign phase runs.

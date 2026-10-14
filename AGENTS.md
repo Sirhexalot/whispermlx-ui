@@ -6,6 +6,7 @@ Native macOS SwiftUI app that wraps the bundled WhisperMLX CLI. The Xcode projec
 - `./build.sh Debug` (or `./build.sh Release`): runs `xcodegen generate`, builds with derived data kept outside iCloud (`WHISPERMLXUI_DERIVED_DATA_PATH`, default `$TMPDIR/whispermlx-ui-derived-data`), copies to `dist/<configuration>/`, and verifies the staged signature. Re-run after editing `project.yml`.
 - `bin/ffmpeg` and `bin/uv` are gitignored prerequisites. `build.sh` fetches `uv` via `scripts/build-bundled-uv.sh` when missing; if FFmpeg is absent, run `scripts/build-bundled-ffmpeg.sh` first.
 - String catalogs `Sources/WhisperMLXUI/*.xcstrings` are authoritative (de + en); legacy `Resources/*.strings` are deliberately excluded to avoid duplicate tables.
+- The bundled community-1 diarization model lives in gitignored `Resources/BundledDiarizationModel`. Prepare it with `zsh scripts/prepare-bundled-diarization.sh <downloaded-snapshot>` from revision `3533c8cf8e369892e6b79ff1bf80f7b0286a54ee`. The manifest pins all shipped files; builds fail if missing or mismatched. Model cards and `THIRD-PARTY-MODELS.md` are included in the app. Users do not need a Hugging Face token; developer acquisition still requires authorized access.
 
 ## Runtime
 - `WhisperMLXUIApp.swift` creates `TranscriptionController`, which launches `bin/whispermlx`. First-run setup (`RuntimeSetup.swift` -> `bin/setup-runtime`) installs pinned Python 3.13.14 / WhisperMLX 3.14.0 / MLX 0.32.3 under `~/.local/share/whispermlx-ui/runtime`.

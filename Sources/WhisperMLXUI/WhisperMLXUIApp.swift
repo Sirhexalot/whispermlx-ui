@@ -111,14 +111,13 @@ enum LocalDiarizationModelStore {
     private static let key = "local-pyannote-model-path"
 
     static func defaultPath() -> String {
-        URL(fileURLWithPath: NSHomeDirectory())
-            .appendingPathComponent(".local/share/whispermlx-ui/pyannote", isDirectory: true)
-            .appendingPathComponent("speaker-diarization-community-1", isDirectory: true)
-            .path
+        Bundle.main.bundleURL
+            .appendingPathComponent("Contents/Resources/models/speaker-diarization-community-1", isDirectory: true).path
     }
 
     static func load() -> String {
-        UserDefaults.standard.string(forKey: key) ?? defaultPath()
+        // Old user-specific download paths must not override the bundled model.
+        defaultPath()
     }
 
     static func save(_ path: String) {
@@ -158,11 +157,7 @@ struct SettingsView: View {
     @State private var transcriptionLanguage: TranscriptionController.TranscriptionLanguage = .german
     @State private var diarizationEnabled = true
     @State private var speakerCount: Int?
-    @State private var token = ""
     @State private var localDiarizationModelPath = ""
-    @State private var tokenLoadMessage: String?
-    @State private var tokenLoadSucceeded = false
-    @State private var tokenSaveError: String?
     @State private var modelManager = ModelManager()
     @State private var diarizationModelManager = DiarizationModelManager()
     @State private var modelToRemove: TranscriptionController.Model?
@@ -200,17 +195,6 @@ struct SettingsView: View {
         }
         .frame(width: 760, height: 500)
         .onAppear { resetDraft() }
-        .alert(
-            "settings.token.saveFailed.title",
-            isPresented: Binding(
-                get: { tokenSaveError != nil },
-                set: { if !$0 { tokenSaveError = nil } }
-            )
-        ) {
-            Button("action.close") { tokenSaveError = nil }
-        } message: {
-            Text(tokenSaveError ?? "")
-        }
     }
 
     private var transcriptionSettings: some View {
@@ -286,58 +270,13 @@ struct SettingsView: View {
                             .font(.caption.monospaced())
                             .foregroundStyle(.secondary)
                             .textSelection(.enabled)
-                        HStack(spacing: 10) {
-                            if diarizationModelManager.isDownloading {
-                                ProgressView()
-                                    .controlSize(.small)
-                                Text("settings.diarization.offline.downloading")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                            } else {
-                                Button("settings.diarization.offline.download") {
-                                    let downloadToken = token.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                                        ? TokenStore.load()
-                                        : token
-                                    diarizationModelManager.download(using: downloadToken, destinationPath: localDiarizationModelPath) {
-                                        controller.diarizationModelPath = localDiarizationModelPath
-                                        diarizationEnabled = true
-                                    }
-                                }
-                                .disabled(diarizationModelManager.isDownloading)
-                            }
-                            if diarizationModelManager.status == .ready || diarizationModelManager.status == .missing {
-                                Button("settings.model.remove", role: .destructive) {
-                                    diarizationModelManager.remove(at: localDiarizationModelPath)
-                                }
-                            }
-                        }
                         if let errorMessage = diarizationModelManager.errorMessage {
                             Label(errorMessage, systemImage: "exclamationmark.triangle.fill")
                                 .font(.caption)
                                 .foregroundStyle(.red)
                         }
 
-                        Divider()
-                        Text("settings.token.title")
-                            .font(.headline)
-                        SecureField("settings.token.placeholder", text: $token)
-                        Text("settings.token.description")
-                            .font(.caption).foregroundStyle(.secondary)
-                        HStack(spacing: 10) {
-                            Link("settings.token.create", destination: URL(string: "https://huggingface.co/settings/tokens")!)
-                            Link("settings.token.modelAgreement", destination: URL(string: "https://huggingface.co/pyannote/speaker-diarization-community-1")!)
-                        }
-                        Button("settings.token.load") {
-                            let result = TokenStore.loadWithStatus()
-                            token = result.token
-                            tokenLoadSucceeded = result.status == errSecSuccess && !result.token.isEmpty
-                            tokenLoadMessage = String(localized: tokenLoadSucceeded ? "settings.token.loaded" : "settings.token.loadFailed")
-                        }
-                        if let tokenLoadMessage {
-                            Label(tokenLoadMessage, systemImage: tokenLoadSucceeded ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
-                                .font(.caption)
-                                .foregroundStyle(tokenLoadSucceeded ? .green : .red)
-                        }
+                        Link("settings.diarization.modelLicense", destination: URL(string: "https://huggingface.co/pyannote/speaker-diarization-community-1")!)
                     }
                 }
             }
@@ -410,8 +349,6 @@ struct SettingsView: View {
             preferredMicrophoneUID = ""
         }
         localDiarizationModelPath = controller.diarizationModelPath.isEmpty ? LocalDiarizationModelStore.load() : controller.diarizationModelPath
-        token = ""
-        tokenLoadMessage = nil
         diarizationModelManager.refresh(configuredPath: localDiarizationModelPath)
     }
 
@@ -421,25 +358,13 @@ struct SettingsView: View {
     }
 
     private func apply() {
-        let newToken = token.trimmingCharacters(in: .whitespacesAndNewlines)
-        if !newToken.isEmpty {
-            let status = TokenStore.save(newToken)
-            if status != errSecSuccess {
-                tokenSaveError = String.localizedStringWithFormat(
-                    String(localized: "settings.token.saveFailed"),
-                    Int(status)
-                )
-                return
-            }
-        }
         let newLocalPath = localDiarizationModelPath.trimmingCharacters(in: .whitespacesAndNewlines)
         diarizationModelManager.refresh(configuredPath: newLocalPath)
-        let hasToken = !newToken.isEmpty || (diarizationEnabled && !TokenStore.load().trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         let hasOfflineModel = diarizationModelManager.status == .ready
         controller.model = model
         controller.vadMethod = vadMethod
         controller.transcriptionLanguage = transcriptionLanguage
-        controller.diarizationEnabled = diarizationEnabled && (hasOfflineModel || hasToken)
+        controller.diarizationEnabled = diarizationEnabled && hasOfflineModel
         controller.diarizationModelPath = newLocalPath
         controller.speakerCount = speakerCount
         controller.preferredMicrophoneUID = preferredMicrophoneUID.isEmpty ? nil : preferredMicrophoneUID
