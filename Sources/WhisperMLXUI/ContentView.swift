@@ -362,6 +362,12 @@ struct ContentView: View {
 
                 if case .ready = controller.status {
                     HStack {
+                        if let error = controller.transcriptionPrerequisiteError {
+                            Label(error, systemImage: "exclamationmark.triangle.fill")
+                                .font(.caption)
+                                .foregroundStyle(.orange)
+                            Button("settings.open") { showsSettings = true }
+                        }
                         Spacer()
                         Button("action.transcribe") { controller.start() }
                             .buttonStyle(.borderedProminent)

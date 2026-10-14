@@ -1,6 +1,30 @@
 import Foundation
 import Observation
 
+enum DiarizationModelValidation {
+    static let requiredFiles = [
+        "config.yaml",
+        "segmentation/pytorch_model.bin",
+        "embedding/pytorch_model.bin",
+        "plda/plda.npz",
+        "plda/xvec_transform.npz"
+    ]
+
+    static func missingFiles(at path: String) -> [String] {
+        let root = URL(fileURLWithPath: path.trimmingCharacters(in: .whitespacesAndNewlines))
+        return requiredFiles.filter { name in
+            let url = root.appendingPathComponent(name)
+            guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey]),
+                  values.isRegularFile == true, (values.fileSize ?? 0) > 0 else { return true }
+            return !FileManager.default.isReadableFile(atPath: url.path)
+        }
+    }
+
+    static func isInstalled(at path: String) -> Bool {
+        !path.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && missingFiles(at: path).isEmpty
+    }
+}
+
 @MainActor
 @Observable
 final class ModelManager {
@@ -94,8 +118,7 @@ final class DiarizationModelManager {
             return
         }
 
-        var isDirectory: ObjCBool = false
-        if FileManager.default.fileExists(atPath: trimmedPath, isDirectory: &isDirectory), isDirectory.boolValue {
+        if DiarizationModelValidation.isInstalled(at: trimmedPath) {
             status = .ready
         } else {
             status = .missing
@@ -137,45 +160,61 @@ final class DiarizationModelManager {
                 return
             }
 
-            let escapedDestination = trimmedDestination
-                .replacingOccurrences(of: "\\", with: "\\\\")
-                .replacingOccurrences(of: "\"", with: "\\\"")
-            let escapedToken = trimmedToken
-                .replacingOccurrences(of: "\\", with: "\\\\")
-                .replacingOccurrences(of: "\"", with: "\\\"")
-
             let process = Process()
             process.executableURL = python
+            let output = Pipe()
+            process.standardOutput = output
+            process.standardError = output
+            var environment = ProcessInfo.processInfo.environment
+            environment["HF_TOKEN"] = trimmedToken
+            process.environment = environment
             process.arguments = [
                 "-c",
                 """
+                import os, sys
                 from huggingface_hub import snapshot_download
                 snapshot_download(
-                    repo_id="\(repository)",
-                    local_dir="\(escapedDestination)",
-                    local_dir_use_symlinks=False,
-                    token="\(escapedToken)"
+                    repo_id=sys.argv[1],
+                    local_dir=sys.argv[2],
+                    token=os.environ["HF_TOKEN"]
                 )
-                """
+                """,
+                repository,
+                trimmedDestination
             ]
 
             do {
-                try await withCheckedThrowingContinuation { continuation in
-                    process.terminationHandler = { _ in continuation.resume() }
-                    do {
-                        try process.run()
-                    } catch {
-                        continuation.resume(throwing: error)
+                try process.run()
+                output.fileHandleForWriting.closeFile()
+                // Drain while the child runs so a full pipe cannot block it.
+                let diagnostic = await Task.detached {
+                    var tail = Data()
+                    while true {
+                        let chunk = output.fileHandleForReading.availableData
+                        if chunk.isEmpty { break }
+                        tail.append(chunk)
+                        if tail.count > 16_384 { tail = Data(tail.suffix(16_384)) }
                     }
-                }
-                if process.terminationStatus == 0 {
-                    self.status = .ready
+                    return String(decoding: tail, as: UTF8.self)
+                }.value
+                await Task.detached { process.waitUntilExit() }.value
+                self.refresh(configuredPath: trimmedDestination)
+                if process.terminationStatus == 0 && self.status == .ready {
                     onComplete()
                 } else {
-                    self.errorMessage = String(localized: "error.diarizationModelDownloadFailed")
-                    self.refresh(configuredPath: trimmedDestination)
+                    var message = String(localized: "error.diarizationModelDownloadFailed")
+                    if process.terminationStatus == 0 {
+                        message += "\n" + String(localized: "error.diarizationModelIncomplete")
+                            + "\n" + DiarizationModelValidation.missingFiles(at: trimmedDestination).joined(separator: "\n")
+                    } else {
+                        let safeDiagnostic = diagnostic.replacingOccurrences(of: trimmedToken, with: "[REDACTED]")
+                            .trimmingCharacters(in: .whitespacesAndNewlines)
+                        message += "\n" + String(safeDiagnostic.suffix(4000))
+                    }
+                    self.errorMessage = message
                 }
             } catch {
+                self.refresh(configuredPath: trimmedDestination)
                 self.errorMessage = error.localizedDescription
             }
 

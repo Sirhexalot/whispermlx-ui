@@ -433,6 +433,7 @@ struct SettingsView: View {
             }
         }
         let newLocalPath = localDiarizationModelPath.trimmingCharacters(in: .whitespacesAndNewlines)
+        diarizationModelManager.refresh(configuredPath: newLocalPath)
         let hasToken = !newToken.isEmpty || (diarizationEnabled && !TokenStore.load().trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         let hasOfflineModel = diarizationModelManager.status == .ready
         controller.model = model

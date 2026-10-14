@@ -236,8 +236,30 @@ final class TranscriptionController {
     }
 
     var canStart: Bool {
-        guard let inputURL else { return false }
-        return !isRunning && FileManager.default.fileExists(atPath: inputURL.path)
+        inputURL != nil && !isBusy && transcriptionPrerequisiteError == nil
+    }
+
+    /// Shared by button availability and the final check before launching a
+    /// helper. Files may have been removed since the settings were opened.
+    var transcriptionPrerequisiteError: String? {
+        guard let inputURL else { return nil }
+        guard FileManager.default.isReadableFile(atPath: inputURL.path) else {
+            return String(localized: "error.transcriptionInputMissing")
+        }
+        guard RuntimeSetup.isInstalled else { return String(localized: "runtime.required") }
+        guard resolveCLI() != nil else { return String(localized: "error.whisperMLXNotInstalled") }
+        guard ModelManager.isInstalled(model) else { return String(localized: "error.modelNotInstalled") }
+        if diarizationEnabled {
+            let path = diarizationModelPath.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !path.isEmpty && !DiarizationModelValidation.isInstalled(at: path) {
+                return String(localized: "error.diarizationModelPathInvalid")
+            }
+            // Do not read a Keychain secret merely to render a button.
+            if path.isEmpty && !TokenStore.exists() {
+                return String(localized: "error.huggingFaceTokenRequired")
+            }
+        }
+        return nil
     }
 
     func selectFile(_ url: URL) {
@@ -290,25 +312,13 @@ final class TranscriptionController {
     }
 
     func start() {
-        guard !isRunning, let inputURL else { return }
-        guard RuntimeSetup.isInstalled else {
-            status = .failed(String(localized: "runtime.required"))
-            return
-        }
-        guard resolveCLI() != nil else {
-            status = .failed(String(localized: "error.whisperMLXNotInstalled"))
-            return
-        }
-        guard ModelManager.isInstalled(model) else {
-            status = .failed(String(localized: "error.modelNotInstalled"))
+        guard !isBusy, let inputURL else { return }
+        if let error = transcriptionPrerequisiteError {
+            status = .failed(error)
             return
         }
 
         let localDiarizationModel = validatedDiarizationModelPath()
-        if diarizationEnabled && !diarizationModelPath.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && localDiarizationModel == nil {
-            status = .failed(String(localized: "error.diarizationModelPathInvalid"))
-            return
-        }
         if diarizationEnabled && localDiarizationModel == nil && TokenStore.load().trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             status = .failed(String(localized: "error.huggingFaceTokenRequired"))
             log = String(localized: "log.huggingFaceTokenRequired") + "\n"
@@ -530,7 +540,6 @@ final class TranscriptionController {
         let trimmedPath = path.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedPath.isEmpty else { return false }
 
-        var isDirectory: ObjCBool = false
-        return FileManager.default.fileExists(atPath: trimmedPath, isDirectory: &isDirectory) && isDirectory.boolValue
+        return DiarizationModelValidation.isInstalled(at: trimmedPath)
     }
 }

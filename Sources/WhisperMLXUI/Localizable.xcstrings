@@ -373,19 +373,53 @@
         }
       }
     },
+    "error.diarizationModelIncomplete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Offline-Modell ist unvollständig. Fehlende oder nicht lesbare Dateien:"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The offline model is incomplete. Missing or unreadable files:"
+          }
+        }
+      }
+    },
     "error.diarizationModelPathInvalid" : {
       "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Der lokale pyannote-Modellordner wurde nicht gefunden."
+            "value" : "Das lokale pyannote-Modell fehlt oder ist unvollständig. Bitte lade es in den Einstellungen erneut herunter."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The offline pyannote model folder could not be found."
+            "value" : "The offline pyannote model is missing or incomplete. Download it again in Settings."
+          }
+        }
+      }
+    },
+    "error.transcriptionInputMissing" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Aufnahme fehlt oder ist nicht lesbar. Bitte wähle sie erneut aus."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The recording is missing or unreadable. Select it again."
           }
         }
       }
@@ -1429,13 +1463,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Der Offline-Modellort ist gespeichert, aber die Dateien fehlen"
+            "value" : "Offline-Modell fehlt oder ist unvollständig – bitte erneut herunterladen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Offline model location exists in settings, but the files are missing"
+            "value" : "Offline model is missing or incomplete — download it again"
           }
         }
       }

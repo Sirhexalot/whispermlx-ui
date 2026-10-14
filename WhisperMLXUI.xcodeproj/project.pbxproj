@@ -23,6 +23,7 @@
 		A07F725D9DB96D19D045644B /* RuntimeSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E0CE9B415D51EAA9843DF6 /* RuntimeSetup.swift */; };
 		A4EABC792E88443BF952DA41 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = CCC3E177A42099C12AC6BC66 /* Sparkle */; };
 		CC1568C3B8564A359CCBAD68 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8927AEE5C22EE729A1EDD0F8 /* AudioRecorder.swift */; };
+		E78851DD1522ED0BC6289D64 /* DiarizationModelValidationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F1A54012E915B2939ED6A16 /* DiarizationModelValidationTests.swift */; };
 		F0C762A7126EAD594BEB2B43 /* TranscriptionLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58021E4576F4C8B93CDF8244 /* TranscriptionLog.swift */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +42,7 @@
 		24E0CE9B415D51EAA9843DF6 /* RuntimeSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeSetup.swift; sourceTree = "<group>"; };
 		4213D2D0C2592CBFC61BEDD5 /* WhisperMLXUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WhisperMLXUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		58021E4576F4C8B93CDF8244 /* TranscriptionLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionLog.swift; sourceTree = "<group>"; };
+		5F1A54012E915B2939ED6A16 /* DiarizationModelValidationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarizationModelValidationTests.swift; sourceTree = "<group>"; };
 		646DEE8E6F5630B25061A6DC /* WhisperMLXUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperMLXUIApp.swift; sourceTree = "<group>"; };
 		774042A3194BD34BAA2E3584 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		7936A48F4F444F9B2FC646D6 /* WhisperMLXUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhisperMLXUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -103,6 +105,7 @@
 		CFDDEE14A8110BAAABB0E921 /* WhisperMLXUI */ = {
 			isa = PBXGroup;
 			children = (
+				5F1A54012E915B2939ED6A16 /* DiarizationModelValidationTests.swift */,
 				B273C83100E694B3A92E8F29 /* RuntimeSetupTests.swift */,
 				A0EB193DEEA6ED630AC57477 /* TranscriptionControllerLogicTests.swift */,
 			);
@@ -245,6 +248,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E78851DD1522ED0BC6289D64 /* DiarizationModelValidationTests.swift in Sources */,
 				1628806DDB0D4C41049FE290 /* RuntimeSetupTests.swift in Sources */,
 				50297CB1C0C25119F20F1410 /* TranscriptionControllerLogicTests.swift in Sources */,
 			);
